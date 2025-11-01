@@ -4,9 +4,8 @@ using System;
 
 namespace Domain.Entities
 {
-    public class Reserva
+    public class Reserva : EntidadeRastreadaComum
     {
-        public int Id { get; set; }
         public string Finalidade { get; set; } = string.Empty;
         public DateTime Data { get; set; }
         public int NumeroConvidados { get; set; }

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101183446_AdicionandoDataCriacaoNasEntidades")]
+    partial class AdicionandoDataCriacaoNasEntidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -102,6 +108,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CondominioId");
@@ -127,6 +136,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -161,6 +173,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -212,6 +227,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Endereco");
@@ -251,6 +269,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Transportadora")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("VinculoResidencialId")
                         .HasColumnType("integer");
@@ -301,6 +322,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("VinculoResidencialId")
                         .HasColumnType("integer");
 
@@ -344,6 +368,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Cpf")
@@ -379,6 +406,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoUsuario")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")
@@ -417,6 +447,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoOcupacao")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101175626_AdicionandoVinculoUsuarioCondominio")]
+    partial class AdicionandoVinculoUsuarioCondominio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("BlocoId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Numero")
                         .IsRequired()
@@ -64,9 +64,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -120,9 +117,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -146,9 +140,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Cnpj")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -193,9 +184,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("text");
@@ -229,9 +217,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DataChegada")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataRetirada")
@@ -278,9 +263,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Finalidade")
                         .IsRequired()
                         .HasColumnType("text");
@@ -321,12 +303,12 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Cpf")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -343,6 +325,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("TipoUsuario")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -366,20 +351,17 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("CondominioId")
+                    b.Property<int>("Cargo")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("CondominioId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DataFim")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("TipoUsuario")
-                        .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
@@ -406,9 +388,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataFim")
                         .HasColumnType("timestamp with time zone");

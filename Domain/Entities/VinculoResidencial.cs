@@ -4,9 +4,8 @@ using System;
 
 namespace Domain.Entities
 {
-    public class VinculoResidencial
+    public class VinculoResidencial : EntidadeRastreadaComum
     {
-        public int Id { get; set; }
         public ETipoOcupacao TipoOcupacao { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }

@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Context
 {
@@ -16,6 +17,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<AreaComum> AreasComuns => Set<AreaComum>();
         public DbSet<Reserva> Reservas => Set<Reserva>();
         public DbSet<Encomenda> Encomendas => Set<Encomenda>();
+        public DbSet<UsuarioCondominio> UsuarioCondominio => Set<UsuarioCondominio>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +44,34 @@ namespace Infrastructure.Persistence.Context
             modelBuilder.Entity<Apartamento>()
                 .Property(a => a.Numero)
                 .HasMaxLength(10);
+
+            modelBuilder.Entity<UsuarioCondominio>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Usuario)
+                    .WithMany(u => u.VinculosCondominios)
+                    .HasForeignKey(e => e.UsuarioId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Condominio)
+                    .WithMany(c => c.VinculosUsuarios)
+                    .HasForeignKey(e => e.CondominioId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<Domain.Common.EntidadeRastreadaComum>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.DataCriacao = DateTime.UtcNow;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

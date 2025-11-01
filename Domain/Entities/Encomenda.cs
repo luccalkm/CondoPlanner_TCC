@@ -1,10 +1,10 @@
-﻿using Domain.Enums;
+﻿using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class Encomenda
+    public class Encomenda : EntidadeRastreadaComum
     {
-        public int Id { get; set; }
         public string Transportadora { get; set; } = string.Empty;
         public DateTime DataChegada { get; set; }
         public EStatusEncomenda Status { get; set; }

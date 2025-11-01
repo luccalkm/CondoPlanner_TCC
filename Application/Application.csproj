@@ -5,10 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Validators\" />
     <Folder Include="Mappings\" />
-    <Folder Include="DTOs\" />
   </ItemGroup>
 
   <PropertyGroup>

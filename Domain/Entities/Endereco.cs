@@ -1,10 +1,11 @@
-﻿namespace Domain.Entities
+﻿using Domain.Common;
+
+namespace Domain.Entities
 {
     namespace Domain.Entities
     {
-        public class Endereco
+        public class Endereco : EntidadeRastreadaComum
         {
-            public int Id { get; set; }
             public string Logradouro { get; set; } = string.Empty;
             public string Numero { get; set; } = string.Empty;
             public string Complemento { get; set; } = string.Empty;

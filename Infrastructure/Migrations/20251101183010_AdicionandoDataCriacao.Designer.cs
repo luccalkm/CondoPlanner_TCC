@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101183010_AdicionandoDataCriacao")]
+    partial class AdicionandoDataCriacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("BlocoId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Numero")
                         .IsRequired()
@@ -64,9 +64,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -120,9 +117,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -146,9 +140,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Cnpj")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -193,9 +184,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("text");
@@ -229,9 +217,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DataChegada")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataRetirada")
@@ -276,9 +261,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Data")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Finalidade")
@@ -344,6 +326,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Cpf")
@@ -379,6 +364,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoUsuario")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")
@@ -417,6 +405,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoOcupacao")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class Apartamento
+    public class Apartamento : EntidadeRastreadaComum
     {
-        public int Id { get; set; }
         public string Numero { get; set; } = string.Empty;
         public int Andar { get; set; }
 
