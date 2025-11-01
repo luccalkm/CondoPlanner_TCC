@@ -4,18 +4,19 @@ using System;
 
 namespace Domain.Entities
 {
-    public class Reserva : EntidadeRastreadaComum
+    public class Reserva
     {
+        public int Id { get; set; }
         public string Finalidade { get; set; } = string.Empty;
+        public DateTime Data { get; set; }
         public int NumeroConvidados { get; set; }
-        public DateTime DataInicio { get; set; }           
-        public DateTime DataTermino { get; set; }           
+        public TimeSpan HoraInicio { get; set; }
+        public TimeSpan HoraTermino { get; set; }
         public EStatusReserva Status { get; set; }
-        public string? Observacoes { get; set; }
+        public string Observacoes { get; set; } = string.Empty;
 
-        public int UsuarioId { get; set; }
-        public Usuario Usuario { get; set; } = null!;
-
+        public int VinculoResidencialId { get; set; }
+        public VinculoResidencial VinculoResidencial { get; set; } = null!;
         public int AreaComumId { get; set; }
         public AreaComum AreaComum { get; set; } = null!;
     }

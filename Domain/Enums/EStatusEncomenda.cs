@@ -2,10 +2,9 @@
 {
     public enum EStatusEncomenda
     {
-        Recebido = 1,
-        Notificado = 2,
-        AguardandoRetirada = 3,
-        Retirado = 4
+        RECEBIDO,
+        NOTIFICADO,
+        AGUARDANDO_RETIRADA,
+        RETIRADO
     }
-
 }

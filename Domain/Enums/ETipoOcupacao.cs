@@ -2,8 +2,8 @@
 {
     public enum ETipoOcupacao
     {
-        Proprietario = 1,
-        Inquilino = 2,
-        Familiar = 3
+        PROPRIETARIO,
+        INQUILINO,
+        FAMILIAR
     }
 }

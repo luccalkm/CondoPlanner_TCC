@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class Bloco : EntidadeRastreadaComum
+    public class Bloco
     {
-        public string IdentificadorBloco { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
         public int CondominioId { get; set; }
         public Condominio Condominio { get; set; } = null!;

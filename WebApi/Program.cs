@@ -1,10 +1,17 @@
+using DotNetEnv.Configuration;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotNetEnv.Env.Load();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(
+        Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULT"),
+        x => x.MigrationsAssembly("Infrastructure")
+    ));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.Context
                 .HasMaxLength(150);
 
             modelBuilder.Entity<Bloco>()
-                .Property(b => b.IdentificadorBloco)
+                .Property(b => b.Nome)
                 .HasMaxLength(100);
 
             modelBuilder.Entity<Apartamento>()

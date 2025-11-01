@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class AreaComum : EntidadeRastreadaComum
+    public class AreaComum
     {
+        public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
@@ -16,11 +17,10 @@ namespace Domain.Entities
         public bool Disponivel { get; set; }
         public bool RequerAprovacao { get; set; }
         public int DiasDisponiveis { get; set; }
-        public string? Observacoes { get; set; }
+        public string Observacoes { get; set; } = string.Empty;
 
         public int CondominioId { get; set; }
         public Condominio Condominio { get; set; } = null!;
-
         public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
     }
 }

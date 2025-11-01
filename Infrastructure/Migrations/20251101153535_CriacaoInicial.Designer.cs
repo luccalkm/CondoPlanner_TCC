@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101153535_CriacaoInicial")]
+    partial class CriacaoInicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,10 +39,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("BlocoId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Numero")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -61,6 +70,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -86,7 +98,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Observacoes")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("RequerAprovacao")
@@ -95,6 +106,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -114,10 +128,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Nome")
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdentificadorBloco")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -138,68 +158,28 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("EnderecoId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnderecoId");
-
-                    b.ToTable("Condominios");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Domain.Entities.Endereco", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Cep")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Complemento")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Logradouro")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pais")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Endereco");
+                    b.ToTable("Condominios");
                 });
 
             modelBuilder.Entity("Domain.Entities.Encomenda", b =>
@@ -210,21 +190,25 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ApartamentoId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("CondominioId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DataChegada")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("DataRetirada")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NomeRetirante")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Observacoes")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Status")
@@ -234,14 +218,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("VinculoResidencialId")
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CondominioId");
+                    b.HasIndex("ApartamentoId");
 
-                    b.HasIndex("VinculoResidencialId");
+                    b.HasIndex("CondominioId");
 
                     b.ToTable("Encomendas");
                 });
@@ -257,37 +241,39 @@ namespace Infrastructure.Migrations
                     b.Property<int>("AreaComumId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("Data")
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataTermino")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Finalidade")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<TimeSpan>("HoraInicio")
-                        .HasColumnType("interval");
-
-                    b.Property<TimeSpan>("HoraTermino")
-                        .HasColumnType("interval");
-
                     b.Property<int>("NumeroConvidados")
                         .HasColumnType("integer");
 
                     b.Property<string>("Observacoes")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<int>("VinculoResidencialId")
+                    b.Property<int>("UsuarioCriadorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AreaComumId");
 
-                    b.HasIndex("VinculoResidencialId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Reservas");
                 });
@@ -310,6 +296,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataNascimento")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -327,6 +319,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("TipoUsuario")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -356,6 +351,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("DataFim")
                         .HasColumnType("timestamp with time zone");
 
@@ -363,6 +361,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoOcupacao")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioCriadorId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsuarioId")
@@ -410,34 +411,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("Condominio");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Condominio", b =>
-                {
-                    b.HasOne("Domain.Entities.Domain.Entities.Endereco", "Endereco")
-                        .WithMany("Condominios")
-                        .HasForeignKey("EnderecoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Endereco");
-                });
-
             modelBuilder.Entity("Domain.Entities.Encomenda", b =>
                 {
+                    b.HasOne("Domain.Entities.Apartamento", "Apartamento")
+                        .WithMany("Encomendas")
+                        .HasForeignKey("ApartamentoId");
+
                     b.HasOne("Domain.Entities.Condominio", "Condominio")
                         .WithMany("Encomendas")
                         .HasForeignKey("CondominioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.VinculoResidencial", "VinculoResidencial")
-                        .WithMany("Encomendas")
-                        .HasForeignKey("VinculoResidencialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Apartamento");
 
                     b.Navigation("Condominio");
-
-                    b.Navigation("VinculoResidencial");
                 });
 
             modelBuilder.Entity("Domain.Entities.Reserva", b =>
@@ -448,15 +436,15 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.VinculoResidencial", "VinculoResidencial")
+                    b.HasOne("Domain.Entities.Usuario", "Usuario")
                         .WithMany("Reservas")
-                        .HasForeignKey("VinculoResidencialId")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AreaComum");
 
-                    b.Navigation("VinculoResidencial");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Domain.Entities.Usuario", b =>
@@ -473,13 +461,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.VinculoResidencial", b =>
                 {
                     b.HasOne("Domain.Entities.Apartamento", "Apartamento")
-                        .WithMany("VinculosResidenciais")
+                        .WithMany("Vinculos")
                         .HasForeignKey("ApartamentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Usuario", "Usuario")
-                        .WithMany("VinculosResidenciais")
+                        .WithMany("Vinculos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -491,7 +479,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Apartamento", b =>
                 {
-                    b.Navigation("VinculosResidenciais");
+                    b.Navigation("Encomendas");
+
+                    b.Navigation("Vinculos");
                 });
 
             modelBuilder.Entity("Domain.Entities.AreaComum", b =>
@@ -515,21 +505,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Usuarios");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Domain.Entities.Endereco", b =>
-                {
-                    b.Navigation("Condominios");
-                });
-
             modelBuilder.Entity("Domain.Entities.Usuario", b =>
                 {
-                    b.Navigation("VinculosResidenciais");
-                });
-
-            modelBuilder.Entity("Domain.Entities.VinculoResidencial", b =>
-                {
-                    b.Navigation("Encomendas");
-
                     b.Navigation("Reservas");
+
+                    b.Navigation("Vinculos");
                 });
 #pragma warning restore 612, 618
         }
