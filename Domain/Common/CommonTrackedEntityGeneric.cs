@@ -1,6 +1,6 @@
 ﻿namespace Domain.Common
 {
-    public class CommonTrackedEntity<T>
+    public class CommonTrackedEntity<T> 
     {
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class Block : CommonTrackedEntity
+    public class Block : CommonTrackedEntity 
     {
         public string BlockName { get; set; } = string.Empty;
 

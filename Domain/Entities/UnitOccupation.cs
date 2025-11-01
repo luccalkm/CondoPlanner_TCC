@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class UnitOccupation : CommonTrackedEntity
+    public class UnitOccupation : EntidadeRastreadaComum
     {
         public EOccupationType OccupationType { get; set; }
         public DateTime StartDate { get; set; }

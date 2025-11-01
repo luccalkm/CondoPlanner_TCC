@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Package : CommonTrackedEntity
+    public class Package : EntidadeRastreadaComum
     {
         public string CarrierName { get; set; } = string.Empty;
         public DateTime ArrivedAt { get; set; }

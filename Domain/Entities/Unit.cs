@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Unit : CommonTrackedEntity
+    public class Unit : EntidadeRastreadaComum
     {
         public string Number { get; set; } = string.Empty;
         public int Floor { get; set; }
 
         public int BlockId { get; set; }
-        public Block Block { get; set; }
+        public Bloco Block { get; set; }
 
         public ICollection<UnitOccupation> Occupations { get; set; } = new List<UnitOccupation>();
     }
