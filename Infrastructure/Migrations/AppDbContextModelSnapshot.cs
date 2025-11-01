@@ -30,10 +30,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CondominiumId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -43,7 +43,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Blocks");
                 });
 
-            modelBuilder.Entity("Domain.Entities.CommonArea", b =>
+            modelBuilder.Entity("Domain.Entities.AreaComum", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,13 +58,13 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -78,7 +78,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MaxDurationMinutes")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -92,7 +92,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("RequiresApproval")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -117,17 +117,17 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -149,10 +149,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Notes")
@@ -187,10 +187,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CommonAreaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
@@ -237,10 +237,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("BlockId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Floor")
@@ -263,10 +263,10 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("EndDate")
@@ -309,10 +309,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CondominiumId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreatorUserId")
+                    b.Property<int>("IdUsuarioCriador")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
@@ -322,7 +322,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -355,7 +355,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Condominium");
                 });
 
-            modelBuilder.Entity("Domain.Entities.CommonArea", b =>
+            modelBuilder.Entity("Domain.Entities.AreaComum", b =>
                 {
                     b.HasOne("Domain.Entities.Block", "Block")
                         .WithMany("CommonAreas")
@@ -379,7 +379,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Reservation", b =>
                 {
-                    b.HasOne("Domain.Entities.CommonArea", "CommonArea")
+                    b.HasOne("Domain.Entities.AreaComum", "AreaComum")
                         .WithMany("Reservations")
                         .HasForeignKey("CommonAreaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,7 +391,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CommonArea");
+                    b.Navigation("AreaComum");
 
                     b.Navigation("UnitOccupation");
                 });
@@ -444,7 +444,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Units");
                 });
 
-            modelBuilder.Entity("Domain.Entities.CommonArea", b =>
+            modelBuilder.Entity("Domain.Entities.AreaComum", b =>
                 {
                     b.Navigation("Reservations");
                 });

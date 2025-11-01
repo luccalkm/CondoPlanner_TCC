@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace Infrastructure.Persistence.Context
 {
@@ -10,18 +8,40 @@ namespace Infrastructure.Persistence.Context
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
 
-        public DbSet<User> Users => Set<User>();
-        public DbSet<Condominium> Condominiums => Set<Condominium>();
-        public DbSet<Block> Blocks => Set<Block>();
-        public DbSet<Unit> Units => Set<Unit>();
-        public DbSet<UnitOccupation> UnitOccupations => Set<UnitOccupation>();
-        public DbSet<CommonArea> CommonAreas => Set<CommonArea>();
-        public DbSet<Reservation> Reservations => Set<Reservation>();
-        public DbSet<Package> Packages => Set<Package>();
+        public DbSet<Usuario> Usuarios => Set<Usuario>();
+        public DbSet<Condominio> Condominios => Set<Condominio>();
+        public DbSet<Bloco> Blocos => Set<Bloco>();
+        public DbSet<Apartamento> Apartamentos => Set<Apartamento>();
+        public DbSet<VinculoResidencial> VinculosResidenciais => Set<VinculoResidencial>();
+        public DbSet<AreaComum> AreasComuns => Set<AreaComum>();
+        public DbSet<Reserva> Reservas => Set<Reserva>();
+        public DbSet<Encomenda> Encomendas => Set<Encomenda>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Cpf)
+                .IsUnique();
+
+            modelBuilder.Entity<Condominio>()
+                .Property(c => c.Nome)
+                .HasMaxLength(150);
+
+            modelBuilder.Entity<Bloco>()
+                .Property(b => b.IdentificadorBloco)
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Apartamento>()
+                .Property(a => a.Numero)
+                .HasMaxLength(10);
         }
     }
 }
