@@ -18,22 +18,22 @@ namespace WebApi.Controllers
 
         [HttpPost("registrar")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest dto)
+        public async Task<RegisterResponse> Register([FromBody] RegisterRequest dto)
         {
             var result = await _authService.RegisterAsync(dto);
-            return Ok(result);
+            return result;
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest dto)
+        public async Task<AuthenticationResponse> Login([FromBody] LoginRequest dto)
         {
             var result = await _authService.LoginAsync(dto);
 
-            if (result == null) 
-                return Unauthorized("Credenciais inválidas.");
+            if (result == null)
+                return null;//Unauthorized("Credenciais inválidas.");
 
-            return Ok(result);
+            return result;
         }
     }
 }
