@@ -2,7 +2,7 @@
 
 namespace Application.Dtos
 {
-    public class RequisicaoRegistro
+    public class RegisterRequest
     {
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

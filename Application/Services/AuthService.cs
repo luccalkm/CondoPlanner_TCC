@@ -1,90 +1,85 @@
 ﻿using Application.Dtos;
 using Application.Interfaces;
 using Domain.Entities;
+using Shared.Helpers;
 
 namespace Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IRepositorio<Usuario> _usuarioRepo;
+        private readonly IRepository<Usuario> _userRepo;
         private readonly ITokenService _tokenService;
 
-        public AuthService(IRepositorio<Usuario> usuarioRepo, ITokenService tokenService)
+        public AuthService(IRepository<Usuario> usuarioRepo, ITokenService tokenService)
         {
-            _usuarioRepo = usuarioRepo;
+            _userRepo = usuarioRepo;
             _tokenService = tokenService;
         }
 
-        public async Task<RespostaAutenticacao?> LoginAsync(RequisicaoLogin requisicao)
+        public async Task<AuthenticationResponse?> LoginAsync(LoginRequest request)
         {
-            var usuario = await _usuarioRepo.PrimeiroOuPadraoAsync(u => u.Email == requisicao.Email);
+            var user = await _userRepo.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            if (!LoginValido(usuario, requisicao.Senha))
+            if (!IsLoginValid(user, request.Senha))
             {
-                return new RespostaAutenticacao
+                return new AuthenticationResponse
                 {
                     Sucesso = false,
                     Erro = "Não foi possível efetuar login com as credenciais informadas. Revise-as e tente novamente."
                 };
             }
 
-            var token = _tokenService.GerarToken(usuario);
+            var token = _tokenService.GenerateToken(user);
 
-            return new RespostaAutenticacao
+            return new AuthenticationResponse
             {
                 Token = token,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
+                Nome = user.Nome,
+                Email = user.Email,
                 Sucesso = true
             };
         }
 
-        public async Task<RespostaRegistro> RegistrarAsync(RequisicaoRegistro requisicao)
+        public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
-            var existente = await _usuarioRepo.PrimeiroOuPadraoAsync(u =>
-                u.Email == requisicao.Email ||
-                u.Cpf == requisicao.Cpf ||
-                u.Telefone == requisicao.Telefone);
+            var existente = await _userRepo.FirstOrDefaultAsync(u =>
+                u.Email == request.Email ||
+                u.Cpf == request.Cpf ||
+                u.Telefone == request.Telefone);
 
             if (existente != null)
             {
-                return new RespostaRegistro
+                return new RegisterResponse
                 {
                     Sucesso = false,
                     Mensagem = "Dados cadastrais já utilizados. Por favor, analise as informações e tente novamente."
                 };
             }
 
-            // TODO: Tratar senha
+            var senhaHash = PasswordHasherHelper.HashPassword(request.Senha);
 
             var novo = new Usuario
             {
-                Nome = requisicao.Nome,
-                Email = requisicao.Email,
-                Telefone = requisicao.Telefone,
-                Senha = requisicao.Senha, // TODO: hash
-                Cpf = requisicao.Cpf,
+                Nome = request.Nome,
+                Email = request.Email,
+                Telefone = request.Telefone,
+                Senha = senhaHash,
+                Cpf = request.Cpf,
             };
 
-            await _usuarioRepo.AdicionarAsync(novo);
-            await _usuarioRepo.SalvarAlteracoesAsync();
+            await _userRepo.AddAsync(novo);
+            await _userRepo.SaveChangesAsync();
 
-            return new RespostaRegistro
+            return new RegisterResponse
             {
                 Sucesso = true,
                 Mensagem = "Usuário cadastrado com sucesso."
             };
         }
-    
-        private bool LoginValido(Usuario usuario, string senhaEntrada)
-        {
-            return usuario is not null && SenhaValida(usuario.Senha, senhaEntrada);
-        }
 
-        private bool SenhaValida(string senhaUsuario, string senhaEntrada)
+        private bool IsLoginValid(Usuario? user, string inputPassword)
         {
-            // TODO: Validar senha corretamente
-            return senhaUsuario.Equals(senhaEntrada);
+            return user is not null && PasswordHasherHelper.VerifyPassword(inputPassword, user.Senha);
         }
     }
 }

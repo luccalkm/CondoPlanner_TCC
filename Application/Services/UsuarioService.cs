@@ -5,34 +5,34 @@
 //{
 //    public class UsuarioService
 //    {
-//        private readonly IRepositorio<Usuario> _repositorio;
+//        private readonly IRepository<Usuario> _repositorio;
 
-//        public UsuarioService(IRepositorio<Usuario> repositorio)
+//        public UsuarioService(IRepository<Usuario> repositorio)
 //        {
 //            _repositorio = repositorio;
 //        }
 
-//        public async Task<IEnumerable<Usuario>> ObterTodosAsync()
+//        public async Task<IEnumerable<Usuario>> GetAllAsync()
 //        {
-//            return await _repositorio.ObterTodosAsync();
+//            return await _repositorio.GetAllAsync();
 //        }
 
-//        public async Task<Usuario?> ObterPorIdAsync(int id)
+//        public async Task<Usuario?> GetByIdAsync(int id)
 //        {
-//            return await _repositorio.ObterPorIdAsync(id);
+//            return await _repositorio.GetByIdAsync(id);
 //        }
 
 //        public async Task<Usuario> CriarAsync(Usuario usuario)
 //        {
-//            await _repositorio.AdicionarAsync(usuario);
-//            await _repositorio.SalvarAlteracoesAsync();
+//            await _repositorio.AddAsync(usuario);
+//            await _repositorio.SaveChangesAsync();
 
 //            return usuario;
 //        }
 
 //        public async Task<bool> AtualizarAsync(int id, Usuario usuarioAtualizado)
 //        {
-//            var existente = await _repositorio.ObterPorIdAsync(id);
+//            var existente = await _repositorio.GetByIdAsync(id);
 //            if (existente == null) return false;
 
 //            existente.Nome = usuarioAtualizado.Nome;
@@ -43,18 +43,18 @@
 //            existente.Cpf = usuarioAtualizado.Cpf;
 //            existente.CondominioId = usuarioAtualizado.CondominioId;
 
-//            _repositorio.Atualizar(existente);
-//            await _repositorio.SalvarAlteracoesAsync();
+//            _repositorio.Update(existente);
+//            await _repositorio.SaveChangesAsync();
 //            return true;
 //        }
 
 //        public async Task<bool> RemoverAsync(int id)
 //        {
-//            var existente = await _repositorio.ObterPorIdAsync(id);
+//            var existente = await _repositorio.GetByIdAsync(id);
 //            if (existente == null) return false;
 
-//            _repositorio.Remover(existente);
-//            await _repositorio.SalvarAlteracoesAsync();
+//            _repositorio.Delete(existente);
+//            await _repositorio.SaveChangesAsync();
 //            return true;
 //        }
 //    }

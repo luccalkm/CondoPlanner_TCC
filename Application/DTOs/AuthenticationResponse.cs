@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos
 {
-    public class RespostaAutenticacao
+    public class AuthenticationResponse
     {
         public string Token { get; set; } = string.Empty;
         public string Nome { get; set; } = string.Empty;

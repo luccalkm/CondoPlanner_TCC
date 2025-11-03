@@ -92,7 +92,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-builder.Services.AddScoped(typeof(IRepositorio<>), typeof(RepositorioBase<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var infrastructureAssembly = Assembly.Load("Infrastructure");

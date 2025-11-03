@@ -17,7 +17,7 @@ namespace Infrastructure.Security
             _configuration = configuration;
         }
 
-        public string GerarToken(Usuario usuario)
+        public string GenerateToken(Usuario usuario)
         {
             var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT__KEY"));
 
