@@ -1,16 +1,9 @@
-// src/router/AppRouter.tsx
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from '../stores/auth.store';
-import type { JSX } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from '../features/auth/Login/Login';
 import Register from '../features/auth/Register/Register';
 import AuthLayout from '../features/auth/components/AuthLayout';
-
-function ProtectedRoute({ children }: { children: JSX.Element }) {
-    const { isAuthenticated } = useAuthStore();
-    return isAuthenticated ? children : <Navigate to="/login" replace />;
-}
+import ProtectedRoute from './ProtectedRoute';
 
 export function AppRouter() {
     return (
@@ -22,8 +15,14 @@ export function AppRouter() {
                 </Route>
 
                 <Route
-                    path="/dashboard"
-                    element={<ProtectedRoute><div>Dashboard</div></ProtectedRoute>}
+                    path="/*"
+                    element={
+                        <ProtectedRoute>
+                            <Routes>
+                                <Route path="dashboard" element={<div>Dashboard</div>} />
+                            </Routes>
+                        </ProtectedRoute>
+                    }
                 />
             </Routes>
         </BrowserRouter>

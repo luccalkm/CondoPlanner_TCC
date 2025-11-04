@@ -12,8 +12,11 @@ export function useAuth() {
             setError(null);
             setLoading(true);
             await login(loginRequest);
+            return { success: true, message: 'Login realizado com sucesso!' };
         } catch (err: unknown) {
-            setError((err as Error).message || 'Erro ao efetuar login');
+            const errorMessage = (err as Error).message || 'Erro ao efetuar login';
+            setError(errorMessage);
+            return { success: false, message: errorMessage };
         } finally {
             setLoading(false);
         }
@@ -24,8 +27,11 @@ export function useAuth() {
             setError(null);
             setLoading(true);
             await register(registerRequest);
+            return { success: true, message: 'Registro realizado com sucesso!' };
         } catch (err: unknown) {
-            setError((err as Error).message || 'Erro ao registrar');
+            const errorMessage = (err as Error).message || 'Erro ao registrar';
+            setError(errorMessage);
+            return { success: false, message: errorMessage };
         } finally {
             setLoading(false);
         }

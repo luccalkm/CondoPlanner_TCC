@@ -1,27 +1,33 @@
-
-import { Typography, TextField, Button, Link, Alert } from '@mui/material';
+import { Typography, TextField, Button, Link } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import { useAlertStore } from '../../../stores/alert.store';
 import { Email, Lock } from '@mui/icons-material';
 import type { LoginRequest } from '../../../apiClient';
 
 export default function Login() {
-    const { handleLogin, error, loading } = useAuth();
+    const { handleLogin, loading } = useAuth();
     const navigate = useNavigate();
+    const showAlert = useAlertStore((state) => state.showAlert);
 
     const [request, setRequest] = useState({ email: '', senha: '' });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const loginRequest: LoginRequest = { ...request };
-        await handleLogin(loginRequest);
-        navigate('/dashboard');
+        const response = await handleLogin(loginRequest);
+
+        if (response.success) {
+            showAlert('Login realizado com sucesso!', 'success');
+            navigate('/dashboard');
+        } else {
+            showAlert(response.message || 'Erro ao realizar login.', 'error');
+        }
     };
 
     return (
         <>
-            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
             <>
                 <TextField
                     label="Email"

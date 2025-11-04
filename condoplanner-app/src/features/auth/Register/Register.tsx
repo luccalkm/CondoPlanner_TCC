@@ -3,13 +3,13 @@ import {
     TextField,
     Button,
     Link,
-    Alert,
     Grid,
     Box,
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import { useAlertStore } from '../../../stores/alert.store';
 import type { RegisterRequest } from '../../../apiClient';
 
 const sanitize = (value: string): string => value.replace(/\D/g, '');
@@ -49,7 +49,8 @@ const validateField = {
 };
 
 export default function Register() {
-    const { handleRegister, error, loading } = useAuth();
+    const { handleRegister, loading } = useAuth();
+    const showAlert = useAlertStore((state) => state.showAlert);
     const navigate = useNavigate();
 
     const [form, setForm] = useState<{
@@ -70,7 +71,6 @@ export default function Register() {
         confirmarSenha: '',
     });
 
-    const [localError, setLocalError] = useState<string | null>(null);
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const update = (field: string, value: string) => {
@@ -94,7 +94,6 @@ export default function Register() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLocalError(null);
 
         if (!validateFields()) return;
 
@@ -106,23 +105,18 @@ export default function Register() {
             senha: form.senha,
         };
 
-        await handleRegister(registerRequest)
-        .then(() => {
+        const response = await handleRegister(registerRequest);
+
+        if (response.success) {
+            showAlert('Registro realizado com sucesso!', 'success');
             navigate('/login');
-        })
-        .catch(() => {
-            alert('Erro ao registrar. Verifique os dados e tente novamente.');
-        });
+        } else {
+            showAlert(response.message || 'Erro ao registrar.', 'error');
+        }
     };
 
     return (
         <Box component="form" onSubmit={handleSubmit}>
-            {(error || localError) && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error || localError}
-                </Alert>
-            )}
-
             <Grid container spacing={2}>
                 <Grid size={6}>
                     <TextField

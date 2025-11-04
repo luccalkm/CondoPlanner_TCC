@@ -10,7 +10,8 @@ using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-DotNetEnv.Env.Load();
+DotNetEnv.Env.Load("../.env");
+
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT__KEY") ?? "dev-key-change-me";
 var jwtIssuer = Environment.GetEnvironmentVariable("JWT__ISSUER") ?? "localhost";
