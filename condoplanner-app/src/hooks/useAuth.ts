@@ -7,6 +7,11 @@ export function useAuth() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    function hasAuthenticationToken(): boolean {
+        const hasToken = !!localStorage.getItem("token");
+        return hasToken;
+    }
+
     async function handleLogin(loginRequest: LoginRequest) {
         try {
             setError(null);
@@ -37,5 +42,5 @@ export function useAuth() {
         }
     }
 
-    return { handleLogin, handleRegister, logout, isAuthenticated, user, loading, error };
+    return { hasAuthenticationToken, handleLogin, handleRegister, logout, isAuthenticated, user, loading, error };
 }

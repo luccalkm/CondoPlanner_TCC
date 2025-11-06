@@ -1,8 +1,12 @@
 
 import { Grid, Card, Typography } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export default function AuthLayout() {
+
+    if (localStorage.getItem("token"))
+        return <Navigate to={"/condominios"} replace />
+        
     return (
         <Grid
             container

@@ -20,7 +20,7 @@ export default function Login() {
 
         if (response.success) {
             showAlert('Login realizado com sucesso!', 'success');
-            navigate('/dashboard');
+            navigate('/condominios');
         } else {
             showAlert(response.message || 'Erro ao realizar login.', 'error');
         }
