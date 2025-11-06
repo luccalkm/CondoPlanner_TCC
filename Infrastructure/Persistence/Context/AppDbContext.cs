@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.Condominium;
+using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,6 @@ namespace Infrastructure.Persistence.Context
         public DbSet<Reserva> Reservas => Set<Reserva>();
         public DbSet<Encomenda> Encomendas => Set<Encomenda>();
         public DbSet<UsuarioCondominio> UsuarioCondominio => Set<UsuarioCondominio>();
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -37,6 +37,12 @@ namespace Infrastructure.Persistence.Context
                 .Property(c => c.Nome)
                 .HasMaxLength(150);
 
+            modelBuilder.Entity<Condominio>()
+                .HasOne(c => c.Endereco)
+                .WithMany()
+                .HasForeignKey(c => c.EnderecoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Bloco>()
                 .Property(b => b.Nome)
                 .HasMaxLength(100);
@@ -45,20 +51,24 @@ namespace Infrastructure.Persistence.Context
                 .Property(a => a.Numero)
                 .HasMaxLength(10);
 
-            modelBuilder.Entity<UsuarioCondominio>(entity =>
-            {
-                entity.HasKey(e => e.Id);
+            modelBuilder.Entity<UsuarioCondominio>()
+                .HasKey(uc => uc.Id);
 
-                entity.HasOne(e => e.Usuario)
-                    .WithMany(u => u.VinculosCondominios)
-                    .HasForeignKey(e => e.UsuarioId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UsuarioCondominio>()
+                .HasIndex(uc => new { uc.UsuarioId, uc.CondominioId })
+                .IsUnique();
 
-                entity.HasOne(e => e.Condominio)
-                    .WithMany(c => c.VinculosUsuarios)
-                    .HasForeignKey(e => e.CondominioId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
+            modelBuilder.Entity<UsuarioCondominio>()
+                .HasOne(uc => uc.Usuario)
+                .WithMany(u => u.VinculosCondominios)
+                .HasForeignKey(uc => uc.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UsuarioCondominio>()
+                .HasOne(uc => uc.Condominio)
+                .WithMany(c => c.VinculosUsuarios)
+                .HasForeignKey(uc => uc.CondominioId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

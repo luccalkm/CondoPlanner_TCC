@@ -1,6 +1,6 @@
 ﻿using Domain.Enums;
 
-namespace Application.Dtos
+namespace Application.DTOs.Authentication
 {
     public class RegisterRequest
     {

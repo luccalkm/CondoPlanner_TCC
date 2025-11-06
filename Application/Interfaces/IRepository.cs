@@ -8,6 +8,8 @@ namespace Application.Interfaces
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> FetchAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default);
         Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default);
+        IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
+        IQueryable<T> Include(params string[] includes);
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task BulkAddAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
         void Update(T entity);

@@ -1,4 +1,4 @@
-﻿using Application.Dtos;
+﻿using Application.DTOs.Authentication;
 using Application.Interfaces;
 using Domain.Entities;
 using Shared.Helpers;
@@ -69,6 +69,12 @@ namespace Application.Services
 
             await _userRepo.AddAsync(novo);
             await _userRepo.SaveChangesAsync();
+
+            // TODO: Adicionar usuário ao condomínio, se CondomínioId for fornecido
+            //if (request.CondominioId.HasValue)
+            //{
+            //    await _condominioService.AddUserToCondominiumAsync(request.CondominioId.Value, usuario.Id);
+            //}
 
             return new RegisterResponse
             {

@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Profiles;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Security;
@@ -11,6 +12,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load("../.env");
+DotNetEnv.Env.Load();
 
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT__KEY") ?? "dev-key-change-me";
@@ -95,6 +97,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAutoMapper(typeof(CondominiumProfile).Assembly);
 
 var infrastructureAssembly = Assembly.Load("Infrastructure");
 builder.Services.Scan(scan => scan

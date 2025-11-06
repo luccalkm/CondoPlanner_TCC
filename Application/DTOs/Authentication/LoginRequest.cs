@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos
+﻿namespace Application.DTOs.Authentication
 {
     public class LoginRequest
     {

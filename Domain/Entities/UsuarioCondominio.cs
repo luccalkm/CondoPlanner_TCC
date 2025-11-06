@@ -17,8 +17,7 @@ namespace Domain.Entities
         public Condominio Condominio { get; set; } = null!;
 
         public ETipoUsuario TipoUsuario { get; set; }
-        public DateTime DataInicio { get; set; } = DateTime.UtcNow;
-        public DateTime? DataFim { get; set; }
+        public DateTime? DataInativacao { get; set; }
         public bool Ativo { get; set; } = true;
     }
 }

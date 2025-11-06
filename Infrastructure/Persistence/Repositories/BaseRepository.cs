@@ -36,6 +36,32 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(filtro, cancellationToken);
         }
+
+        private IQueryable<T> _query;
+        public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
+        {
+            _query ??= _dbSet.AsQueryable();
+
+            foreach (var include in includes)
+            {
+                _query = _query.Include(include);
+            }
+
+            return _query;
+        }
+
+        public IQueryable<T> Include(params string[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query;
+        }
+
         #endregion
 
         #region Escritas

@@ -190,7 +190,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Complemento")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DataCriacao")
@@ -205,7 +204,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Numero")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Pais")
@@ -336,7 +334,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -372,10 +370,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DataFim")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DataInicio")
+                    b.Property<DateTime?>("DataInativacao")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TipoUsuario")
@@ -388,7 +383,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CondominioId");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UsuarioId", "CondominioId")
+                        .IsUnique();
 
                     b.ToTable("UsuarioCondominio");
                 });
@@ -467,7 +463,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Condominio", b =>
                 {
                     b.HasOne("Domain.Entities.Domain.Entities.Endereco", "Endereco")
-                        .WithMany("Condominios")
+                        .WithMany()
                         .HasForeignKey("EnderecoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -518,13 +514,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Condominio", "Condominio")
                         .WithMany("VinculosUsuarios")
                         .HasForeignKey("CondominioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Usuario", "Usuario")
                         .WithMany("VinculosCondominios")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Condominio");
@@ -575,11 +571,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Encomendas");
 
                     b.Navigation("VinculosUsuarios");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Domain.Entities.Endereco", b =>
-                {
-                    b.Navigation("Condominios");
                 });
 
             modelBuilder.Entity("Domain.Entities.Usuario", b =>
