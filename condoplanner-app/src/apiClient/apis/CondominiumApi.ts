@@ -16,21 +16,23 @@
 import * as runtime from '../runtime';
 import type {
   AddUserToCondominiumInput,
+  CondominioDto,
   CreateOrEditCondominiumInput,
+  UsuarioDto,
 } from '../models/index';
 import {
     AddUserToCondominiumInputFromJSON,
     AddUserToCondominiumInputToJSON,
+    CondominioDtoFromJSON,
+    CondominioDtoToJSON,
     CreateOrEditCondominiumInputFromJSON,
     CreateOrEditCondominiumInputToJSON,
+    UsuarioDtoFromJSON,
+    UsuarioDtoToJSON,
 } from '../models/index';
 
 export interface ApiCondominiumAddUserToCondominiumPostRequest {
     addUserToCondominiumInput?: AddUserToCondominiumInput;
-}
-
-export interface ApiCondominiumByUserUserIdGetRequest {
-    userId: number;
 }
 
 export interface ApiCondominiumCondominioIdUsersGetRequest {
@@ -39,6 +41,10 @@ export interface ApiCondominiumCondominioIdUsersGetRequest {
 
 export interface ApiCondominiumCreateOrEditPostRequest {
     createOrEditCondominiumInput?: CreateOrEditCondominiumInput;
+}
+
+export interface ApiCondominiumGetAllUserIdGetRequest {
+    userId: number;
 }
 
 /**
@@ -85,49 +91,7 @@ export class CondominiumApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCondominiumByUserUserIdGetRaw(requestParameters: ApiCondominiumByUserUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['userId'] == null) {
-            throw new runtime.RequiredError(
-                'userId',
-                'Required parameter "userId" was null or undefined when calling apiCondominiumByUserUserIdGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/Condominium/ByUser/{userId}`;
-        urlPath = urlPath.replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters['userId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiCondominiumByUserUserIdGet(requestParameters: ApiCondominiumByUserUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiCondominiumByUserUserIdGetRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiCondominiumCondominioIdUsersGetRaw(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiCondominiumCondominioIdUsersGetRaw(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UsuarioDto>>> {
         if (requestParameters['condominioId'] == null) {
             throw new runtime.RequiredError(
                 'condominioId',
@@ -158,13 +122,14 @@ export class CondominiumApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UsuarioDtoFromJSON));
     }
 
     /**
      */
-    async apiCondominiumCondominioIdUsersGet(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiCondominiumCondominioIdUsersGetRaw(requestParameters, initOverrides);
+    async apiCondominiumCondominioIdUsersGet(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UsuarioDto>> {
+        const response = await this.apiCondominiumCondominioIdUsersGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -202,6 +167,49 @@ export class CondominiumApi extends runtime.BaseAPI {
      */
     async apiCondominiumCreateOrEditPost(requestParameters: ApiCondominiumCreateOrEditPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiCondominiumCreateOrEditPostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiCondominiumGetAllUserIdGetRaw(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CondominioDto>>> {
+        if (requestParameters['userId'] == null) {
+            throw new runtime.RequiredError(
+                'userId',
+                'Required parameter "userId" was null or undefined when calling apiCondominiumGetAllUserIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Condominium/GetAll/{userId}`;
+        urlPath = urlPath.replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters['userId'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CondominioDtoFromJSON));
+    }
+
+    /**
+     */
+    async apiCondominiumGetAllUserIdGet(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CondominioDto>> {
+        const response = await this.apiCondominiumGetAllUserIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

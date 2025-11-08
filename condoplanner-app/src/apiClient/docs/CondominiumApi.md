@@ -5,9 +5,9 @@ All URIs are relative to *http://localhost*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**apiCondominiumAddUserToCondominiumPost**](CondominiumApi.md#apicondominiumaddusertocondominiumpost) | **POST** /api/Condominium/AddUserToCondominium |  |
-| [**apiCondominiumByUserUserIdGet**](CondominiumApi.md#apicondominiumbyuseruseridget) | **GET** /api/Condominium/ByUser/{userId} |  |
 | [**apiCondominiumCondominioIdUsersGet**](CondominiumApi.md#apicondominiumcondominioidusersget) | **GET** /api/Condominium/{condominioId}/Users |  |
 | [**apiCondominiumCreateOrEditPost**](CondominiumApi.md#apicondominiumcreateoreditpost) | **POST** /api/Condominium/CreateOrEdit |  |
+| [**apiCondominiumGetAllUserIdGet**](CondominiumApi.md#apicondominiumgetalluseridget) | **GET** /api/Condominium/GetAll/{userId} |  |
 
 
 
@@ -80,78 +80,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiCondominiumByUserUserIdGet
-
-> apiCondominiumByUserUserIdGet(userId)
-
-
-
-### Example
-
-```ts
-import {
-  Configuration,
-  CondominiumApi,
-} from '';
-import type { ApiCondominiumByUserUserIdGetRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: Bearer
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new CondominiumApi(config);
-
-  const body = {
-    // number
-    userId: 56,
-  } satisfies ApiCondominiumByUserUserIdGetRequest;
-
-  try {
-    const data = await api.apiCondominiumByUserUserIdGet(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **userId** | `number` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
 ## apiCondominiumCondominioIdUsersGet
 
-> apiCondominiumCondominioIdUsersGet(condominioId)
+> Array&lt;UsuarioDto&gt; apiCondominiumCondominioIdUsersGet(condominioId)
 
 
 
@@ -198,7 +129,7 @@ example().catch(console.error);
 
 ### Return type
 
-`void` (Empty response body)
+[**Array&lt;UsuarioDto&gt;**](UsuarioDto.md)
 
 ### Authorization
 
@@ -207,7 +138,7 @@ example().catch(console.error);
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
 
 
 ### HTTP response details
@@ -277,6 +208,75 @@ example().catch(console.error);
 
 - **Content-Type**: `application/json`, `text/json`, `application/*+json`
 - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiCondominiumGetAllUserIdGet
+
+> Array&lt;CondominioDto&gt; apiCondominiumGetAllUserIdGet(userId)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CondominiumApi,
+} from '';
+import type { ApiCondominiumGetAllUserIdGetRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CondominiumApi(config);
+
+  const body = {
+    // number
+    userId: 56,
+  } satisfies ApiCondominiumGetAllUserIdGetRequest;
+
+  try {
+    const data = await api.apiCondominiumGetAllUserIdGet(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **userId** | `number` |  | [Defaults to `undefined`] |
+
+### Return type
+
+[**Array&lt;CondominioDto&gt;**](CondominioDto.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
 
 
 ### HTTP response details

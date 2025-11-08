@@ -1,15 +1,17 @@
 import { create } from 'zustand';
-import { AuthService } from '../features/auth/services/auth.service';
-import type { LoginRequest, RegisterRequest } from '../apiClient';
+import { AuthApi, type AuthenticationResponse, type LoginRequest, type RegisterRequest, type RegisterResponse, type UsuarioDto } from '../apiClient';
+import { ApiConfiguration } from '../apiClient/apiConfig';
+
+const authApi = new AuthApi(ApiConfiguration);
 
 interface AuthState {
-    token: string | null;
     isAuthenticated: boolean;
-    user: { nome: string; email: string } | null;
+    user: UsuarioDto | null;
 
-    login: (loginRequest: LoginRequest) => Promise<void>;
-    register: (registerRequest: RegisterRequest) => Promise<void>;
+    login: (loginRequest: LoginRequest) => Promise<AuthenticationResponse>;
+    register: (registerRequest: RegisterRequest) => Promise<RegisterResponse>;
     logout: () => void;
+    setUser: (user: UsuarioDto) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -17,28 +19,32 @@ export const useAuthStore = create<AuthState>((set) => ({
     isAuthenticated: !!localStorage.getItem('token'),
     user: null,
 
-    login: async (loginRequest) => {
-        const res = await AuthService.login(loginRequest);
-        if (res.token && res.nome && res.email) {
-            localStorage.setItem('token', res.token);
-            set({ token: res.token, isAuthenticated: true, user: { nome: res.nome, email: res.email } });
-        } else {
-            throw new Error('Invalid login response');
-        }
+    setUser: (user: UsuarioDto) => set({ user }),
+
+    login: async (loginRequest): Promise<AuthenticationResponse> => {
+        const res = await authApi.apiAuthLoginPost({ loginRequest });
+
+        if (!res.sucesso)
+            throw new Error(res.erro || 'Erro ao efetuar login');
+
+        localStorage.setItem('token', res.token!);
+        localStorage.setItem('user', JSON.stringify(res.usuario));
+        set({ isAuthenticated: true, user: res.usuario || null });
+        return res;
     },
 
-    register: async (registerRequest) => {
-        const res = await AuthService.register(registerRequest);
-        if (res.token && res.nome && res.email) {
-            localStorage.setItem('token', res.token);
-            set({ token: res.token, isAuthenticated: true, user: { nome: res.nome, email: res.email } });
-        } else {
-            throw new Error('Invalid register response');
-        }
+    register: async (registerRequest): Promise<RegisterResponse> => {
+        const res = await authApi.apiAuthRegistrarPost({ registerRequest });
+
+        if (!res.sucesso) 
+            throw new Error('Registro realizado com sucesso');
+
+        return res;
+        
     },
 
     logout: () => {
         localStorage.removeItem('token');
-        set({ token: null, isAuthenticated: false, user: null });
+        set({ isAuthenticated: false, user: null });
     },
 }));

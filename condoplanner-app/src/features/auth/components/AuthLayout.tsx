@@ -13,7 +13,7 @@ export default function AuthLayout() {
             justifyContent="center"
             alignItems="center"
             sx={{
-                minHeight: '100vh',
+                minHeight: '99vh',
                 minWidth: '100vw',
                 background: 'linear-gradient(135deg, #e3f2fd, #ffffff)',
             }}

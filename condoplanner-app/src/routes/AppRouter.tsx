@@ -5,6 +5,7 @@ import AuthLayout from "../features/auth/components/AuthLayout";
 import Login from "../features/auth/Login/Login";
 import Register from "../features/auth/Register/Register";
 import { NotFoundPage } from "../features/common/NotFoundPage";
+import CondominiumPage from "../features/condominium/CondominiumPage";
 
 export function AppRouter() {
     return (
@@ -13,7 +14,7 @@ export function AppRouter() {
                 <Route element={<ProtectedRoutes />}>
                     <Route element={<MainLayout />}>
                         {/* <Route index element={<HomePage />} /> */}
-                        <Route path="condominium" element={<h1>Condomínio</h1>} />
+                        <Route path="condominios" element={<CondominiumPage />} />
                         {/* <Route path="reservation" element={<ReservationPage />} /> */}
                         {/* <Route path="commom-area" element={<CommomAreaPage />} /> */}
                         <Route path="*" element={<NotFoundPage />} />

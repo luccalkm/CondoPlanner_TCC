@@ -41,8 +41,8 @@ namespace WebApi.Controllers
         /// <summary>
         /// Retorna todos os condomínios nos quais o usuário está vinculado.
         /// </summary>
-        [HttpGet("ByUser/{userId:int}")]
-        public async Task<IActionResult> GetAllByUser(int userId)
+        [HttpGet("GetAll/{userId:int}")]
+        public async Task<ActionResult<List<CondominioDto>>> GetAllByUser(int userId)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace WebApi.Controllers
         /// Retorna todos os usuários vinculados a um condomínio.
         /// </summary>
         [HttpGet("{condominioId:int}/Users")]
-        public async Task<IActionResult> GetUsersFromCondominium(int condominioId)
+        public async Task<ActionResult<List<UsuarioDto>>> GetUsersFromCondominium(int condominioId)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Authentication;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Shared.Helpers;
 
@@ -9,11 +10,13 @@ namespace Application.Services
     {
         private readonly IRepository<Usuario> _userRepo;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AuthService(IRepository<Usuario> usuarioRepo, ITokenService tokenService)
+        public AuthService(IMapper mapper, IRepository<Usuario> usuarioRepo, ITokenService tokenService)
         {
             _userRepo = usuarioRepo;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         public async Task<AuthenticationResponse?> LoginAsync(LoginRequest request)
@@ -33,9 +36,8 @@ namespace Application.Services
 
             return new AuthenticationResponse
             {
+                Usuario = _mapper.Map<UsuarioDto>(user),
                 Token = token,
-                Nome = user.Nome,
-                Email = user.Email,
                 Sucesso = true
             };
         }
