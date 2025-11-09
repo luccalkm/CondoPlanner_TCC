@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Profiles;
+using Infrastructure.ExternalServices;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Security;
@@ -96,7 +97,13 @@ builder.Services.AddSwaggerGen(c =>
 
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddHttpClient<IViaCepService, ViaCepService>();
+
 builder.Services.AddAutoMapper(typeof(CondominiumProfile).Assembly);
 
 var infrastructureAssembly = Assembly.Load("Infrastructure");
@@ -110,6 +117,7 @@ var applicationAssembly = Assembly.Load("Application");
 builder.Services.Scan(scan => scan
     .FromAssemblies(applicationAssembly)
     .AddClasses(classes => classes.InNamespaces("Application.Services"))
+    .AsSelf()
     .AsImplementedInterfaces()
     .WithScopedLifetime());
 

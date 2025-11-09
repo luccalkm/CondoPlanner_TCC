@@ -3,21 +3,11 @@ import { useTheme } from "@mui/material/styles";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
-import { useEffect } from "react";
-import { useAuthStore } from "../../stores/auth.store";
 
 export const MainLayout = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const navigate = useNavigate();
-    const authStore = useAuthStore();
-
-    useEffect(() => {
-        const user = localStorage.getItem('user');
-        if (user) {
-            authStore.setUser(JSON.parse(user));
-        }
-    }, []);
 
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh" sx={{ backgroundColor: "#fafafa" }}>

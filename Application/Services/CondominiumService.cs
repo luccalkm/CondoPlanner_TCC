@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Authentication;
 using Application.DTOs.Condominium;
+using Application.DTOs.Endereco;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;

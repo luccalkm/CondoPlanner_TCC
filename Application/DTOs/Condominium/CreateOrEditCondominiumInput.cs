@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.Condominium
+﻿using Application.DTOs.Endereco;
+
+namespace Application.DTOs.Condominium
 {
     public class CreateOrEditCondominiumInput
     {

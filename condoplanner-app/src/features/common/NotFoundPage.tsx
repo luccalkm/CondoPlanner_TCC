@@ -1,6 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-// import animationData from "../../assets/lottie/404-animation.json";
 import Lottie from "lottie-react";
 
 export const NotFoundPage = () => {

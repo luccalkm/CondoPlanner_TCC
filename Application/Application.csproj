@@ -1,6 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="DTOs\NovaPasta\**" />
+    <EmbeddedResource Remove="DTOs\NovaPasta\**" />
+    <None Remove="DTOs\NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

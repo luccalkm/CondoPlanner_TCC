@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Authentication;
+using Application.DTOs.Endereco;
 
 namespace Application.DTOs.Condominium
 {

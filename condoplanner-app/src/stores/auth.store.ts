@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { AuthApi, type AuthenticationResponse, type LoginRequest, type RegisterRequest, type RegisterResponse, type UsuarioDto } from '../apiClient';
 import { ApiConfiguration } from '../apiClient/apiConfig';
 
@@ -14,37 +15,42 @@ interface AuthState {
     setUser: (user: UsuarioDto) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-    token: localStorage.getItem('token') ?? "",
-    isAuthenticated: !!localStorage.getItem('token'),
-    user: null,
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set) => ({
+            isAuthenticated: !!localStorage.getItem('token'),
+            user: null,
 
-    setUser: (user: UsuarioDto) => set({ user }),
+            setUser: (user: UsuarioDto) => set({ user }),
 
-    login: async (loginRequest): Promise<AuthenticationResponse> => {
-        const res = await authApi.apiAuthLoginPost({ loginRequest });
+            login: async (loginRequest): Promise<AuthenticationResponse> => {
+                const res = await authApi.apiAuthLoginPost({ loginRequest });
 
-        if (!res.sucesso)
-            throw new Error(res.erro || 'Erro ao efetuar login');
+                if (!res.sucesso)
+                    throw new Error(res.erro || 'Erro ao efetuar login');
 
-        localStorage.setItem('token', res.token!);
-        localStorage.setItem('user', JSON.stringify(res.usuario));
-        set({ isAuthenticated: true, user: res.usuario || null });
-        return res;
-    },
+                localStorage.setItem('token', res.token!);
+                set({ isAuthenticated: true, user: res.usuario || null });
+                return res;
+            },
 
-    register: async (registerRequest): Promise<RegisterResponse> => {
-        const res = await authApi.apiAuthRegistrarPost({ registerRequest });
+            register: async (registerRequest): Promise<RegisterResponse> => {
+                const res = await authApi.apiAuthRegistrarPost({ registerRequest });
 
-        if (!res.sucesso) 
-            throw new Error('Registro realizado com sucesso');
+                if (!res.sucesso) 
+                    throw new Error('Registro realizado com sucesso');
 
-        return res;
-        
-    },
+                return res;
+            },
 
-    logout: () => {
-        localStorage.removeItem('token');
-        set({ isAuthenticated: false, user: null });
-    },
-}));
+            logout: () => {
+                localStorage.removeItem('token');
+                set({ isAuthenticated: false, user: null });
+            },
+        }),
+        {
+            name: 'auth-storage',
+            partialize: (state) => ({ isAuthenticated: state.isAuthenticated, user: state.user }),
+        }
+    )
+);

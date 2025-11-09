@@ -6,6 +6,7 @@ export * from './CondominioDto';
 export * from './CreateOrEditCondominiumInput';
 export * from './ETipoUsuario';
 export * from './EnderecoDto';
+export * from './GetCepInput';
 export * from './LoginRequest';
 export * from './RegisterRequest';
 export * from './RegisterResponse';

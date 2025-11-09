@@ -1,110 +1,135 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Typography,
     Grid,
-    Card,
-    CardContent,
-    CardActions,
+    TextField,
+    Paper,
     Button,
-    CircularProgress,
-    Fab,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import type { CondominioDto } from "../../apiClient";
+    IconButton,
+    InputAdornment,
+    useTheme,
+    useMediaQuery,
+} from "@mui/material";
+import { Add, AddHome, Search } from "@mui/icons-material";
 import { useCondominiumStore } from "../../stores/condominium.store";
 import { useAuthStore } from "../../stores/auth.store";
+import CondominiumList from "./components/CondominiumList";
+import CondominiumDialog from "./components/CondominiumDialog";
 
-const CondominiumListPage: React.FC = () => {
-    const { condominiums, loading, fetchCondominiums } = useCondominiumStore();
+const CondominiumPage: React.FC = () => {
+    const { condominiums, fetchCondominiums, loading } = useCondominiumStore();
     const { user } = useAuthStore();
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+    const [query, setQuery] = useState("");
+    const [openDialog, setOpenDialog] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchCondominiums(user?.id);
-        console.log(condominiums)
-    }, []);
+    }, [fetchCondominiums, user]);
+
+    const filtered = condominiums.filter((c) =>
+        c.nome?.toLowerCase().includes(query.toLowerCase())
+    );
+
+    const handleOpenDialog = () => {
+        setEditingId(null);
+        setOpenDialog(true);
+    };
+
+    const handleEditCondominium = (id: number) => {
+        setEditingId(id);
+        setOpenDialog(true);
+    };
+    
+    const handleCloseDialog = () => setOpenDialog(false);
+    const handleOpenCondominium = (id: number) => console.log("Abrir", id);
 
     return (
         <Box
             sx={{
-                p: 3,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
+                px: { xs: 2, sm: 4 },
+                py: { xs: 2, sm: 3 },
+                minHeight: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                marginX: "auto",
+                width: isMobile ? "auto" : "70%",
             }}
         >
-            {/* Título da Página */}
-            <Typography variant="h4" sx={{ mb: 3, fontWeight: 600 }}>
-                Meus Condomínios
-            </Typography>
+            <Paper sx={{ p: 2, mb: 2, borderRadius: 3 }}>
+                <Grid container alignItems="center">
+                    <Grid size={12}>
+                        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                            Meus Condomínios
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Gerencie e organize seus condomínios
+                        </Typography>
+                    </Grid>
 
-            {/* Loading */}
-            {loading ? (
-                <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <CircularProgress />
-                </Box>
-            ) : (
-                <>
-                    {condominiums.length > 0 ? (
-                        <Grid container spacing={2}>
-                            {condominiums.map((cond: CondominioDto) => (
-                                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={cond.id}>
-                                    <Card
-                                        variant="outlined"
-                                        sx={{
-                                            borderRadius: 3,
-                                            boxShadow: 1,
-                                            transition: '0.3s',
-                                            '&:hover': { boxShadow: 4, transform: 'translateY(-3px)' },
-                                        }}
-                                    >
-                                        <CardContent>
-                                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                                                {cond.nome}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {cond.endereco?.logradouro}, {cond.endereco?.cidade}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button size="small" onClick={() => console.log('Abrir detalhes', cond.id)}>
-                                                Detalhes
-                                            </Button>
-                                            <Button
-                                                size="small"
-                                                color="primary"
-                                                onClick={() => console.log('Editar', cond.id)}
-                                            >
-                                                Editar
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    ) : (
-                        <Box sx={{ textAlign: 'center', mt: 8 }}>
-                            <Typography color="text.secondary">Nenhum condomínio encontrado.</Typography>
-                        </Box>
-                    )}
-                </>
-            )}
+                    <Box display={'flex'} gap={2} alignItems="center" width="100%">
+                        <TextField
+                            fullWidth
+                            sx={{ width: "60%" }}
+                            placeholder="Pesquisar..."
+                            size="small"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search color="action" />
+                                    </InputAdornment>
+                                ),
+                                sx: { borderRadius: 3 },
+                            }}
+                        />
 
-            <Fab
-                color="primary"
-                sx={{
-                    position: 'fixed',
-                    bottom: { xs: 80, sm: 24 },
-                    right: 24,
-                    boxShadow: 3,
-                }}
-                onClick={() => console.log('Novo condomínio')}
-            >
-                <AddIcon />
-            </Fab>
+                        {isMobile ? (
+                            <IconButton color="primary" onClick={handleOpenDialog}>
+                                <AddHome />
+                            </IconButton>
+                        ) : (
+                            <Button
+                                sx={{ width: "40%" }}
+                                startIcon={<Add />}
+                                variant="contained"
+                                color="primary"
+                                onClick={handleOpenDialog}
+                            >
+                                ADICIONAR CONDOMÍNIO
+                            </Button>
+                        )}
+                    </Box>
+                </Grid>
+            </Paper>
+
+            <Paper sx={{ p: 2, borderRadius: 3, flexGrow: 1 }}>
+                <Typography variant="h5" mb={2} sx={{ fontWeight: 700 }}>
+                    Todos os condomínios
+                </Typography>
+                <CondominiumList
+                    condominiums={filtered}
+                    loading={loading}
+                    onOpen={handleOpenCondominium}
+                    onEdit={handleEditCondominium}
+                />
+            </Paper>
+
+            <CondominiumDialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                fullScreen={isMobile}
+                condominiumId={editingId} 
+            />
         </Box>
     );
 };
 
-export default CondominiumListPage;
+export default CondominiumPage;

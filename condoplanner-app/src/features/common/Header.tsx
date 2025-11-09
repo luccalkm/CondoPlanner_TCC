@@ -1,4 +1,4 @@
-import { Apartment, Home, Logout, Settings } from "@mui/icons-material";
+import { Apartment, Logout, Settings } from "@mui/icons-material";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -20,9 +20,6 @@ export const Header = ({ handleNav }: HeaderProps) => {
                 <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
                     CondoPlanner
                 </Typography>
-                <IconButton color="inherit" onClick={() => handleNav("/home")}>
-                    <Home />
-                </IconButton>
                 <IconButton color="inherit" onClick={() => handleNav("/condominios")}>
                     <Apartment />
                 </IconButton>

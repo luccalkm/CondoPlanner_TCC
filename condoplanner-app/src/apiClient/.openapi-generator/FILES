@@ -1,8 +1,10 @@
+apis/AddressApi.ts
 apis/AuthApi.ts
 apis/CondominiumApi.ts
 apis/WeatherForecastApi.ts
 apis/index.ts
 docs/AddUserToCondominiumInput.md
+docs/AddressApi.md
 docs/AuthApi.md
 docs/AuthenticationResponse.md
 docs/CondominioDto.md
@@ -10,6 +12,7 @@ docs/CondominiumApi.md
 docs/CreateOrEditCondominiumInput.md
 docs/ETipoUsuario.md
 docs/EnderecoDto.md
+docs/GetCepInput.md
 docs/LoginRequest.md
 docs/RegisterRequest.md
 docs/RegisterResponse.md
@@ -23,6 +26,7 @@ models/CondominioDto.ts
 models/CreateOrEditCondominiumInput.ts
 models/ETipoUsuario.ts
 models/EnderecoDto.ts
+models/GetCepInput.ts
 models/LoginRequest.ts
 models/RegisterRequest.ts
 models/RegisterResponse.ts

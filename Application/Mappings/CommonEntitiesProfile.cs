@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Condominium;
+using Application.DTOs.Endereco;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.Domain.Entities;
