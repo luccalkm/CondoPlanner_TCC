@@ -48,7 +48,7 @@ const validateField = {
     },
 };
 
-export default function Register() {
+export const RegisterPage = () => {
     const { handleRegister, loading } = useAuth();
     const showAlert = useAlertStore((state) => state.showAlert);
     const navigate = useNavigate();

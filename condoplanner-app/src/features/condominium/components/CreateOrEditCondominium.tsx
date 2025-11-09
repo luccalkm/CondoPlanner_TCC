@@ -152,7 +152,7 @@ export default function CreateOrEditCondominium({
         <>
             <Paper
                 sx={{
-                    p: { size: 2, sm: 3 },
+                    p: 2,
                     borderRadius: 3,
                     maxWidth: 600,
                     mx: "auto",
@@ -220,7 +220,7 @@ export default function CreateOrEditCondominium({
 
             <Paper
                 sx={{
-                    p: { size: 2, sm: 3 },
+                    p: 2,
                     borderRadius: 3,
                     maxWidth: 600,
                     mx: "auto",

@@ -13,7 +13,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useAlertStore } from "../../../stores/alert.store";
 import type { LoginRequest } from "../../../apiClient";
 
-export default function Login() {
+export default function LoginPage() {
     const { handleLogin, loading } = useAuth();
     const navigate = useNavigate();
     const showAlert = useAlertStore((state) => state.showAlert);

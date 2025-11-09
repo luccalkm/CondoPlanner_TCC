@@ -12,10 +12,10 @@ export const Footer = ({ handleNav }: FooterProps) => {
 
     return (
         <Paper
-            elevation={6}
+            elevation={1}
             sx={{
                 position: "fixed",
-                bottom: 12,
+                bottom: 25,
                 left: "50%",
                 transform: "translateX(-50%)",
                 width: "80%",
@@ -44,8 +44,8 @@ export const Footer = ({ handleNav }: FooterProps) => {
                     },
                 }}
             >
-                <BottomNavigationAction label="Condomínios" icon={<Apartment />} />
-                <BottomNavigationAction label="Config" icon={<Settings />} />
+                <BottomNavigationAction onClick={() => handleNav("/condominios")} label="Condomínios" icon={<Apartment />} />
+                <BottomNavigationAction onClick={() => handleNav("/configuracoes")} label="Config" icon={<Settings />} />
             </BottomNavigation>
         </Paper>
     );
