@@ -220,7 +220,7 @@ example().catch(console.error);
 
 ## apiCondominiumGetAllUserIdGet
 
-> Array&lt;CondominioDto&gt; apiCondominiumGetAllUserIdGet(userId)
+> Array&lt;UsuarioCondominioDto&gt; apiCondominiumGetAllUserIdGet(userId)
 
 
 
@@ -267,7 +267,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;CondominioDto&gt;**](CondominioDto.md)
+[**Array&lt;UsuarioCondominioDto&gt;**](UsuarioCondominioDto.md)
 
 ### Authorization
 

@@ -12,6 +12,7 @@ namespace Application.DTOs.Condominium
         public bool Ativo { get; set; }
         public DateTime DataInicio { get; set; }
 
-        public UsuarioDto Usuario { get; set; } = new();
+        public UsuarioDto Usuario { get; set; }
+        public CondominioDto Condominio { get; set; }
     }
 }

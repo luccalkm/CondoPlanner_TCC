@@ -16,10 +16,14 @@ import { useCondominiumStore } from "../../stores/condominium.store";
 import { useAuthStore } from "../../stores/auth.store";
 import CondominiumList from "./components/CondominiumList";
 import CondominiumDialog from "./components/CondominiumDialog";
+import { useInstanceStore } from "../../stores/instance.store";
+import { useNavigate } from "react-router-dom";
 
 const CondominiumPage: React.FC = () => {
-    const { condominiums, fetchCondominiums, loading } = useCondominiumStore();
+    const { fetchCondominiums, loading } = useCondominiumStore();
     const { user } = useAuthStore();
+    const { selectCondominium } = useInstanceStore();
+    const navigate = useNavigate();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -32,10 +36,6 @@ const CondominiumPage: React.FC = () => {
         fetchCondominiums(user?.id);
     }, [fetchCondominiums, user]);
 
-    const filtered = condominiums.filter((c) =>
-        c.nome?.toLowerCase().includes(query.toLowerCase())
-    );
-
     const handleOpenDialog = () => {
         setEditingId(null);
         setOpenDialog(true);
@@ -47,7 +47,10 @@ const CondominiumPage: React.FC = () => {
     };
     
     const handleCloseDialog = () => setOpenDialog(false);
-    const handleOpenCondominium = (id: number) => console.log("Abrir", id);
+    const handleOpenCondominium = (id: number) => {
+        selectCondominium(id);
+        navigate(`/c/${id}/areas`);
+    };
 
     return (
         <Box
@@ -115,7 +118,6 @@ const CondominiumPage: React.FC = () => {
                     Todos os condomínios
                 </Typography>
                 <CondominiumList
-                    condominiums={filtered}
                     loading={loading}
                     onOpen={handleOpenCondominium}
                     onEdit={handleEditCondominium}

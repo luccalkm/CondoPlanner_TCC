@@ -84,7 +84,7 @@ namespace Application.Services
             return _mapper.Map<List<UsuarioDto>>(users);
         }
 
-        public async Task<List<CondominioDto>> GetAllByUserAsync(int userId)
+        public async Task<List<UsuarioCondominioDto>> GetAllRelationsByUserAsync(int userId)
         {
             var userRelations = _usuarioCondominioRepository
                 .Include(
@@ -98,43 +98,52 @@ namespace Application.Services
                 .ToList();
 
             if (!userRelations.Any())
-                return new List<CondominioDto>();
+                return new List<UsuarioCondominioDto>();
 
-            var condominios = new List<CondominioDto>();
+            var result = new List<UsuarioCondominioDto>();
 
             foreach (var relation in userRelations)
             {
                 var cond = relation.Condominio;
+                var usuario = relation.Usuario;
 
-                var dto = new CondominioDto
+                var condDto = new CondominioDto
                 {
                     Id = cond.Id,
                     Nome = cond.Nome,
                     Cnpj = cond.Cnpj,
                     Email = cond.Email,
-                    Endereco = _mapper.Map<EnderecoDto>(cond.Endereco),
-                    Usuarios = new List<UsuarioDto>()
+                    Endereco = _mapper.Map<EnderecoDto>(cond.Endereco)
                 };
 
-                if (relation.TipoUsuario != ETipoUsuario.MORADOR)
+                var usuarioDto = new UsuarioDto
                 {
-                    dto.Usuarios = cond.VinculosUsuarios
-                        .Where(v => v.Ativo)
-                        .Select(v => new UsuarioDto
-                        {
-                            Id = v.Usuario.Id,
-                            Nome = v.Usuario.Nome,
-                            Email = v.Usuario.Email,
-                            Telefone = v.Usuario.Telefone,
-                            Cpf = v.Usuario.Cpf
-                        })
-                        .ToList();
+                    Id = usuario.Id,
+                    Nome = usuario.Nome,
+                    Telefone = usuario.Telefone,
+                };
+
+                if (relation.TipoUsuario is ETipoUsuario.ADMINISTRADOR or ETipoUsuario.SINDICO)
+                {
+                    usuarioDto.Email = usuario.Email;
+                    usuarioDto.Cpf = usuario.Cpf;
                 }
 
-                condominios.Add(dto);
+                var dto = new UsuarioCondominioDto
+                {
+                    UsuarioId = usuario.Id,
+                    CondominioId = cond.Id,
+                    TipoUsuario = relation.TipoUsuario,
+                    Ativo = relation.Ativo,
+                    DataInicio = relation.DataCriacao,
+                    Usuario = usuarioDto,
+                    Condominio = condDto
+                };
+
+                result.Add(dto);
             }
 
-            return condominios;
+            return result;
         }
 
 

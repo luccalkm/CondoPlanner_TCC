@@ -10,6 +10,6 @@ namespace Application.Interfaces
         Task CreateOrEditCondominium(CreateOrEditCondominiumInput dto);
         Task AddUserToCondominiumAsync(int condominioId, int usuarioId);
         Task<List<UsuarioDto>> GetUsersFromCondominiumAsync(int condominioId);
-        Task<List<CondominioDto>> GetAllByUserAsync(int userId);
+        Task<List<UsuarioCondominioDto>> GetAllRelationsByUserAsync(int userId);
     }
 }

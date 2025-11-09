@@ -9,18 +9,19 @@ import {
     Box,
     useTheme,
     Grid,
-    CardActions,
+    CardActions
 } from "@mui/material";
 import { Edit, OpenInNew } from "@mui/icons-material";
-import type { CondominioDto } from "../../../apiClient";
+import type { UsuarioCondominioDto } from "../../../apiClient";
+import UserTypeChip from "./UserTypeChip";
 
 interface Props {
-    cond: CondominioDto;
+    userCondominiumRelation: UsuarioCondominioDto;
     onOpen: (id: number) => void;
     onEdit: (id: number) => void;
 }
 
-const CondominiumCard: React.FC<Props> = ({ cond, onOpen, onEdit }) => {
+const CondominiumCard: React.FC<Props> = ({ userCondominiumRelation, onOpen, onEdit }) => {
     const theme = useTheme();
 
     return (
@@ -58,9 +59,10 @@ const CondominiumCard: React.FC<Props> = ({ cond, onOpen, onEdit }) => {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
+                            width: "260px",
                         }}
                     >
-                        {cond.nome}
+                        {userCondominiumRelation?.condominio?.nome}
                     </Typography>
 
                     <Typography
@@ -76,8 +78,8 @@ const CondominiumCard: React.FC<Props> = ({ cond, onOpen, onEdit }) => {
                             WebkitBoxOrient: "vertical",
                         }}
                     >
-                        {cond.endereco?.logradouro}, {cond.endereco?.cidade},{" "}
-                        {cond.endereco?.estado} - {cond.endereco?.cep}
+                        {userCondominiumRelation?.condominio?.endereco?.logradouro}, {userCondominiumRelation?.condominio?.endereco?.cidade}.<br></br>
+                        {userCondominiumRelation?.condominio?.endereco?.estado} - {userCondominiumRelation?.condominio?.endereco?.cep}
                     </Typography>
                 </Box>
             </CardContent>
@@ -92,7 +94,7 @@ const CondominiumCard: React.FC<Props> = ({ cond, onOpen, onEdit }) => {
                                     bgcolor: alpha(theme.palette.primary.main, 0.2),
                                 },
                             }}
-                            onClick={() => onOpen(cond.id!)}
+                            onClick={() => onOpen(userCondominiumRelation.condominioId!)}
                         >
                             <OpenInNew fontSize="small" />
                         </IconButton>
@@ -107,13 +109,18 @@ const CondominiumCard: React.FC<Props> = ({ cond, onOpen, onEdit }) => {
                                     bgcolor: alpha(theme.palette.success.main, 0.2),
                                 },
                             }}
-                            onClick={() => onEdit(cond.id!)}
+                            onClick={() => onEdit(userCondominiumRelation.condominioId!)}
                         >
                             <Edit fontSize="small" />
                         </IconButton>
                     </Tooltip>
                 </Grid>
             </CardActions>
+            <Grid size={12} container spacing={2}>
+                <Grid size={12} textAlign={'right'}>
+                    <UserTypeChip value={userCondominiumRelation?.tipoUsuario} />
+                </Grid>
+            </Grid>
         </Card>
     );
 };

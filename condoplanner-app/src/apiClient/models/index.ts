@@ -10,4 +10,5 @@ export * from './EnderecoDto';
 export * from './LoginRequest';
 export * from './RegisterRequest';
 export * from './RegisterResponse';
+export * from './UsuarioCondominioDto';
 export * from './UsuarioDto';

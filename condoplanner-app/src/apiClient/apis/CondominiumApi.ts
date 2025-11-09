@@ -16,17 +16,17 @@
 import * as runtime from '../runtime';
 import type {
   AddUserToCondominiumInput,
-  CondominioDto,
   CreateOrEditCondominiumInput,
+  UsuarioCondominioDto,
   UsuarioDto,
 } from '../models/index';
 import {
     AddUserToCondominiumInputFromJSON,
     AddUserToCondominiumInputToJSON,
-    CondominioDtoFromJSON,
-    CondominioDtoToJSON,
     CreateOrEditCondominiumInputFromJSON,
     CreateOrEditCondominiumInputToJSON,
+    UsuarioCondominioDtoFromJSON,
+    UsuarioCondominioDtoToJSON,
     UsuarioDtoFromJSON,
     UsuarioDtoToJSON,
 } from '../models/index';
@@ -171,7 +171,7 @@ export class CondominiumApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCondominiumGetAllUserIdGetRaw(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CondominioDto>>> {
+    async apiCondominiumGetAllUserIdGetRaw(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UsuarioCondominioDto>>> {
         if (requestParameters['userId'] == null) {
             throw new runtime.RequiredError(
                 'userId',
@@ -202,12 +202,12 @@ export class CondominiumApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CondominioDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UsuarioCondominioDtoFromJSON));
     }
 
     /**
      */
-    async apiCondominiumGetAllUserIdGet(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CondominioDto>> {
+    async apiCondominiumGetAllUserIdGet(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UsuarioCondominioDto>> {
         const response = await this.apiCondominiumGetAllUserIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

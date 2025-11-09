@@ -11,7 +11,6 @@ Name | Type
 `cnpj` | string
 `email` | string
 `endereco` | [EnderecoDto](EnderecoDto.md)
-`usuarios` | [Array&lt;UsuarioDto&gt;](UsuarioDto.md)
 
 ## Example
 
@@ -25,7 +24,6 @@ const example = {
   "cnpj": null,
   "email": null,
   "endereco": null,
-  "usuarios": null,
 } satisfies CondominioDto
 
 console.log(example)

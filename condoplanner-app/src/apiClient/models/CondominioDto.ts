@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UsuarioDto } from './UsuarioDto';
-import {
-    UsuarioDtoFromJSON,
-    UsuarioDtoFromJSONTyped,
-    UsuarioDtoToJSON,
-    UsuarioDtoToJSONTyped,
-} from './UsuarioDto';
 import type { EnderecoDto } from './EnderecoDto';
 import {
     EnderecoDtoFromJSON,
@@ -64,12 +57,6 @@ export interface CondominioDto {
      * @memberof CondominioDto
      */
     endereco?: EnderecoDto;
-    /**
-     * 
-     * @type {Array<UsuarioDto>}
-     * @memberof CondominioDto
-     */
-    usuarios?: Array<UsuarioDto> | null;
 }
 
 /**
@@ -94,7 +81,6 @@ export function CondominioDtoFromJSONTyped(json: any, ignoreDiscriminator: boole
         'cnpj': json['cnpj'] == null ? undefined : json['cnpj'],
         'email': json['email'] == null ? undefined : json['email'],
         'endereco': json['endereco'] == null ? undefined : EnderecoDtoFromJSON(json['endereco']),
-        'usuarios': json['usuarios'] == null ? undefined : ((json['usuarios'] as Array<any>).map(UsuarioDtoFromJSON)),
     };
 }
 
@@ -114,7 +100,6 @@ export function CondominioDtoToJSONTyped(value?: CondominioDto | null, ignoreDis
         'cnpj': value['cnpj'],
         'email': value['email'],
         'endereco': EnderecoDtoToJSON(value['endereco']),
-        'usuarios': value['usuarios'] == null ? undefined : ((value['usuarios'] as Array<any>).map(UsuarioDtoToJSON)),
     };
 }
 

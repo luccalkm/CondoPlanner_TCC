@@ -10,6 +10,5 @@ namespace Application.DTOs.Condominium
         public string Cnpj { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public EnderecoDto Endereco { get; set; } = new();
-        public List<UsuarioDto>? Usuarios { get; set; }
     }
 }

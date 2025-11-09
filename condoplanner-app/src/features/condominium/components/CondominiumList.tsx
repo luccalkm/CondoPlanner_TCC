@@ -1,17 +1,18 @@
 import React from "react";
 import { Grid, Box, Typography, CircularProgress } from "@mui/material";
 import { GridView } from "@mui/icons-material";
-import type { CondominioDto } from "../../../apiClient";
 import CondominiumCard from "./CondominiumCard";
+import { useCondominiumStore } from "../../../stores/condominium.store";
 
 interface Props {
-    condominiums: CondominioDto[];
     loading: boolean;
     onOpen: (id: number) => void;
     onEdit: (id: number) => void;
 }
 
-const CondominiumList: React.FC<Props> = ({ condominiums, loading, onEdit, onOpen }) => {
+const CondominiumList: React.FC<Props> = ({ loading, onEdit, onOpen }) => {
+    const { userCondominiumRelations } = useCondominiumStore();
+
     if (loading)
         return (
             <Box display="flex" justifyContent="center" alignItems="center" py={4}>
@@ -19,7 +20,7 @@ const CondominiumList: React.FC<Props> = ({ condominiums, loading, onEdit, onOpe
             </Box>
         );
 
-    if (condominiums.length === 0)
+    if (userCondominiumRelations.length === 0)
         return (
             <Box textAlign="center" mt={6}>
                 <GridView sx={{ fontSize: 48, color: "text.disabled", mb: 1 }} />
@@ -31,10 +32,10 @@ const CondominiumList: React.FC<Props> = ({ condominiums, loading, onEdit, onOpe
 
     return (
         <Grid container spacing={2} maxHeight={'60vh'} overflow={'auto'}>
-            {condominiums.map((cond) => (
-                <Grid key={cond.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            {userCondominiumRelations.map((relation) => (
+                <Grid key={`${relation.condominioId}-${relation.usuarioId}`} size={{ xs: 12, sm: 6, md: 4 }}>
                     <CondominiumCard
-                        cond={cond}
+                        userCondominiumRelation={relation}
                         onEdit={onEdit}
                         onOpen={onOpen}
                     />

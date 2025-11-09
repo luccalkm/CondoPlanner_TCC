@@ -17,6 +17,7 @@ docs/LoginRequest.md
 docs/RegisterRequest.md
 docs/RegisterResponse.md
 docs/UsersApi.md
+docs/UsuarioCondominioDto.md
 docs/UsuarioDto.md
 index.ts
 models/AddUserToCondominiumInput.ts
@@ -29,6 +30,7 @@ models/EnderecoDto.ts
 models/LoginRequest.ts
 models/RegisterRequest.ts
 models/RegisterResponse.ts
+models/UsuarioCondominioDto.ts
 models/UsuarioDto.ts
 models/index.ts
 runtime.ts

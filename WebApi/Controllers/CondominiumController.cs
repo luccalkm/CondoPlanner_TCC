@@ -41,15 +41,19 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Retorna todos os condomínios nos quais o usuário está vinculado.
+        /// Retorna todas as relações de condomínios para um usuário específico.
         /// </summary>
+        /// <param name="userId">Identificador único de usuário que será buscado</param>
+        /// <returns>An asynchronous operation that returns an <see cref="ActionResult{T}">ActionResult</see> containing a list
+        /// of <see cref="UsuarioCondominioDto"/> objects representing the user's condominium associations. Returns a
+        /// 500 status code if an error occurs.</returns>
         [HttpGet("GetAll/{userId:int}")]
-        public async Task<ActionResult<List<CondominioDto>>> GetAllByUser(int userId)
+        public async Task<ActionResult<List<UsuarioCondominioDto>>> GetAllByUser(int userId)
         {
             try
             {
-                var condominiums = await _condominiumService.GetAllByUserAsync(userId);
-                return Ok(condominiums);
+                var allRelations = await _condominiumService.GetAllRelationsByUserAsync(userId);
+                return Ok(allRelations);
             }
             catch (Exception ex)
             {

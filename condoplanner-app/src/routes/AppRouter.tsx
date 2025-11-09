@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "../features/common/MainLayout";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import AuthLayout from "../features/auth/components/AuthLayout";
@@ -7,6 +7,11 @@ import { NotFoundPage } from "../features/common/NotFoundPage";
 import CondominiumPage from "../features/condominium/CondominiumPage";
 import { SettingsPage } from "../features/settings/SettingsPage";
 import { RegisterPage } from "../features/auth/Register/RegisterPage";
+import { InstanceLayout } from "../features/common/InstanceLayout";
+import AreasPage from "../features/instance/AreasPage";
+import NoticesPage from "../features/instance/NoticesPage";
+import CondominiumSettingsPage from "../features/instance/CondominiumSettingsPage";
+import { InstanceGuard } from "./InstanceGuard";
 
 export function AppRouter() {
     return (
@@ -19,6 +24,14 @@ export function AppRouter() {
                         {/* <Route path="reservation" element={<ReservationPage />} /> */}
                         <Route path="configuracoes" element={<SettingsPage />} />
                         <Route path="*" element={<NotFoundPage />} />
+                    </Route>
+                    <Route path="c/:condominiumId" element={<InstanceGuard />}>
+                        <Route element={<InstanceLayout />}>
+                            <Route index element={<Navigate to="areas" replace />} />
+                            <Route path="areas" element={<AreasPage />} />
+                            <Route path="comunicados" element={<NoticesPage />} />
+                            <Route path="configuracoes" element={<CondominiumSettingsPage />} />
+                        </Route>
                     </Route>
                 </Route>
 

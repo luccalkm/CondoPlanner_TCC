@@ -18,10 +18,10 @@
  * @export
  */
 export const ETipoUsuario = {
-    NUMBER_0: 0,
-    NUMBER_1: 1,
-    NUMBER_2: 2,
-    NUMBER_3: 3
+    Morador: 'MORADOR',
+    Sindico: 'SINDICO',
+    Porteiro: 'PORTEIRO',
+    Administrador: 'ADMINISTRADOR'
 } as const;
 export type ETipoUsuario = typeof ETipoUsuario[keyof typeof ETipoUsuario];
 

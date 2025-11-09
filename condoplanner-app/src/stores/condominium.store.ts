@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CondominiumApi, type CondominioDto, type CreateOrEditCondominiumInput } from '../apiClient';
+import { CondominiumApi, type CondominioDto, type CreateOrEditCondominiumInput, type UsuarioCondominioDto } from '../apiClient';
 import { ApiConfiguration } from '../apiClient/apiConfig';
 import { useAuthStore } from './auth.store';
 
@@ -7,6 +7,7 @@ const condominiumApi = new CondominiumApi(ApiConfiguration);
 
 interface CondominiumState {
     condominiums: CondominioDto[];
+    userCondominiumRelations: UsuarioCondominioDto[];
     loading: boolean;
     fetchCondominiums: (userId?: number) => Promise<void>;
     createOrEditCondominium: (condominiumDto: CondominioDto) => Promise<void>;
@@ -14,15 +15,30 @@ interface CondominiumState {
 
 export const useCondominiumStore = create<CondominiumState>((set) => ({
     condominiums: [],
+    userCondominiumRelations: [],
     loading: false,
 
     fetchCondominiums: async (userId?: number) => {
         set({ loading: true });
         try {
-            const condominiums = await condominiumApi.apiCondominiumGetAllUserIdGet({
-                userId: userId || 0,
-             });
-            set({ condominiums: condominiums });
+            const effectiveUserId = userId ?? useAuthStore.getState().user?.id;
+            if (!effectiveUserId) {
+                set({ userCondominiumRelations: [], condominiums: [] });
+                return;
+            }
+
+            const relations = await condominiumApi.apiCondominiumGetAllUserIdGet({
+                userId: effectiveUserId,
+            });
+
+            const condos = relations
+                .map((r) => r.condominio)
+                .filter((c): c is CondominioDto => !!c);
+
+            set({
+                userCondominiumRelations: relations,
+                condominiums: condos,
+            });
         } finally {
             set({ loading: false });
         }
@@ -31,20 +47,24 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
     createOrEditCondominium: async (condominiumDto: CondominioDto) => {
         try {
             const { id: currentUserId } = useAuthStore.getState().user || {};
-            const userIds = [
-                ...(condominiumDto.usuarios?.map(user => user.id).filter((id): id is number => id !== undefined) || []),
-            ];
+            const userIds: number[] = [];
 
-            if (currentUserId && !userIds.includes(currentUserId)) {
+            if (currentUserId) {
                 userIds.push(currentUserId);
             }
 
             const input: CreateOrEditCondominiumInput = {
-                ...condominiumDto,
+                id: condominiumDto.id ?? null,
+                nome: condominiumDto.nome ?? null,
+                cnpj: condominiumDto.cnpj ?? null,
+                email: condominiumDto.email ?? null,
+                endereco: condominiumDto.endereco,
                 usuariosIds: userIds,
             };
 
-            await condominiumApi.apiCondominiumCreateOrEditPost({ createOrEditCondominiumInput: input });
+            await condominiumApi.apiCondominiumCreateOrEditPost({
+                createOrEditCondominiumInput: input,
+            });
         } catch (error) {
             console.error("Error creating or editing condominium:", error);
             throw error;

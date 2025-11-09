@@ -1,12 +1,14 @@
-import { Apartment, Settings } from "@mui/icons-material";
+import { Article, MeetingRoom, Settings, SpaceDashboard } from "@mui/icons-material";
 import { Paper, BottomNavigation, BottomNavigationAction, useTheme } from "@mui/material";
 import { useState } from "react";
 
-type FooterProps = {
+type InstanceFooterProps = {
     handleNav: (path: string) => void;
+    onLeave: () => void;
+    basePath: string;
 };
 
-export const Footer = ({ handleNav }: FooterProps) => {
+export const InstanceFooter = ({ handleNav, onLeave, basePath }: InstanceFooterProps) => {
     const [navValue, setNavValue] = useState(0);
     const theme = useTheme();
 
@@ -19,7 +21,7 @@ export const Footer = ({ handleNav }: FooterProps) => {
                 left: 0,
                 right: 0,
                 mx: "auto",
-                width: "min(420px, calc(100% - 32px))",
+                width: "min(480px, calc(100% - 32px))",
                 borderRadius: 4,
                 overflow: "hidden",
                 zIndex: 1200,
@@ -31,14 +33,16 @@ export const Footer = ({ handleNav }: FooterProps) => {
                 value={navValue}
                 onChange={(_, newValue) => {
                     setNavValue(newValue);
-                    if (newValue === 0) handleNav("/condominios");
-                    if (newValue === 1) handleNav("/configuracoes");
+                    if (newValue === 0) handleNav(`${basePath}/areas`);
+                    if (newValue === 1) handleNav(`${basePath}/comunicados`);
+                    if (newValue === 2) handleNav(`${basePath}/configuracoes`);
+                    if (newValue === 3) onLeave();
                 }}
                 showLabels
                 sx={{
                     bgcolor: "transparent",
                     "& .MuiBottomNavigationAction-root": {
-                        color: "rgba(255,255,255,0.6)",
+                        color: "rgba(255,255,255,0.75)",
                         minWidth: 0,
                         flex: 1,
                     },
@@ -48,9 +52,10 @@ export const Footer = ({ handleNav }: FooterProps) => {
                     px: 1,
                 }}
             >
-                {/* Remove onClick para evitar navegação duplicada */}
-                <BottomNavigationAction label="Condomínios" icon={<Apartment />} />
+                <BottomNavigationAction label="Áreas" icon={<SpaceDashboard />} />
+                <BottomNavigationAction label="Comunicados" icon={<Article />} />
                 <BottomNavigationAction label="Config" icon={<Settings />} />
+                <BottomNavigationAction label="Sair" icon={<MeetingRoom />} />
             </BottomNavigation>
         </Paper>
     );
