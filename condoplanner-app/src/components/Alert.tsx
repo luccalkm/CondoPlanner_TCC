@@ -13,7 +13,7 @@ const Alert: React.FC = () => {
       onClose={hideAlert}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >
-      <MuiAlert onClose={hideAlert} severity={type} sx={{ width: '100%' }}>
+      <MuiAlert onClose={hideAlert} severity={type}>
         {message}
       </MuiAlert>
     </Snackbar>
