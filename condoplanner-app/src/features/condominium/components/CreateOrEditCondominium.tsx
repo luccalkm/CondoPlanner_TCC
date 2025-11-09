@@ -15,6 +15,8 @@ import { useDebounce } from "use-debounce";
 import { DomainAdd, Email, LocationOn, Numbers } from "@mui/icons-material";
 import { AddressApi, type CondominioDto } from "../../../apiClient";
 import { ApiConfiguration } from "../../../apiClient/apiConfig";
+import { useAuthStore } from "../../../stores/auth.store";
+import { useAlertStore } from "../../../stores/alert.store";
 
 type CreateOrEditCondominiumProps = {
     condominiumId?: number | null;
@@ -25,8 +27,10 @@ export default function CreateOrEditCondominium({
     condominiumId,
     onClose
 }: CreateOrEditCondominiumProps) {
-    const { condominiums, createOrEditCondominium } = useCondominiumStore();
+    const { condominiums, createOrEditCondominium, fetchCondominiums } = useCondominiumStore();
+    const { user } = useAuthStore();
     const addressApi = useMemo(() => new AddressApi(ApiConfiguration), []);
+    const showAlert = useAlertStore((state) => state.showAlert);
 
     const [saving, setSaving] = useState(false);
     const [loadingCep, setLoadingCep] = useState(false);
@@ -58,9 +62,7 @@ export default function CreateOrEditCondominium({
 
         setLoadingCep(true);
         try {
-            const response = await addressApi.apiAddressPost({
-                getCepInput: { cep },
-            });
+            const response = await addressApi.apiAddressCepGet({cep});
 
             setForm((prev) => ({
                 ...prev,
@@ -74,8 +76,9 @@ export default function CreateOrEditCondominium({
                 },
             }));
             setCepValido(true);
-        } catch (error) {
-            console.warn("CEP não encontrado ou inválido", error);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+            showAlert("CEP não encontrado ou inválido. Error: " + errorMessage, "error");
             setCepValido(false);
         } finally {
             setLoadingCep(false);
@@ -131,6 +134,7 @@ export default function CreateOrEditCondominium({
         setSaving(true);
         await createOrEditCondominium(form)
             .then(() => {
+                fetchCondominiums(user?.id);
                 onClose();
             })
             .finally(() => {

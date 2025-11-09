@@ -1,5 +1,5 @@
-﻿using Application.DTOs.Authentication;
-using Application.DTOs.Condominium;
+﻿using Application.DTOs.Condominium;
+using Application.DTOs.Usuario;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

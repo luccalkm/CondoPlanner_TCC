@@ -30,7 +30,7 @@ const CondominiumList: React.FC<Props> = ({ condominiums, loading, onEdit, onOpe
         );
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} maxHeight={'60vh'} overflow={'auto'}>
             {condominiums.map((cond) => (
                 <Grid key={cond.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <CondominiumCard

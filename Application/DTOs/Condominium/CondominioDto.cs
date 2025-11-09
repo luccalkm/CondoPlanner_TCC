@@ -1,5 +1,5 @@
-﻿using Application.DTOs.Authentication;
-using Application.DTOs.Endereco;
+﻿using Application.DTOs.Endereco;
+using Application.DTOs.Usuario;
 
 namespace Application.DTOs.Condominium
 {

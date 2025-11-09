@@ -62,7 +62,7 @@ const CondominiumPage: React.FC = () => {
                 width: isMobile ? "auto" : "70%",
             }}
         >
-            <Paper sx={{ p: 2, mb: 2, borderRadius: 3 }}>
+            <Paper sx={{ p: 2, borderRadius: 3 }}>
                 <Grid container alignItems="center">
                     <Grid size={12}>
                         <Typography variant="h5" sx={{ fontWeight: 700 }}>

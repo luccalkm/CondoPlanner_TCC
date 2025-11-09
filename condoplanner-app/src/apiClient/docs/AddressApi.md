@@ -4,13 +4,13 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**apiAddressPost**](AddressApi.md#apiaddresspost) | **POST** /api/Address |  |
+| [**apiAddressCepGet**](AddressApi.md#apiaddresscepget) | **GET** /api/Address/{cep} |  |
 
 
 
-## apiAddressPost
+## apiAddressCepGet
 
-> EnderecoDto apiAddressPost(getCepInput)
+> EnderecoDto apiAddressCepGet(cep)
 
 
 
@@ -21,7 +21,7 @@ import {
   Configuration,
   AddressApi,
 } from '';
-import type { ApiAddressPostRequest } from '';
+import type { ApiAddressCepGetRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -32,12 +32,12 @@ async function example() {
   const api = new AddressApi(config);
 
   const body = {
-    // GetCepInput (optional)
-    getCepInput: ...,
-  } satisfies ApiAddressPostRequest;
+    // string
+    cep: cep_example,
+  } satisfies ApiAddressCepGetRequest;
 
   try {
-    const data = await api.apiAddressPost(body);
+    const data = await api.apiAddressCepGet(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **getCepInput** | [GetCepInput](GetCepInput.md) |  | [Optional] |
+| **cep** | `string` |  | [Defaults to `undefined`] |
 
 ### Return type
 
@@ -65,7 +65,7 @@ example().catch(console.error);
 
 ### HTTP request headers
 
-- **Content-Type**: `application/json`, `text/json`, `application/*+json`
+- **Content-Type**: Not defined
 - **Accept**: `text/plain`, `application/json`, `text/json`
 
 

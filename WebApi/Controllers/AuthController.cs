@@ -28,12 +28,12 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<AuthenticationResponse> Login([FromBody] LoginRequest dto)
         {
-            var result = await _authService.LoginAsync(dto);
+            return await _authService.LoginAsync(dto);
 
-            if (result == null)
-                return null;//Unauthorized("Credenciais inválidas.");
+            //if (result == null)
+            //    return null;//Unauthorized("Credenciais inválidas.");
 
-            return result;
+            //return result;
         }
     }
 }

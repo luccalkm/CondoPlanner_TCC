@@ -1,6 +1,7 @@
-using Application.DTOs.Authentication;
 using Application.DTOs.Condominium;
+using Application.DTOs.Usuario;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CondominiumController : ControllerBase
     {
         private readonly ICondominiumService _condominiumService;

@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Authentication
+﻿namespace Application.DTOs.Usuario
 {
     public class UsuarioDto
     {

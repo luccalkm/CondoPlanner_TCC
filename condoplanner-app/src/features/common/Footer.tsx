@@ -15,37 +15,44 @@ export const Footer = ({ handleNav }: FooterProps) => {
             elevation={1}
             sx={{
                 position: "fixed",
-                bottom: 25,
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "80%",
-                maxWidth: 420,
+                // Evita overflow horizontal por subpixel e respeita área segura no iOS
+                bottom: { xs: "max(16px, env(safe-area-inset-bottom))", sm: 25 },
+                left: 0,
+                right: 0,
+                mx: "auto",
+                // Largura responsiva sem ultrapassar a viewport (16px de margem lateral)
+                width: "min(420px, calc(100% - 32px))",
                 borderRadius: 4,
                 overflow: "hidden",
                 zIndex: 1200,
                 bgcolor: theme.palette.primary.main,
+                boxSizing: "border-box",
             }}
         >
             <BottomNavigation
                 value={navValue}
                 onChange={(_, newValue) => {
                     setNavValue(newValue);
-                    if (newValue === 1) handleNav("/condominios");
-                    if (newValue === 2) handleNav("/configuracoes");
+                    if (newValue === 0) handleNav("/condominios");
+                    if (newValue === 1) handleNav("/configuracoes");
                 }}
                 showLabels
                 sx={{
                     bgcolor: "transparent",
                     "& .MuiBottomNavigationAction-root": {
                         color: "rgba(255,255,255,0.6)",
+                        minWidth: 0,
+                        flex: 1,
                     },
                     "& .Mui-selected, & .Mui-selected .MuiSvgIcon-root": {
                         color: "#fff !important",
                     },
+                    px: 1,
                 }}
             >
-                <BottomNavigationAction onClick={() => handleNav("/condominios")} label="Condomínios" icon={<Apartment />} />
-                <BottomNavigationAction onClick={() => handleNav("/configuracoes")} label="Config" icon={<Settings />} />
+                {/* Remove onClick para evitar navegação duplicada */}
+                <BottomNavigationAction label="Condomínios" icon={<Apartment />} />
+                <BottomNavigationAction label="Config" icon={<Settings />} />
             </BottomNavigation>
         </Paper>
     );

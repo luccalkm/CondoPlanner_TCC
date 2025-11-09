@@ -14,21 +14,19 @@ export default function AuthLayout() {
             alignItems="center"
             sx={{
                 minHeight: "100vh",
-                minWidth: "100vw",
                 px: { xs: 2, sm: 0 },
                 background: "linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%)",
             }}
-            size={12}
         >
             <Card
                 sx={{
                     p: { xs: 3, sm: 5 },
+                    width: { xs: "100%", sm: 420 },
                     borderRadius: 4,
                     boxShadow: 6,
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    width: isMobile ? "100%" : 700,
                 }}
             >
                 <Box mb={3} textAlign="center">

@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +83,16 @@ namespace Infrastructure.ExternalServices
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            var result = await response.Content.ReadFromJsonAsync<ViaCepResponse>();
+            ViaCepResponse result;
+            try
+            {
+                result = await response.Content.ReadFromJsonAsync<ViaCepResponse>();
+            }
+            catch
+            {
+                throw new UserFriendlyException($"O CEP informado não é válido.");
+            }
+
             if (result == null || result.Erro)
                 return null;
 

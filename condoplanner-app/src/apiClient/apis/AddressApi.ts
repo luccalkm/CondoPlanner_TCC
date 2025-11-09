@@ -16,17 +16,14 @@
 import * as runtime from '../runtime';
 import type {
   EnderecoDto,
-  GetCepInput,
 } from '../models/index';
 import {
     EnderecoDtoFromJSON,
     EnderecoDtoToJSON,
-    GetCepInputFromJSON,
-    GetCepInputToJSON,
 } from '../models/index';
 
-export interface ApiAddressPostRequest {
-    getCepInput?: GetCepInput;
+export interface ApiAddressCepGetRequest {
+    cep: string;
 }
 
 /**
@@ -36,12 +33,17 @@ export class AddressApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAddressPostRaw(requestParameters: ApiAddressPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnderecoDto>> {
+    async apiAddressCepGetRaw(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnderecoDto>> {
+        if (requestParameters['cep'] == null) {
+            throw new runtime.RequiredError(
+                'cep',
+                'Required parameter "cep" was null or undefined when calling apiAddressCepGet().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -52,14 +54,14 @@ export class AddressApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/api/Address`;
+        let urlPath = `/api/Address/{cep}`;
+        urlPath = urlPath.replace(`{${"cep"}}`, encodeURIComponent(String(requestParameters['cep'])));
 
         const response = await this.request({
             path: urlPath,
-            method: 'POST',
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-            body: GetCepInputToJSON(requestParameters['getCepInput']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => EnderecoDtoFromJSON(jsonValue));
@@ -67,8 +69,8 @@ export class AddressApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAddressPost(requestParameters: ApiAddressPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnderecoDto> {
-        const response = await this.apiAddressPostRaw(requestParameters, initOverrides);
+    async apiAddressCepGet(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnderecoDto> {
+        const response = await this.apiAddressCepGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

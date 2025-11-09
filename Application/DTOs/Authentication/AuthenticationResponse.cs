@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.Authentication
+﻿using Application.DTOs.Usuario;
+
+namespace Application.DTOs.Authentication
 {
     public class AuthenticationResponse
     {

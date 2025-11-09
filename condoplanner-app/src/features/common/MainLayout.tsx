@@ -12,7 +12,6 @@ export const MainLayout = () => {
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh" sx={{ backgroundColor: "#fafafa" }}>
             {!isMobile && <Header handleNav={navigate} />}
-
             <Box
                 sx={{
                     mt: !isMobile ? 8 : 0,
