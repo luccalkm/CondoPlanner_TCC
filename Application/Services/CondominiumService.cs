@@ -50,30 +50,46 @@ namespace Application.Services
             await UpdateCondominiumAsync(input);
         }
 
-        public async Task AddUserToCondominiumAsync(int condominioId, int usuarioId)
+        public async Task UpsertUserCondominiumAsync(UpsertUserCondominiumInput input)
         {
-            var exists = await _usuarioCondominioRepository
-                .FetchAsync(uc => uc.UsuarioId == usuarioId && uc.CondominioId == condominioId);
+            var existingRelation = await _usuarioCondominioRepository
+                .GetTrackedAsync(uc => uc.UsuarioId == input.UserId && uc.CondominioId == input.CondominiumId);
 
-            if (exists.Any())
-                throw new UserFriendlyException("Usuário já está vinculado a este condomínio.");
-
-            var entity = new UsuarioCondominio
+            if (existingRelation is null)
             {
-                UsuarioId = usuarioId,
-                CondominioId = condominioId,
-                TipoUsuario = ETipoUsuario.MORADOR,
-                Ativo = true
-            };
+                var entity = new UsuarioCondominio
+                {
+                    UsuarioId = input.UserId,
+                    CondominioId = input.CondominiumId,
+                    TipoUsuario = input.UserType != null ? input.UserType : ETipoUsuario.MORADOR,
+                    Ativo = true
+                };
 
-            await _usuarioCondominioRepository.AddAsync(entity);
+                await _usuarioCondominioRepository.AddAsync(entity);
+                await _usuarioCondominioRepository.SaveChangesAsync();
+                return;
+            }
+
+            existingRelation.TipoUsuario = input.UserType;
+            existingRelation.Ativo = input.Active;
+
+            if (input.Active)
+            {
+                existingRelation.DataInativacao = null;
+            }
+            else
+            {
+                existingRelation.DataInativacao = input.StartDate ?? DateTime.UtcNow;
+            }
+
+            _usuarioCondominioRepository.Update(existingRelation);
             await _usuarioCondominioRepository.SaveChangesAsync();
         }
 
         public async Task<List<UserDto>> GetUsersFromCondominiumAsync(int condominioId)
         {
             var relations = await _usuarioCondominioRepository
-                .FetchAsync(uc => uc.CondominioId == condominioId && uc.Ativo);
+                .FetchAsync(uc => uc.CondominioId == condominioId);
 
             if (relations == null || !relations.Any())
                 return new List<UserDto>();
@@ -88,65 +104,34 @@ namespace Application.Services
         public async Task<List<UserCondominiumDto>> GetAllRelationsByUserAsync(int userId)
         {
             var userRelations = _usuarioCondominioRepository
-                .Include(
-                    "Condominio",
-                    "Condominio.Endereco",
-                    "Condominio.VinculosUsuarios",
-                    "Condominio.VinculosUsuarios.Usuario",
-                    "Usuario"
-                )
-                .Where(uc => uc.UsuarioId == userId && uc.Ativo)
+                .Include("Condominio", "Condominio.Endereco", "Usuario")
+                .Where(uc => uc.UsuarioId == userId)
                 .ToList();
 
             if (!userRelations.Any())
                 return new List<UserCondominiumDto>();
 
-            var result = new List<UserCondominiumDto>();
-
-            foreach (var relation in userRelations)
-            {
-                var cond = relation.Condominio;
-                var user = relation.Usuario;
-
-                var condDto = new CondominiumDto
-                {
-                    Id = cond.Id,
-                    Name = cond.Nome,
-                    Cnpj = cond.Cnpj,
-                    Email = cond.Email,
-                    Address = _mapper.Map<AddressDto>(cond.Endereco)
-                };
-
-                var userDto = new UserDto
-                {
-                    Id = user.Id,
-                    Name = user.Nome,
-                    Phone = user.Telefone,
-                };
-
-                if (relation.TipoUsuario is ETipoUsuario.ADMINISTRADOR or ETipoUsuario.SINDICO)
-                {
-                    userDto.Email = user.Email;
-                    userDto.Cpf = user.Cpf;
-                }
-
-                var dto = new UserCondominiumDto
-                {
-                    UserId = user.Id,
-                    CondominiumId = cond.Id,
-                    UserType = relation.TipoUsuario,
-                    Active = relation.Ativo,
-                    CreationTime = relation.DataCriacao,
-                    User = userDto,
-                    Condominium = condDto
-                };
-
-                result.Add(dto);
-            }
-
-            return result;
+            return userRelations.Select(MapRelation).ToList();
         }
 
+        public async Task<List<UserCondominiumDto>> GetRelationsByCondominiumAsync(int currentUserId, int condominiumId)
+        {
+            var adminRelation = await _usuarioCondominioRepository
+                .FirstOrDefaultAsync(uc => uc.UsuarioId == currentUserId && uc.CondominioId == condominiumId);
+
+            if (adminRelation is null || adminRelation.TipoUsuario != ETipoUsuario.ADMINISTRADOR)
+                throw new UserFriendlyException("Somente administradores podem visualizar todas as relações deste condomínio.");
+
+            var relations = _usuarioCondominioRepository
+                .Include("Condominio", "Condominio.Endereco", "Usuario")
+                .Where(uc => uc.CondominioId == condominiumId)
+                .ToList();
+
+            if (!relations.Any())
+                return new List<UserCondominiumDto>();
+
+            return relations.Select(MapRelation).ToList();
+        }
 
         private async Task CreateCondominiumAsync(CreateOrEditCondominiumInput input)
         {
@@ -243,6 +228,43 @@ namespace Application.Services
             }
         }
 
+        private UserCondominiumDto MapRelation(UsuarioCondominio relation)
+        {
+            var cond = relation.Condominio;
+            var user = relation.Usuario;
 
+            var condDto = new CondominiumDto
+            {
+                Id = cond.Id,
+                Name = cond.Nome,
+                Cnpj = cond.Cnpj,
+                Email = cond.Email,
+                Address = _mapper.Map<AddressDto>(cond.Endereco)
+            };
+
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Name = user.Nome,
+                Phone = user.Telefone,
+            };
+
+            if (relation.TipoUsuario is ETipoUsuario.ADMINISTRADOR or ETipoUsuario.SINDICO)
+            {
+                userDto.Email = user.Email;
+                userDto.Cpf = user.Cpf;
+            }
+
+            return new UserCondominiumDto
+            {
+                UserId = user.Id,
+                CondominiumId = cond.Id,
+                UserType = relation.TipoUsuario,
+                Active = relation.Ativo,
+                CreationTime = relation.DataCriacao,
+                User = userDto,
+                Condominium = condDto
+            };
+        }
     }
 }

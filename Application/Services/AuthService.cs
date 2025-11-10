@@ -74,12 +74,6 @@ namespace Application.Services
             await _userRepo.AddAsync(novo);
             await _userRepo.SaveChangesAsync();
 
-            // TODO: Adicionar usuário ao condomínio, se CondomínioId for fornecido
-            //if (request.CondominioId.HasValue)
-            //{
-            //    await _condominioService.AddUserToCondominiumAsync(request.CondominioId.Value, usuario.Id);
-            //}
-
             return new RegisterResponse
             {
                 Sucesso = true,

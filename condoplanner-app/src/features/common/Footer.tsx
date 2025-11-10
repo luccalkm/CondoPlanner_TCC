@@ -1,4 +1,4 @@
-import { Apartment, Settings } from "@mui/icons-material";
+import { Apartment, ManageAccounts } from "@mui/icons-material";
 import { Paper, BottomNavigation, BottomNavigationAction, useTheme } from "@mui/material";
 import { useState } from "react";
 
@@ -49,8 +49,8 @@ export const Footer = ({ handleNav }: FooterProps) => {
                 }}
             >
                 {/* Remove onClick para evitar navegação duplicada */}
-                <BottomNavigationAction label="Condomínios" icon={<Apartment />} />
-                <BottomNavigationAction label="Config" icon={<Settings />} />
+                <BottomNavigationAction icon={<Apartment />} />
+                <BottomNavigationAction icon={<ManageAccounts />} />
             </BottomNavigation>
         </Paper>
     );

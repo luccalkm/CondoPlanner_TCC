@@ -22,6 +22,11 @@ namespace Infrastructure.Persistence.Repositories
             return await _dbSet.FindAsync(new object?[] { id }, cancellationToken);
         }
 
+        public async Task<T?> GetTrackedAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.FirstOrDefaultAsync(filtro, cancellationToken);
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);

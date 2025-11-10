@@ -5,6 +5,7 @@ namespace Application.Interfaces
     public interface IRepository<T> where T : class
     {
         Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<T?> GetTrackedAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> FetchAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default);
         Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken = default);

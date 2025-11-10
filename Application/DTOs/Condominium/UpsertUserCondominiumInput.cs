@@ -3,7 +3,7 @@ using System;
 
 namespace Application.DTOs.Condominium
 {
-    public class AddUserToCondominiumInput
+    public class UpsertUserCondominiumInput
     {
         public int CondominiumId { get; set; }
         public int UserId { get; set; }

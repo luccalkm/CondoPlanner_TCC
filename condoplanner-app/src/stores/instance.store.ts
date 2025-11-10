@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { CondominiumDto } from '../apiClient';
+import { ETipoUsuario, type CondominiumDto } from '../apiClient';
 import { useCondominiumStore } from './condominium.store';
+import { useAuthStore } from './auth.store';
 
 interface InstanceState {
     selectedCondominiumId: number | null;
@@ -8,6 +9,7 @@ interface InstanceState {
     loadingSelected: boolean;
     selectCondominium: (id: number) => void;
     clearSelection: () => void;
+    isAdminSelected: () => boolean;
     syncFromParam: (id: number) => void;
 }
 
@@ -23,6 +25,15 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
     },
 
     clearSelection: () => set({ selectedCondominiumId: null, selectedCondominium: null }),
+
+    isAdminSelected: () => {
+        const user = useAuthStore.getState().user;
+        return get().selectedCondominiumId !== null && useCondominiumStore.getState().userCondominiumRelations.some(r =>
+            r.condominiumId === get().selectedCondominium?.id &&
+            r.userId === user?.id &&
+            r.userType === ETipoUsuario.Administrador
+        );
+    },
 
     syncFromParam: (id: number) => {
         const currentId = get().selectedCondominiumId;

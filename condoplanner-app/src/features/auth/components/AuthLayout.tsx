@@ -14,6 +14,7 @@ export default function AuthLayout() {
             alignItems="center"
             sx={{
                 minHeight: "100vh",
+                width: "100vw",
                 px: { xs: 2, sm: 0 },
                 background: "linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%)",
             }}

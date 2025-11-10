@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -62,25 +63,24 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Adiciona um usuário a um condomínio.
+        /// Adiciona/Atualiza um usuário a um condomínio.
         /// </summary>
-        [HttpPost("AddUserToCondominium")]
-        public async Task<IActionResult> AddUserToCondominium([FromBody] AddUserToCondominiumInput input)
+        [HttpPost("UpsertUserCondominium")]
+        public async Task<IActionResult> AddUserToCondominium([FromBody] UpsertUserCondominiumInput input)
         {
             if (input == null)
                 return BadRequest(new { message = "Os dados enviados são inválidos." });
 
             try
             {
-                await _condominiumService.AddUserToCondominiumAsync(input.CondominiumId, input.UserId);
-                return Ok(new { message = "Usuário vinculado com sucesso ao condomínio." });
+                await _condominiumService.UpsertUserCondominiumAsync(input);
+                return Ok(new { message = "Usuário vinculado/atualizado com sucesso ao condomínio." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = $"Erro ao vincular usuário: {ex.Message}" });
             }
         }
-
         /// <summary>
         /// Retorna todos os usuários vinculados a um condomínio.
         /// </summary>
@@ -95,6 +95,27 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = $"Erro ao buscar usuários: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// Retorna todas as relações (UserCondominium) de um condomínio.
+        /// </summary>
+        [HttpGet("{condominioId:int}/Relations")]
+        public async Task<ActionResult<List<UserCondominiumDto>>> GetRelationsFromCondominium(int condominioId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var currentUserId))
+                    return Unauthorized(new { message = "Usuário não identificado." });
+
+                var relations = await _condominiumService.GetRelationsByCondominiumAsync(currentUserId, condominioId);
+                return Ok(relations);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Erro ao buscar relações: {ex.Message}" });
             }
         }
     }

@@ -10,8 +10,9 @@ import { RegisterPage } from "../features/auth/Register/RegisterPage";
 import { InstanceLayout } from "../features/common/InstanceLayout";
 import AreasPage from "../features/instance/AreasPage";
 import NoticesPage from "../features/instance/NoticesPage";
-import CondominiumSettingsPage from "../features/instance/CondominiumSettingsPage";
 import { InstanceGuard } from "./InstanceGuard";
+import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
+import AcceptInvitePage from "../features/invite/AcceptInvitePage";
 
 export function AppRouter() {
     return (
@@ -34,6 +35,8 @@ export function AppRouter() {
                         </Route>
                     </Route>
                 </Route>
+
+                <Route path="/accept-invite" element={<AcceptInvitePage />} />
 
                 <Route element={<AuthLayout />}>
                     <Route path="/login" element={<LoginPage />} />

@@ -1,6 +1,7 @@
 import { Article, MeetingRoom, Settings, SpaceDashboard } from "@mui/icons-material";
 import { Paper, BottomNavigation, BottomNavigationAction, useTheme } from "@mui/material";
 import { useState } from "react";
+import { useInstanceStore } from "../../stores/instance.store";
 
 type InstanceFooterProps = {
     handleNav: (path: string) => void;
@@ -11,6 +12,7 @@ type InstanceFooterProps = {
 export const InstanceFooter = ({ handleNav, onLeave, basePath }: InstanceFooterProps) => {
     const [navValue, setNavValue] = useState(0);
     const theme = useTheme();
+    const { isAdminSelected } = useInstanceStore();
 
     return (
         <Paper
@@ -52,10 +54,10 @@ export const InstanceFooter = ({ handleNav, onLeave, basePath }: InstanceFooterP
                     px: 1,
                 }}
             >
-                <BottomNavigationAction label="Áreas" icon={<SpaceDashboard />} />
-                <BottomNavigationAction label="Comunicados" icon={<Article />} />
-                <BottomNavigationAction label="Config" icon={<Settings />} />
-                <BottomNavigationAction label="Sair" icon={<MeetingRoom />} />
+                <BottomNavigationAction icon={<SpaceDashboard />} />
+                <BottomNavigationAction icon={<Article />} />
+                {isAdminSelected() && <BottomNavigationAction icon={<Settings />} />}
+                <BottomNavigationAction icon={<MeetingRoom />} />
             </BottomNavigation>
         </Paper>
     );

@@ -19,6 +19,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<Reserva> Reservas => Set<Reserva>();
         public DbSet<Encomenda> Encomendas => Set<Encomenda>();
         public DbSet<UsuarioCondominio> UsuarioCondominio => Set<UsuarioCondominio>();
+        public DbSet<ConviteCondominio> ConvitesCondominio => Set<ConviteCondominio>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -69,6 +70,14 @@ namespace Infrastructure.Persistence.Context
                 .WithMany(c => c.VinculosUsuarios)
                 .HasForeignKey(uc => uc.CondominioId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ConviteCondominio>()
+                .HasIndex(c => c.Token)
+                .IsUnique();
+
+            modelBuilder.Entity<ConviteCondominio>()
+                .Property(c => c.Token)
+                .HasMaxLength(120);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -4,16 +4,17 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**apiCondominiumAddUserToCondominiumPost**](CondominiumApi.md#apicondominiumaddusertocondominiumpost) | **POST** /api/Condominium/AddUserToCondominium |  |
+| [**apiCondominiumCondominioIdRelationsGet**](CondominiumApi.md#apicondominiumcondominioidrelationsget) | **GET** /api/Condominium/{condominioId}/Relations |  |
 | [**apiCondominiumCondominioIdUsersGet**](CondominiumApi.md#apicondominiumcondominioidusersget) | **GET** /api/Condominium/{condominioId}/Users |  |
 | [**apiCondominiumCreateOrEditPost**](CondominiumApi.md#apicondominiumcreateoreditpost) | **POST** /api/Condominium/CreateOrEdit |  |
 | [**apiCondominiumGetAllUserIdGet**](CondominiumApi.md#apicondominiumgetalluseridget) | **GET** /api/Condominium/GetAll/{userId} |  |
+| [**apiCondominiumUpsertUserCondominiumPost**](CondominiumApi.md#apicondominiumupsertusercondominiumpost) | **POST** /api/Condominium/UpsertUserCondominium |  |
 
 
 
-## apiCondominiumAddUserToCondominiumPost
+## apiCondominiumCondominioIdRelationsGet
 
-> apiCondominiumAddUserToCondominiumPost(addUserToCondominiumInput)
+> Array&lt;UserCondominiumDto&gt; apiCondominiumCondominioIdRelationsGet(condominioId)
 
 
 
@@ -24,7 +25,7 @@ import {
   Configuration,
   CondominiumApi,
 } from '';
-import type { ApiCondominiumAddUserToCondominiumPostRequest } from '';
+import type { ApiCondominiumCondominioIdRelationsGetRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -35,12 +36,12 @@ async function example() {
   const api = new CondominiumApi(config);
 
   const body = {
-    // AddUserToCondominiumInput (optional)
-    addUserToCondominiumInput: ...,
-  } satisfies ApiCondominiumAddUserToCondominiumPostRequest;
+    // number
+    condominioId: 56,
+  } satisfies ApiCondominiumCondominioIdRelationsGetRequest;
 
   try {
-    const data = await api.apiCondominiumAddUserToCondominiumPost(body);
+    const data = await api.apiCondominiumCondominioIdRelationsGet(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -56,11 +57,11 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **addUserToCondominiumInput** | [AddUserToCondominiumInput](AddUserToCondominiumInput.md) |  | [Optional] |
+| **condominioId** | `number` |  | [Defaults to `undefined`] |
 
 ### Return type
 
-`void` (Empty response body)
+[**Array&lt;UserCondominiumDto&gt;**](UserCondominiumDto.md)
 
 ### Authorization
 
@@ -68,8 +69,8 @@ example().catch(console.error);
 
 ### HTTP request headers
 
-- **Content-Type**: `application/json`, `text/json`, `application/*+json`
-- **Accept**: Not defined
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
 
 
 ### HTTP response details
@@ -277,6 +278,75 @@ example().catch(console.error);
 
 - **Content-Type**: Not defined
 - **Accept**: `text/plain`, `application/json`, `text/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiCondominiumUpsertUserCondominiumPost
+
+> apiCondominiumUpsertUserCondominiumPost(upsertUserCondominiumInput)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CondominiumApi,
+} from '';
+import type { ApiCondominiumUpsertUserCondominiumPostRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CondominiumApi(config);
+
+  const body = {
+    // UpsertUserCondominiumInput (optional)
+    upsertUserCondominiumInput: ...,
+  } satisfies ApiCondominiumUpsertUserCondominiumPostRequest;
+
+  try {
+    const data = await api.apiCondominiumUpsertUserCondominiumPost(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **upsertUserCondominiumInput** | [UpsertUserCondominiumInput](UpsertUserCondominiumInput.md) |  | [Optional] |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`, `text/json`, `application/*+json`
+- **Accept**: Not defined
 
 
 ### HTTP response details

@@ -138,8 +138,8 @@ export const SettingsPage = () => {
                             fullWidth
                             label="Nome de Usuário"
                             variant="outlined"
-                            value={currentUser.nome || ""}
-                            onChange={(e) => handleUserFieldChange('nome', e.target.value)}
+                            value={currentUser.name || ""}
+                            onChange={(e) => handleUserFieldChange('name', e.target.value)}
                             InputProps={{
                                 startAdornment: <AccountBox color="primary" sx={{ mr: 1 }} />
                             }}

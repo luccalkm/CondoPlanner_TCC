@@ -15,14 +15,14 @@ import type { RegisterRequest } from '../../../apiClient';
 const sanitize = (value: string): string => value.replace(/\D/g, '');
 
 const validateField = {
-    nome: (value: string) => (!value.trim() ? 'Informe seu nome.' : ''),
-    sobrenome: (value: string) => (!value.trim() ? 'Informe seu sobrenome.' : ''),
+    name: (value: string) => (!value.trim() ? 'Informe seu nome.' : ''),
+    lastname: (value: string) => (!value.trim() ? 'Informe seu sobrenome.' : ''),
     email: (value: string) => {
         if (!value.trim()) return 'Informe seu email.';
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Email inválido.';
         return '';
     },
-    telefone: (value: string) => {
+    phone: (value: string) => {
         const sanitized = sanitize(value);
         if (!sanitized) return 'Informe seu telefone.';
         if (!/^\d{10,11}$/.test(sanitized)) return 'Formato de telefone inválido.';
@@ -34,16 +34,16 @@ const validateField = {
         if (!/^\d{11}$/.test(sanitized)) return 'Formato de CPF inválido.';
         return '';
     },
-    senha: (value: string) => {
+    password: (value: string) => {
         if (!value.trim()) return 'Informe uma senha.';
         if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value)) {
             return 'A senha deve ter pelo menos 8 caracteres, incluindo 1 dígito, 1 letra maiúscula, 1 letra minúscula e 1 caractere especial.';
         }
         return '';
     },
-    confirmarSenha: (value: string, form: Record<string, string>) => {
+    confirmPassword: (value: string, form: Record<string, string>) => {
         if (!value.trim()) return 'Confirme sua senha.';
-        if (value !== form.senha) return 'As senhas não coincidem.';
+        if (value !== form.password) return 'As senhas não coincidem.';
         return '';
     },
 };
@@ -54,21 +54,21 @@ export const RegisterPage = () => {
     const navigate = useNavigate();
 
     const [form, setForm] = useState<{
-        nome: string;
-        sobrenome: string;
+        name: string;
+        lastname: string;
         email: string;
-        telefone: string;
+        phone: string;
         cpf: string;
-        senha: string;
-        confirmarSenha: string;
+        password: string;
+        confirmPassword: string;
     }>({
-        nome: '',
-        sobrenome: '',
+        name: '',
+        lastname: '',
         email: '',
-        telefone: '',
+        phone: '',
         cpf: '',
-        senha: '',
-        confirmarSenha: '',
+        password: '',
+        confirmPassword: '',
     });
 
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -94,21 +94,20 @@ export const RegisterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         if (!validateFields()) return;
 
         const registerRequest: RegisterRequest = {
-            nome: `${form.nome} ${form.sobrenome}`,
+            nome: `${form.name} ${form.lastname}`,
             email: form.email,
-            telefone: sanitize(form.telefone),
+            telefone: sanitize(form.phone),
             cpf: sanitize(form.cpf),
-            senha: form.senha,
+            senha: form.password,
         };
 
         const response = await handleRegister(registerRequest);
 
         if (response.success) {
-            showAlert('Registro realizado com sucesso!', 'success');
+            showAlert('Registro realizado com sucesso! Faça o login para continuar.', 'success');
             navigate('/login');
         } else {
             showAlert(response.message || 'Erro ao registrar.', 'error');
@@ -123,10 +122,10 @@ export const RegisterPage = () => {
                         required
                         label="Nome"
                         fullWidth
-                        value={form.nome}
-                        onChange={(e) => update('nome', e.target.value)}
-                        error={!!fieldErrors.nome}
-                        helperText={fieldErrors.nome}
+                        value={form.name}
+                        onChange={(e) => update('name', e.target.value)}
+                        error={!!fieldErrors.name}
+                        helperText={fieldErrors.name}
                     />
                 </Grid>
                 <Grid size={6}>
@@ -134,10 +133,10 @@ export const RegisterPage = () => {
                         required
                         label="Sobrenome"
                         fullWidth
-                        value={form.sobrenome}
-                        onChange={(e) => update('sobrenome', e.target.value)}
-                        error={!!fieldErrors.sobrenome}
-                        helperText={fieldErrors.sobrenome}
+                        value={form.lastname}
+                        onChange={(e) => update('lastname', e.target.value)}
+                        error={!!fieldErrors.lastname}
+                        helperText={fieldErrors.lastname}
                     />
                 </Grid>
 
@@ -159,10 +158,10 @@ export const RegisterPage = () => {
                         required
                         label="Telefone"
                         fullWidth
-                        value={form.telefone}
-                        onChange={(e) => update('telefone', e.target.value)}
-                        error={!!fieldErrors.telefone}
-                        helperText={fieldErrors.telefone}
+                        value={form.phone}
+                        onChange={(e) => update('phone', e.target.value)}
+                        error={!!fieldErrors.phone}
+                        helperText={fieldErrors.phone}
                         placeholder="(11) 91234-5678"
                     />
                 </Grid>
@@ -185,10 +184,10 @@ export const RegisterPage = () => {
                         label="Senha"
                         fullWidth
                         type="password"
-                        value={form.senha}
-                        onChange={(e) => update('senha', e.target.value)}
-                        error={!!fieldErrors.senha}
-                        helperText={fieldErrors.senha}
+                        value={form.password}
+                        onChange={(e) => update('password', e.target.value)}
+                        error={!!fieldErrors.password}
+                        helperText={fieldErrors.password}
                     />
                 </Grid>
 
@@ -198,10 +197,10 @@ export const RegisterPage = () => {
                         label="Confirmar senha"
                         fullWidth
                         type="password"
-                        value={form.confirmarSenha}
-                        onChange={(e) => update('confirmarSenha', e.target.value)}
-                        error={!!fieldErrors.confirmarSenha}
-                        helperText={fieldErrors.confirmarSenha}
+                        value={form.confirmPassword}
+                        onChange={(e) => update('confirmPassword', e.target.value)}
+                        error={!!fieldErrors.confirmPassword}
+                        helperText={fieldErrors.confirmPassword}
                     />
                 </Grid>
             </Grid>
