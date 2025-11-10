@@ -1,28 +1,30 @@
 
-# AuthenticationResponse
+# CondominiumDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`usuario` | [UserDto](UserDto.md)
-`token` | string
-`sucesso` | boolean
-`erro` | string
+`id` | number
+`name` | string
+`cnpj` | string
+`email` | string
+`address` | [AddressDto](AddressDto.md)
 
 ## Example
 
 ```typescript
-import type { AuthenticationResponse } from ''
+import type { CondominiumDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "usuario": null,
-  "token": null,
-  "sucesso": null,
-  "erro": null,
-} satisfies AuthenticationResponse
+  "id": null,
+  "name": null,
+  "cnpj": null,
+  "email": null,
+  "address": null,
+} satisfies CondominiumDto
 
 console.log(example)
 
@@ -31,7 +33,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as AuthenticationResponse
+const exampleParsed = JSON.parse(exampleJSON) as CondominiumDto
 console.log(exampleParsed)
 ```
 

@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UsuarioDto } from './UsuarioDto';
+import type { UserDto } from './UserDto';
 import {
-    UsuarioDtoFromJSON,
-    UsuarioDtoFromJSONTyped,
-    UsuarioDtoToJSON,
-    UsuarioDtoToJSONTyped,
-} from './UsuarioDto';
+    UserDtoFromJSON,
+    UserDtoFromJSONTyped,
+    UserDtoToJSON,
+    UserDtoToJSONTyped,
+} from './UserDto';
 
 /**
  * 
@@ -29,10 +29,10 @@ import {
 export interface AuthenticationResponse {
     /**
      * 
-     * @type {UsuarioDto}
+     * @type {UserDto}
      * @memberof AuthenticationResponse
      */
-    usuario?: UsuarioDto;
+    usuario?: UserDto;
     /**
      * 
      * @type {string}
@@ -70,7 +70,7 @@ export function AuthenticationResponseFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'usuario': json['usuario'] == null ? undefined : UsuarioDtoFromJSON(json['usuario']),
+        'usuario': json['usuario'] == null ? undefined : UserDtoFromJSON(json['usuario']),
         'token': json['token'] == null ? undefined : json['token'],
         'sucesso': json['sucesso'] == null ? undefined : json['sucesso'],
         'erro': json['erro'] == null ? undefined : json['erro'],
@@ -88,7 +88,7 @@ export function AuthenticationResponseToJSONTyped(value?: AuthenticationResponse
 
     return {
         
-        'usuario': UsuarioDtoToJSON(value['usuario']),
+        'usuario': UserDtoToJSON(value['usuario']),
         'token': value['token'],
         'sucesso': value['sucesso'],
         'erro': value['erro'],

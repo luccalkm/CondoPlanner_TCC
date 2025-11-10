@@ -15,11 +15,11 @@
 
 import * as runtime from '../runtime';
 import type {
-  EnderecoDto,
+  AddressDto,
 } from '../models/index';
 import {
-    EnderecoDtoFromJSON,
-    EnderecoDtoToJSON,
+    AddressDtoFromJSON,
+    AddressDtoToJSON,
 } from '../models/index';
 
 export interface ApiAddressCepGetRequest {
@@ -33,7 +33,7 @@ export class AddressApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAddressCepGetRaw(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnderecoDto>> {
+    async apiAddressCepGetRaw(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddressDto>> {
         if (requestParameters['cep'] == null) {
             throw new runtime.RequiredError(
                 'cep',
@@ -64,12 +64,12 @@ export class AddressApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EnderecoDtoFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AddressDtoFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAddressCepGet(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnderecoDto> {
+    async apiAddressCepGet(requestParameters: ApiAddressCepGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddressDto> {
         const response = await this.apiAddressCepGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

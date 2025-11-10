@@ -81,7 +81,7 @@ example().catch(console.error);
 
 ## apiUsersIdGet
 
-> UsuarioDto apiUsersIdGet(id)
+> UserDto apiUsersIdGet(id)
 
 
 
@@ -128,7 +128,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**UsuarioDto**](UsuarioDto.md)
+[**UserDto**](UserDto.md)
 
 ### Authorization
 
@@ -150,7 +150,7 @@ example().catch(console.error);
 
 ## apiUsersPut
 
-> UsuarioDto apiUsersPut(usuarioDto)
+> UserDto apiUsersPut(userDto)
 
 
 
@@ -172,8 +172,8 @@ async function example() {
   const api = new UsersApi(config);
 
   const body = {
-    // UsuarioDto (optional)
-    usuarioDto: ...,
+    // UserDto (optional)
+    userDto: ...,
   } satisfies ApiUsersPutRequest;
 
   try {
@@ -193,11 +193,11 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **usuarioDto** | [UsuarioDto](UsuarioDto.md) |  | [Optional] |
+| **userDto** | [UserDto](UserDto.md) |  | [Optional] |
 
 ### Return type
 
-[**UsuarioDto**](UsuarioDto.md)
+[**UserDto**](UserDto.md)
 
 ### Authorization
 

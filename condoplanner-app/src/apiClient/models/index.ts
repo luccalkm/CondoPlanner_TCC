@@ -1,14 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AddUserToCondominiumInput';
+export * from './AddressDto';
 export * from './AuthenticationResponse';
 export * from './ChangePasswordInput';
-export * from './CondominioDto';
+export * from './CondominiumDto';
 export * from './CreateOrEditCondominiumInput';
 export * from './ETipoUsuario';
-export * from './EnderecoDto';
 export * from './LoginRequest';
 export * from './RegisterRequest';
 export * from './RegisterResponse';
-export * from './UsuarioCondominioDto';
-export * from './UsuarioDto';
+export * from './UserCondominiumDto';
+export * from './UserDto';

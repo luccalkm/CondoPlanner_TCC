@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Endereco;
+﻿using Application.DTOs.Address;
+using Application.DTOs.Endereco;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="cep">CEP no formato 00000000 ou 00000-000</param>
         [HttpGet("{cep}")]
-        public async Task<ActionResult<EnderecoDto>> GetAddress(string cep)
+        public async Task<ActionResult<AddressDto>> GetAddress(string cep)
         {
             if (string.IsNullOrWhiteSpace(cep))
                 return BadRequest(new { message = "O CEP é obrigatório." });

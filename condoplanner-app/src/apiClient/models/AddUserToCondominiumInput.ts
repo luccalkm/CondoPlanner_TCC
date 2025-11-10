@@ -32,31 +32,31 @@ export interface AddUserToCondominiumInput {
      * @type {number}
      * @memberof AddUserToCondominiumInput
      */
-    condominioId?: number;
+    condominiumId?: number;
     /**
      * 
      * @type {number}
      * @memberof AddUserToCondominiumInput
      */
-    usuarioId?: number;
+    userId?: number;
     /**
      * 
      * @type {ETipoUsuario}
      * @memberof AddUserToCondominiumInput
      */
-    tipoUsuario?: ETipoUsuario;
+    userType?: ETipoUsuario;
     /**
      * 
      * @type {boolean}
      * @memberof AddUserToCondominiumInput
      */
-    ativo?: boolean;
+    active?: boolean;
     /**
      * 
      * @type {Date}
      * @memberof AddUserToCondominiumInput
      */
-    dataInicio?: Date | null;
+    startDate?: Date | null;
 }
 
 
@@ -78,11 +78,11 @@ export function AddUserToCondominiumInputFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'condominioId': json['condominioId'] == null ? undefined : json['condominioId'],
-        'usuarioId': json['usuarioId'] == null ? undefined : json['usuarioId'],
-        'tipoUsuario': json['tipoUsuario'] == null ? undefined : ETipoUsuarioFromJSON(json['tipoUsuario']),
-        'ativo': json['ativo'] == null ? undefined : json['ativo'],
-        'dataInicio': json['dataInicio'] == null ? undefined : (new Date(json['dataInicio'])),
+        'condominiumId': json['condominiumId'] == null ? undefined : json['condominiumId'],
+        'userId': json['userId'] == null ? undefined : json['userId'],
+        'userType': json['userType'] == null ? undefined : ETipoUsuarioFromJSON(json['userType']),
+        'active': json['active'] == null ? undefined : json['active'],
+        'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
     };
 }
 
@@ -97,11 +97,11 @@ export function AddUserToCondominiumInputToJSONTyped(value?: AddUserToCondominiu
 
     return {
         
-        'condominioId': value['condominioId'],
-        'usuarioId': value['usuarioId'],
-        'tipoUsuario': ETipoUsuarioToJSON(value['tipoUsuario']),
-        'ativo': value['ativo'],
-        'dataInicio': value['dataInicio'] == null ? value['dataInicio'] : value['dataInicio'].toISOString(),
+        'condominiumId': value['condominiumId'],
+        'userId': value['userId'],
+        'userType': ETipoUsuarioToJSON(value['userType']),
+        'active': value['active'],
+        'startDate': value['startDate'] == null ? value['startDate'] : value['startDate'].toISOString(),
     };
 }
 

@@ -1,28 +1,36 @@
 
-# AuthenticationResponse
+# AddressDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`usuario` | [UserDto](UserDto.md)
-`token` | string
-`sucesso` | boolean
-`erro` | string
+`street` | string
+`number` | string
+`complement` | string
+`district` | string
+`city` | string
+`state` | string
+`zipCode` | string
+`country` | string
 
 ## Example
 
 ```typescript
-import type { AuthenticationResponse } from ''
+import type { AddressDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "usuario": null,
-  "token": null,
-  "sucesso": null,
-  "erro": null,
-} satisfies AuthenticationResponse
+  "street": null,
+  "number": null,
+  "complement": null,
+  "district": null,
+  "city": null,
+  "state": null,
+  "zipCode": null,
+  "country": null,
+} satisfies AddressDto
 
 console.log(example)
 
@@ -31,7 +39,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as AuthenticationResponse
+const exampleParsed = JSON.parse(exampleJSON) as AddressDto
 console.log(exampleParsed)
 ```
 

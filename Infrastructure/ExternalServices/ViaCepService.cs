@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Endereco;
+﻿using Application.DTOs.Address;
+using Application.DTOs.Endereco;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
@@ -39,7 +40,7 @@ namespace Infrastructure.ExternalServices
             _logger = logger;
         }
 
-        public async Task<EnderecoDto?> GetAddressByCepAsync(string cep)
+        public async Task<AddressDto?> GetAddressByCepAsync(string cep)
         {
             if (string.IsNullOrWhiteSpace(cep))
                 return null;
@@ -56,7 +57,7 @@ namespace Infrastructure.ExternalServices
                 var cachedJson = await _cache.GetStringAsync(cacheKey);
                 if (cachedJson != null)
                 {
-                    var cachedEndereco = JsonSerializer.Deserialize<EnderecoDto>(cachedJson);
+                    var cachedEndereco = JsonSerializer.Deserialize<AddressDto>(cachedJson);
                     if (cachedEndereco != null)
                         return cachedEndereco;
                 }
@@ -96,14 +97,14 @@ namespace Infrastructure.ExternalServices
             if (result == null || result.Erro)
                 return null;
 
-            var endereco = new EnderecoDto
+            var address = new AddressDto
             {
-                Cep = result.Cep,
-                Logradouro = result.Logradouro,
-                Bairro = result.Bairro,
-                Cidade = result.Localidade,
-                Estado = result.Uf,
-                Complemento = result.Complemento ?? string.Empty
+                ZipCode = result.Cep,
+                Street = result.Logradouro,
+                District = result.Bairro,
+                City = result.Localidade,
+                State = result.Uf,
+                Complement = result.Complemento ?? string.Empty
             };
 
             try
@@ -113,7 +114,7 @@ namespace Infrastructure.ExternalServices
                     AbsoluteExpirationRelativeToNow = _cacheDuration
                 };
 
-                var json = JsonSerializer.Serialize(endereco);
+                var json = JsonSerializer.Serialize(address);
                 await _cache.SetStringAsync(cacheKey, json, options);
 
                 await MaintainRecentCepListAsync(clientId, cep);
@@ -123,7 +124,7 @@ namespace Infrastructure.ExternalServices
                 _logger.LogWarning(ex, "Falha ao gravar cache de CEP {Cep}", cep);
             }
 
-            return endereco;
+            return address;
         }
 
         private string GetClientId()

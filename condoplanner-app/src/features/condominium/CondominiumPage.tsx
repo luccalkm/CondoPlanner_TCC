@@ -47,6 +47,7 @@ const CondominiumPage: React.FC = () => {
     };
     
     const handleCloseDialog = () => setOpenDialog(false);
+    
     const handleOpenCondominium = (id: number) => {
         selectCondominium(id);
         navigate(`/c/${id}/areas`);

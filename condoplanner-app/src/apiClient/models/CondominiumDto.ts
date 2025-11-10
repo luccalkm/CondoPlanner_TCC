@@ -24,59 +24,53 @@ import {
 /**
  * 
  * @export
- * @interface CreateOrEditCondominiumInput
+ * @interface CondominiumDto
  */
-export interface CreateOrEditCondominiumInput {
+export interface CondominiumDto {
     /**
      * 
      * @type {number}
-     * @memberof CreateOrEditCondominiumInput
+     * @memberof CondominiumDto
      */
-    id?: number | null;
+    id?: number;
     /**
      * 
      * @type {string}
-     * @memberof CreateOrEditCondominiumInput
+     * @memberof CondominiumDto
      */
     name?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof CreateOrEditCondominiumInput
+     * @memberof CondominiumDto
      */
     cnpj?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof CreateOrEditCondominiumInput
+     * @memberof CondominiumDto
      */
     email?: string | null;
     /**
      * 
      * @type {AddressDto}
-     * @memberof CreateOrEditCondominiumInput
+     * @memberof CondominiumDto
      */
     address?: AddressDto;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof CreateOrEditCondominiumInput
-     */
-    userIds?: Array<number> | null;
 }
 
 /**
- * Check if a given object implements the CreateOrEditCondominiumInput interface.
+ * Check if a given object implements the CondominiumDto interface.
  */
-export function instanceOfCreateOrEditCondominiumInput(value: object): value is CreateOrEditCondominiumInput {
+export function instanceOfCondominiumDto(value: object): value is CondominiumDto {
     return true;
 }
 
-export function CreateOrEditCondominiumInputFromJSON(json: any): CreateOrEditCondominiumInput {
-    return CreateOrEditCondominiumInputFromJSONTyped(json, false);
+export function CondominiumDtoFromJSON(json: any): CondominiumDto {
+    return CondominiumDtoFromJSONTyped(json, false);
 }
 
-export function CreateOrEditCondominiumInputFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateOrEditCondominiumInput {
+export function CondominiumDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CondominiumDto {
     if (json == null) {
         return json;
     }
@@ -87,15 +81,14 @@ export function CreateOrEditCondominiumInputFromJSONTyped(json: any, ignoreDiscr
         'cnpj': json['cnpj'] == null ? undefined : json['cnpj'],
         'email': json['email'] == null ? undefined : json['email'],
         'address': json['address'] == null ? undefined : AddressDtoFromJSON(json['address']),
-        'userIds': json['userIds'] == null ? undefined : json['userIds'],
     };
 }
 
-export function CreateOrEditCondominiumInputToJSON(json: any): CreateOrEditCondominiumInput {
-    return CreateOrEditCondominiumInputToJSONTyped(json, false);
+export function CondominiumDtoToJSON(json: any): CondominiumDto {
+    return CondominiumDtoToJSONTyped(json, false);
 }
 
-export function CreateOrEditCondominiumInputToJSONTyped(value?: CreateOrEditCondominiumInput | null, ignoreDiscriminator: boolean = false): any {
+export function CondominiumDtoToJSONTyped(value?: CondominiumDto | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -107,7 +100,6 @@ export function CreateOrEditCondominiumInputToJSONTyped(value?: CreateOrEditCond
         'cnpj': value['cnpj'],
         'email': value['email'],
         'address': AddressDtoToJSON(value['address']),
-        'userIds': value['userIds'],
     };
 }
 

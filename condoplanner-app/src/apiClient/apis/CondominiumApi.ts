@@ -17,18 +17,18 @@ import * as runtime from '../runtime';
 import type {
   AddUserToCondominiumInput,
   CreateOrEditCondominiumInput,
-  UsuarioCondominioDto,
-  UsuarioDto,
+  UserCondominiumDto,
+  UserDto,
 } from '../models/index';
 import {
     AddUserToCondominiumInputFromJSON,
     AddUserToCondominiumInputToJSON,
     CreateOrEditCondominiumInputFromJSON,
     CreateOrEditCondominiumInputToJSON,
-    UsuarioCondominioDtoFromJSON,
-    UsuarioCondominioDtoToJSON,
-    UsuarioDtoFromJSON,
-    UsuarioDtoToJSON,
+    UserCondominiumDtoFromJSON,
+    UserCondominiumDtoToJSON,
+    UserDtoFromJSON,
+    UserDtoToJSON,
 } from '../models/index';
 
 export interface ApiCondominiumAddUserToCondominiumPostRequest {
@@ -91,7 +91,7 @@ export class CondominiumApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCondominiumCondominioIdUsersGetRaw(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UsuarioDto>>> {
+    async apiCondominiumCondominioIdUsersGetRaw(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserDto>>> {
         if (requestParameters['condominioId'] == null) {
             throw new runtime.RequiredError(
                 'condominioId',
@@ -122,12 +122,12 @@ export class CondominiumApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UsuarioDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserDtoFromJSON));
     }
 
     /**
      */
-    async apiCondominiumCondominioIdUsersGet(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UsuarioDto>> {
+    async apiCondominiumCondominioIdUsersGet(requestParameters: ApiCondominiumCondominioIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserDto>> {
         const response = await this.apiCondominiumCondominioIdUsersGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -171,7 +171,7 @@ export class CondominiumApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCondominiumGetAllUserIdGetRaw(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UsuarioCondominioDto>>> {
+    async apiCondominiumGetAllUserIdGetRaw(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserCondominiumDto>>> {
         if (requestParameters['userId'] == null) {
             throw new runtime.RequiredError(
                 'userId',
@@ -202,12 +202,12 @@ export class CondominiumApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UsuarioCondominioDtoFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserCondominiumDtoFromJSON));
     }
 
     /**
      */
-    async apiCondominiumGetAllUserIdGet(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UsuarioCondominioDto>> {
+    async apiCondominiumGetAllUserIdGet(requestParameters: ApiCondominiumGetAllUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserCondominiumDto>> {
         const response = await this.apiCondominiumGetAllUserIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

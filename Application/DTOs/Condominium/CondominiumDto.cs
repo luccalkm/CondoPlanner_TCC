@@ -2,13 +2,12 @@
 
 namespace Application.DTOs.Condominium
 {
-    public class CreateOrEditCondominiumInput
+    public class CondominiumDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public AddressDto? Address { get; set; }
-        public List<int>? UserIds { get; set; }
+        public AddressDto Address { get; set; } = new();
     }
 }

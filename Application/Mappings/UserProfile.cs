@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Usuario;
+﻿using Application.DTOs.User;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -13,7 +13,12 @@ namespace Application.Mappings
     {
         public UserProfile()
         {
-            CreateMap<Usuario, UsuarioDto>().ReverseMap();
+            CreateMap<Usuario, UserDto>()
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Nome))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.Telefone))
+                .ReverseMap()
+                .ForMember(d => d.Nome, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.Telefone, o => o.MapFrom(s => s.Phone));
         }
     }
 }

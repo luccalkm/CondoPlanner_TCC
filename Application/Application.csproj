@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\Endereco\GetCepInput.cs" />
+    <Compile Remove="DTOs\Address\GetCepInput.cs" />
   </ItemGroup>
 
   <ItemGroup>

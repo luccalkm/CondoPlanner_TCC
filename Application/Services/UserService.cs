@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Usuario;
+﻿using Application.DTOs.User;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -9,44 +9,44 @@ namespace Application.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<Usuario> _repositorio;
+        private readonly IRepository<Usuario> _repository;
         private readonly IMapper _mapper;
 
         public UserService(IMapper mapper, IRepository<Usuario> repositorio)
         {
-            _repositorio = repositorio;
+            _repository = repositorio;
             _mapper = mapper;
         }
 
-        public async Task<UsuarioDto> GetUserByIdAsync(int userId)
+        public async Task<UserDto> GetUserByIdAsync(int userId)
         {
-            var foundUser = await _repositorio.FirstOrDefaultAsync(user => user.Id == userId);
+            var foundUser = await _repository.FirstOrDefaultAsync(user => user.Id == userId);
 
             if (foundUser is null)
                 throw new UserFriendlyException("Usuário não encontrado. Faça login novamente.");
 
-            return _mapper.Map<UsuarioDto>(foundUser);
+            return _mapper.Map<UserDto>(foundUser);
         }
 
-        public async Task<UsuarioDto> EditUserAsync(UsuarioDto dto)
+        public async Task<UserDto> EditUserAsync(UserDto dto)
         {
             if (dto is null)
                 throw new UserFriendlyException("Os dados do usuário não podem ser nulos.");
 
-            var user = await _repositorio.FirstOrDefaultAsync(u => u.Id == dto.Id);
+            var user = await _repository.GetByIdAsync(dto.Id);
 
             if (user is null)
                 throw new UserFriendlyException("Usuário não encontrado.");
 
-            user.Nome = dto.Nome;
+            user.Nome = dto.Name;
             user.Email = dto.Email;
-            user.Telefone = dto.Telefone;
+            user.Telefone = dto.Phone;
             user.Cpf = dto.Cpf;
 
-            _repositorio.Update(user);
-            await _repositorio.SaveChangesAsync();
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
 
-            return _mapper.Map<UsuarioDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
     
         public async Task ChangeUserPasswordAsync(ChangePasswordInput input)
@@ -55,23 +55,23 @@ namespace Application.Services
             if (input.Password.Length < 8)
                 throw new UserFriendlyException("A senha não comporta as regras necessárias, tente novamente.");
 
-            var user = await _repositorio.GetByIdAsync(input.UserId);
+            var user = await _repository.GetByIdAsync(input.UserId);
 
             if (user is null)
                 throw new UserFriendlyException("Usuário não encontrado.");
 
-            var senhaAtualHash = user.Senha;
-            var regraSenhaIgual = PasswordHasherHelper.VerifyPassword(input.Password, senhaAtualHash);
+            var currentPasswordHash = user.Senha;
+            var isSamePassword = PasswordHasherHelper.VerifyPassword(input.Password, currentPasswordHash);
 
-            if (regraSenhaIgual)
+            if (isSamePassword)
                 throw new UserFriendlyException("A nova senha não pode ser igual à senha atual.");
 
-            var novaSenhaHash = PasswordHasherHelper.HashPassword(input.Password);
+            var newPasswordHash = PasswordHasherHelper.HashPassword(input.Password);
 
-            user.Senha = novaSenhaHash;
+            user.Senha = newPasswordHash;
 
-            _repositorio.Update(user);
-            await _repositorio.SaveChangesAsync();
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Authentication;
-using Application.DTOs.Usuario;
+using Application.DTOs.User;
+using Application.DTOs.User;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -13,9 +14,9 @@ namespace Application.Services
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AuthService(IMapper mapper, IRepository<Usuario> usuarioRepo, ITokenService tokenService)
+        public AuthService(IMapper mapper, IRepository<Usuario> userRepo, ITokenService tokenService)
         {
-            _userRepo = usuarioRepo;
+            _userRepo = userRepo;
             _tokenService = tokenService;
             _mapper = mapper;
         }
@@ -37,7 +38,7 @@ namespace Application.Services
 
             return new AuthenticationResponse
             {
-                Usuario = _mapper.Map<UsuarioDto>(user),
+                Usuario = _mapper.Map<UserDto>(user),
                 Token = token,
                 Sucesso = true
             };

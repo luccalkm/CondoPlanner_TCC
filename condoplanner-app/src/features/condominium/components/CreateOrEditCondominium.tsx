@@ -13,7 +13,7 @@ import {
 import { useCondominiumStore } from "../../../stores/condominium.store";
 import { useDebounce } from "use-debounce";
 import { DomainAdd, Email, LocationOn, Numbers } from "@mui/icons-material";
-import { AddressApi, type CondominioDto } from "../../../apiClient";
+import { AddressApi, type CondominiumDto } from "../../../apiClient";
 import { ApiConfiguration } from "../../../apiClient/apiConfig";
 import { useAuthStore } from "../../../stores/auth.store";
 import { useAlertStore } from "../../../stores/alert.store";
@@ -37,24 +37,24 @@ export default function CreateOrEditCondominium({
     const [cepValido, setCepValido] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
 
-    const [form, setForm] = useState<CondominioDto>({
+    const [form, setForm] = useState<CondominiumDto>({
         id: condominiumId || undefined,
-        nome: "",
+        name: "",
         cnpj: "",
         email: "",
-        endereco: {
-            logradouro: "",
-            numero: "",
-            complemento: "",
-            bairro: "",
-            cidade: "",
-            estado: "",
-            cep: "",
-            pais: "Brasil",
+        address: {
+            street: "",
+            number: "",
+            complement: "",
+            district: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "Brasil",
         },
     });
 
-    const [debouncedCep] = useDebounce(form.endereco?.cep, 1300);
+    const [debouncedCep] = useDebounce(form.address?.zipCode, 1300);
 
     const fetchAddress = useCallback(async () => {
         const cep = debouncedCep?.replace(/\D/g, "");
@@ -62,17 +62,17 @@ export default function CreateOrEditCondominium({
 
         setLoadingCep(true);
         try {
-            const response = await addressApi.apiAddressCepGet({cep});
+            const response = await addressApi.apiAddressCepGet({ cep });
 
             setForm((prev) => ({
                 ...prev,
-                endereco: {
-                    ...prev.endereco,
-                    logradouro: response.logradouro || "",
-                    bairro: response.bairro || "",
-                    cidade: response.cidade || "",
-                    estado: response.estado || "",
-                    pais: response.pais || "Brasil",
+                address: {
+                    ...prev.address,
+                    street: response.street || "",
+                    district: response.district || "",
+                    city: response.city || "",
+                    state: response.state || "",
+                    country: response.country || "Brasil",
                 },
             }));
             setCepValido(true);
@@ -83,7 +83,7 @@ export default function CreateOrEditCondominium({
         } finally {
             setLoadingCep(false);
         }
-    }, [debouncedCep, addressApi]);
+    }, [debouncedCep, addressApi, showAlert]);
 
     useEffect(() => {
         fetchAddress();
@@ -98,18 +98,18 @@ export default function CreateOrEditCondominium({
         if (cond) {
             setForm({
                 id: cond.id,
-                nome: cond.nome || "",
+                name: cond.name || "",
                 cnpj: cond.cnpj || "",
                 email: cond.email || "",
-                endereco: {
-                    logradouro: cond.endereco?.logradouro || "",
-                    numero: cond.endereco?.numero || "",
-                    complemento: cond.endereco?.complemento || "",
-                    bairro: cond.endereco?.bairro || "",
-                    cidade: cond.endereco?.cidade || "",
-                    estado: cond.endereco?.estado || "",
-                    cep: cond.endereco?.cep || "",
-                    pais: cond.endereco?.pais || "Brasil",
+                address: {
+                    street: cond.address?.street || "",
+                    number: cond.address?.number || "",
+                    complement: cond.address?.complement || "",
+                    district: cond.address?.district || "",
+                    city: cond.address?.city || "",
+                    state: cond.address?.state || "",
+                    zipCode: cond.address?.zipCode || "",
+                    country: cond.address?.country || "Brasil",
                 },
             });
             setCepValido(true);
@@ -125,7 +125,7 @@ export default function CreateOrEditCondominium({
     const handleAddressChange = (field: string, value: string) => {
         setForm((prev) => ({
             ...prev,
-            endereco: { ...prev.endereco, [field]: value },
+            address: { ...prev.address, [field]: value },
         }));
     };
 
@@ -142,7 +142,7 @@ export default function CreateOrEditCondominium({
             });
     };
 
-    const isFormValid = cepValido && form.nome && form.email;
+    const isFormValid = cepValido && form.name && form.email;
 
     if (loadingData) {
         return (
@@ -173,8 +173,8 @@ export default function CreateOrEditCondominium({
                             <TextField
                                 label="Nome do condomínio"
                                 fullWidth
-                                value={form.nome}
-                                onChange={(e) => handleChange("nome", e.target.value)}
+                                value={form.name}
+                                onChange={(e) => handleChange("name", e.target.value)}
                                 required
                                 InputProps={{
                                     startAdornment: (
@@ -241,9 +241,9 @@ export default function CreateOrEditCondominium({
                         <TextField
                             label="CEP"
                             fullWidth
-                            value={form.endereco?.cep}
+                            value={form.address?.zipCode}
                             onChange={(e) =>
-                                handleAddressChange("cep", e.target.value.replace(/\D/g, ""))
+                                handleAddressChange("zipCode", e.target.value.replace(/\D/g, ""))
                             }
                             InputProps={{
                                 endAdornment: (
@@ -264,9 +264,9 @@ export default function CreateOrEditCondominium({
                         <TextField
                             label="Logradouro"
                             fullWidth
-                            value={form.endereco?.logradouro}
+                            value={form.address?.street}
                             disabled={!cepValido}
-                            onChange={(e) => handleAddressChange("logradouro", e.target.value)}
+                            onChange={(e) => handleAddressChange("street", e.target.value)}
                         />
                     </Grid>
 
@@ -275,8 +275,8 @@ export default function CreateOrEditCondominium({
                             label="Complemento"
                             fullWidth
                             disabled={!cepValido}
-                            value={form.endereco?.complemento}
-                            onChange={(e) => handleAddressChange("complemento", e.target.value)}
+                            value={form.address?.complement}
+                            onChange={(e) => handleAddressChange("complement", e.target.value)}
                         />
                     </Grid>
 
@@ -285,8 +285,8 @@ export default function CreateOrEditCondominium({
                             label="Número"
                             fullWidth
                             disabled={!cepValido}
-                            value={form.endereco?.numero}
-                            onChange={(e) => handleAddressChange("numero", e.target.value)}
+                            value={form.address?.number}
+                            onChange={(e) => handleAddressChange("number", e.target.value)}
                         />
                     </Grid>
 
@@ -295,8 +295,8 @@ export default function CreateOrEditCondominium({
                             label="Bairro"
                             fullWidth
                             disabled={!cepValido}
-                            value={form.endereco?.bairro}
-                            onChange={(e) => handleAddressChange("bairro", e.target.value)}
+                            value={form.address?.district}
+                            onChange={(e) => handleAddressChange("district", e.target.value)}
                         />
                     </Grid>
 
@@ -305,8 +305,8 @@ export default function CreateOrEditCondominium({
                             label="Cidade"
                             fullWidth
                             disabled={!cepValido}
-                            value={form.endereco?.cidade}
-                            onChange={(e) => handleAddressChange("cidade", e.target.value)}
+                            value={form.address?.city}
+                            onChange={(e) => handleAddressChange("city", e.target.value)}
                         />
                     </Grid>
 
@@ -315,8 +315,8 @@ export default function CreateOrEditCondominium({
                             label="Estado"
                             fullWidth
                             disabled={!cepValido}
-                            value={form.endereco?.estado}
-                            onChange={(e) => handleAddressChange("estado", e.target.value)}
+                            value={form.address?.state}
+                            onChange={(e) => handleAddressChange("state", e.target.value)}
                         />
                     </Grid>
                 </Grid>

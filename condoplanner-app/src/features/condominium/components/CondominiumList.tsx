@@ -33,7 +33,7 @@ const CondominiumList: React.FC<Props> = ({ loading, onEdit, onOpen }) => {
     return (
         <Grid container spacing={2} maxHeight={'60vh'} overflow={'auto'}>
             {userCondominiumRelations.map((relation) => (
-                <Grid key={`${relation.condominioId}-${relation.usuarioId}`} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={`${relation.condominiumId}-${relation.userId}`} size={{ xs: 12, sm: 6, md: 4 }}>
                     <CondominiumCard
                         userCondominiumRelation={relation}
                         onEdit={onEdit}

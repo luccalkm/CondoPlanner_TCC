@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost*
 
 ## apiAddressCepGet
 
-> EnderecoDto apiAddressCepGet(cep)
+> AddressDto apiAddressCepGet(cep)
 
 
 
@@ -57,7 +57,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**EnderecoDto**](EnderecoDto.md)
+[**AddressDto**](AddressDto.md)
 
 ### Authorization
 

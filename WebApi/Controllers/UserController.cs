@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Usuario;
+﻿using Application.DTOs.User;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         /// Retorna os dados do usuário logado ou de um ID específico.
         /// </summary>
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<UsuarioDto>> GetUserById(int id)
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
         /// Edita os dados do usuário.
         /// </summary>
         [HttpPut]
-        public async Task<ActionResult<UsuarioDto>> EditUser([FromBody] UsuarioDto dto)
+        public async Task<ActionResult<UserDto>> EditUser([FromBody] UserDto dto)
         {
             try
             {

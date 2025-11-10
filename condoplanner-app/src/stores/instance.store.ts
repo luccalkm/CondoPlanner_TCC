@@ -1,10 +1,10 @@
 import { create } from 'zustand';
-import type { CondominioDto } from '../apiClient';
+import type { CondominiumDto } from '../apiClient';
 import { useCondominiumStore } from './condominium.store';
 
 interface InstanceState {
     selectedCondominiumId: number | null;
-    selectedCondominium: CondominioDto | null;
+    selectedCondominium: CondominiumDto | null;
     loadingSelected: boolean;
     selectCondominium: (id: number) => void;
     clearSelection: () => void;

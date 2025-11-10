@@ -7,11 +7,11 @@
 Name | Type
 ------------ | -------------
 `id` | number
-`nome` | string
+`name` | string
 `cnpj` | string
 `email` | string
-`endereco` | [EnderecoDto](EnderecoDto.md)
-`usuariosIds` | Array&lt;number&gt;
+`address` | [AddressDto](AddressDto.md)
+`userIds` | Array&lt;number&gt;
 
 ## Example
 
@@ -21,11 +21,11 @@ import type { CreateOrEditCondominiumInput } from ''
 // TODO: Update the object below with actual values
 const example = {
   "id": null,
-  "nome": null,
+  "name": null,
   "cnpj": null,
   "email": null,
-  "endereco": null,
-  "usuariosIds": null,
+  "address": null,
+  "userIds": null,
 } satisfies CreateOrEditCondominiumInput
 
 console.log(example)

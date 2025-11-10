@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Endereco;
+﻿using Application.DTOs.Address;
+using Application.DTOs.Endereco;
 using Application.Interfaces;
 using Domain.Entities;
 using System.Net;
@@ -14,7 +15,7 @@ namespace Application.Services
             _viaCepService = viaCepService;
         }
 
-        public async Task<EnderecoDto?> LookupAsync(string cep)
+        public async Task<AddressDto?> LookupAsync(string cep)
         {
             return await _viaCepService.GetAddressByCepAsync(cep);
         }

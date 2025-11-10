@@ -1,30 +1,36 @@
 
-# AddUserToCondominiumInput
+# UserCondominiumDto
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`condominiumId` | number
 `userId` | number
+`condominiumId` | number
 `userType` | [ETipoUsuario](ETipoUsuario.md)
 `active` | boolean
-`startDate` | Date
+`creationTime` | Date
+`endDate` | Date
+`user` | [UserDto](UserDto.md)
+`condominium` | [CondominiumDto](CondominiumDto.md)
 
 ## Example
 
 ```typescript
-import type { AddUserToCondominiumInput } from ''
+import type { UserCondominiumDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "condominiumId": null,
   "userId": null,
+  "condominiumId": null,
   "userType": null,
   "active": null,
-  "startDate": null,
-} satisfies AddUserToCondominiumInput
+  "creationTime": null,
+  "endDate": null,
+  "user": null,
+  "condominium": null,
+} satisfies UserCondominiumDto
 
 console.log(example)
 
@@ -33,7 +39,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as AddUserToCondominiumInput
+const exampleParsed = JSON.parse(exampleJSON) as UserCondominiumDto
 console.log(exampleParsed)
 ```
 

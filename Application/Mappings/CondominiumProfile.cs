@@ -10,7 +10,14 @@ namespace Application.Profiles
 
         public CondominiumProfile()
         {
-            CreateMap<Condominio, CondominioDto>().ReverseMap();
+            CreateMap<Condominio, CondominiumDto>()
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Nome))
+                .ForMember(d => d.Address, o => o.MapFrom(s => s.Endereco))
+                .ReverseMap();
+
+            //CreateMap<CondominiumDto, Condominio>()
+            //    .ForMember(d => d.Nome, o => o.MapFrom(s => s.Name))
+            //    .ForMember(d => d.Endereco, o => o.MapFrom(s => s.Address));
 
             CreateMap<CreateOrEditCondominiumInput, Condominio>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.HasValue ? src.Id.Value : 0))

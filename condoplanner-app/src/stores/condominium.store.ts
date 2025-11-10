@@ -1,16 +1,16 @@
 import { create } from 'zustand';
-import { CondominiumApi, type CondominioDto, type CreateOrEditCondominiumInput, type UsuarioCondominioDto } from '../apiClient';
+import { CondominiumApi, type CondominiumDto, type CreateOrEditCondominiumInput, type UserCondominiumDto } from '../apiClient';
 import { ApiConfiguration } from '../apiClient/apiConfig';
 import { useAuthStore } from './auth.store';
 
 const condominiumApi = new CondominiumApi(ApiConfiguration);
 
 interface CondominiumState {
-    condominiums: CondominioDto[];
-    userCondominiumRelations: UsuarioCondominioDto[];
+    condominiums: CondominiumDto[];
+    userCondominiumRelations: UserCondominiumDto[];
     loading: boolean;
     fetchCondominiums: (userId?: number) => Promise<void>;
-    createOrEditCondominium: (condominiumDto: CondominioDto) => Promise<void>;
+    createOrEditCondominium: (condominiumDto: CondominiumDto) => Promise<void>;
 }
 
 export const useCondominiumStore = create<CondominiumState>((set) => ({
@@ -32,8 +32,8 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
             });
 
             const condos = relations
-                .map((r) => r.condominio)
-                .filter((c): c is CondominioDto => !!c);
+                .map((r) => r.condominium)
+                .filter((c): c is CondominiumDto => !!c);
 
             set({
                 userCondominiumRelations: relations,
@@ -44,7 +44,7 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
         }
     },
 
-    createOrEditCondominium: async (condominiumDto: CondominioDto) => {
+    createOrEditCondominium: async (condominiumDto: CondominiumDto) => {
         try {
             const { id: currentUserId } = useAuthStore.getState().user || {};
             const userIds: number[] = [];
@@ -55,11 +55,11 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
 
             const input: CreateOrEditCondominiumInput = {
                 id: condominiumDto.id ?? null,
-                nome: condominiumDto.nome ?? null,
+                name: condominiumDto.name ?? null,
                 cnpj: condominiumDto.cnpj ?? null,
                 email: condominiumDto.email ?? null,
-                endereco: condominiumDto.endereco,
-                usuariosIds: userIds,
+                address: condominiumDto.address,
+                userIds: userIds,
             };
 
             await condominiumApi.apiCondominiumCreateOrEditPost({

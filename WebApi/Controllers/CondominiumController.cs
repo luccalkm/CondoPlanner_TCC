@@ -1,5 +1,5 @@
 using Application.DTOs.Condominium;
-using Application.DTOs.Usuario;
+using Application.DTOs.User;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
         /// of <see cref="UsuarioCondominioDto"/> objects representing the user's condominium associations. Returns a
         /// 500 status code if an error occurs.</returns>
         [HttpGet("GetAll/{userId:int}")]
-        public async Task<ActionResult<List<UsuarioCondominioDto>>> GetAllByUser(int userId)
+        public async Task<ActionResult<List<UserCondominiumDto>>> GetAllByUser(int userId)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
 
             try
             {
-                await _condominiumService.AddUserToCondominiumAsync(input.CondominioId, input.UsuarioId);
+                await _condominiumService.AddUserToCondominiumAsync(input.CondominiumId, input.UserId);
                 return Ok(new { message = "Usuário vinculado com sucesso ao condomínio." });
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
         /// Retorna todos os usuários vinculados a um condomínio.
         /// </summary>
         [HttpGet("{condominioId:int}/Users")]
-        public async Task<ActionResult<List<UsuarioDto>>> GetUsersFromCondominium(int condominioId)
+        public async Task<ActionResult<List<UserDto>>> GetUsersFromCondominium(int condominioId)
         {
             try
             {

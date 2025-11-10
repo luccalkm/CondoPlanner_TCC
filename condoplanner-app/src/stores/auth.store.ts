@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthApi, type AuthenticationResponse, type LoginRequest, type RegisterRequest, type RegisterResponse, type UsuarioDto } from '../apiClient';
+import { AuthApi, type AuthenticationResponse, type LoginRequest, type RegisterRequest, type RegisterResponse, type UserDto } from '../apiClient';
 import { ApiConfiguration } from '../apiClient/apiConfig';
 
 const authApi = new AuthApi(ApiConfiguration);
 
 interface AuthState {
     isAuthenticated: boolean;
-    user: UsuarioDto | null;
+    user: UserDto | null;
 
     login: (loginRequest: LoginRequest) => Promise<AuthenticationResponse>;
     register: (registerRequest: RegisterRequest) => Promise<RegisterResponse>;
     logout: () => void;
-    setUser: (user: UsuarioDto) => void;
+    setUser: (user: UserDto) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: !!localStorage.getItem('token'),
             user: null,
 
-            setUser: (user: UsuarioDto) => set({ user }),
+            setUser: (user: UserDto) => set({ user }),
 
             login: async (loginRequest): Promise<AuthenticationResponse> => {
                 const res = await authApi.apiAuthLoginPost({ loginRequest });

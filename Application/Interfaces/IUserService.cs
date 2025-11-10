@@ -1,11 +1,11 @@
-﻿using Application.DTOs.Usuario;
+﻿using Application.DTOs.User;
 
 namespace Application.Interfaces
 {
     public interface IUserService
     {
-        Task<UsuarioDto> GetUserByIdAsync(int userId);
-        Task<UsuarioDto> EditUserAsync(UsuarioDto dto);
+        Task<UserDto> GetUserByIdAsync(int userId);
+        Task<UserDto> EditUserAsync(UserDto dto);
         Task ChangeUserPasswordAsync(ChangePasswordInput input);
     }
 }

@@ -1,15 +1,13 @@
 ﻿using Application.DTOs.Condominium;
-using Application.DTOs.Usuario;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Application.DTOs.User;
 
 namespace Application.Interfaces
 {
     public interface ICondominiumService
     {
         Task CreateOrEditCondominium(CreateOrEditCondominiumInput dto);
-        Task AddUserToCondominiumAsync(int condominioId, int usuarioId);
-        Task<List<UsuarioDto>> GetUsersFromCondominiumAsync(int condominioId);
-        Task<List<UsuarioCondominioDto>> GetAllRelationsByUserAsync(int userId);
+        Task AddUserToCondominiumAsync(int condominiumId, int userId);
+        Task<List<UserDto>> GetUsersFromCondominiumAsync(int condominiumId);
+        Task<List<UserCondominiumDto>> GetAllRelationsByUserAsync(int userId);
     }
 }

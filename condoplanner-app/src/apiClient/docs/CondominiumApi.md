@@ -82,7 +82,7 @@ example().catch(console.error);
 
 ## apiCondominiumCondominioIdUsersGet
 
-> Array&lt;UsuarioDto&gt; apiCondominiumCondominioIdUsersGet(condominioId)
+> Array&lt;UserDto&gt; apiCondominiumCondominioIdUsersGet(condominioId)
 
 
 
@@ -129,7 +129,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;UsuarioDto&gt;**](UsuarioDto.md)
+[**Array&lt;UserDto&gt;**](UserDto.md)
 
 ### Authorization
 
@@ -220,7 +220,7 @@ example().catch(console.error);
 
 ## apiCondominiumGetAllUserIdGet
 
-> Array&lt;UsuarioCondominioDto&gt; apiCondominiumGetAllUserIdGet(userId)
+> Array&lt;UserCondominiumDto&gt; apiCondominiumGetAllUserIdGet(userId)
 
 
 
@@ -267,7 +267,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;UsuarioCondominioDto&gt;**](UsuarioCondominioDto.md)
+[**Array&lt;UserCondominiumDto&gt;**](UserCondominiumDto.md)
 
 ### Authorization
 

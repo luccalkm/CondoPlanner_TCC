@@ -6,7 +6,7 @@ const AreasPage = () => {
     return (
         <Box p={3}>
             <Typography variant="h5" fontWeight={700}>Áreas Comuns</Typography>
-            <Typography variant="body2" color="text.secondary">Contexto do condomínio: {selectedCondominium?.nome || 'carregando...'}</Typography>
+            <Typography variant="body2" color="text.secondary">Contexto do condomínio: {selectedCondominium?.name || 'carregando...'}</Typography>
         </Box>
     );
 };

@@ -15,7 +15,7 @@ export const InstanceGuard = () => {
         }
     }, [id, syncFromParam]);
 
-    const hasAccess = userCondominiumRelations.some(r => r.condominioId === id);
+    const hasAccess = userCondominiumRelations.some(r => r.condominiumId === id);
     if (!hasAccess) {
         return <Navigate to="/condominios" replace />;
     }

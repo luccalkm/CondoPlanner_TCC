@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Endereco;
+﻿using Application.DTOs.Address;
+using Application.DTOs.Endereco;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Application.Interfaces
 {
     public interface IViaCepService
     {
-        Task<EnderecoDto?> GetAddressByCepAsync(string cep);
+        Task<AddressDto?> GetAddressByCepAsync(string cep);
     }
 }

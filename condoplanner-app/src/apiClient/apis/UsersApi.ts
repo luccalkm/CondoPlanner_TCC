@@ -16,13 +16,13 @@
 import * as runtime from '../runtime';
 import type {
   ChangePasswordInput,
-  UsuarioDto,
+  UserDto,
 } from '../models/index';
 import {
     ChangePasswordInputFromJSON,
     ChangePasswordInputToJSON,
-    UsuarioDtoFromJSON,
-    UsuarioDtoToJSON,
+    UserDtoFromJSON,
+    UserDtoToJSON,
 } from '../models/index';
 
 export interface ApiUsersChangePasswordPostRequest {
@@ -34,7 +34,7 @@ export interface ApiUsersIdGetRequest {
 }
 
 export interface ApiUsersPutRequest {
-    usuarioDto?: UsuarioDto;
+    userDto?: UserDto;
 }
 
 /**
@@ -81,7 +81,7 @@ export class UsersApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiUsersIdGetRaw(requestParameters: ApiUsersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UsuarioDto>> {
+    async apiUsersIdGetRaw(requestParameters: ApiUsersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserDto>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -112,19 +112,19 @@ export class UsersApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UsuarioDtoFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserDtoFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiUsersIdGet(requestParameters: ApiUsersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UsuarioDto> {
+    async apiUsersIdGet(requestParameters: ApiUsersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserDto> {
         const response = await this.apiUsersIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiUsersPutRaw(requestParameters: ApiUsersPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UsuarioDto>> {
+    async apiUsersPutRaw(requestParameters: ApiUsersPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserDto>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -147,15 +147,15 @@ export class UsersApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: UsuarioDtoToJSON(requestParameters['usuarioDto']),
+            body: UserDtoToJSON(requestParameters['userDto']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UsuarioDtoFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserDtoFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiUsersPut(requestParameters: ApiUsersPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UsuarioDto> {
+    async apiUsersPut(requestParameters: ApiUsersPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserDto> {
         const response = await this.apiUsersPutRaw(requestParameters, initOverrides);
         return await response.value();
     }

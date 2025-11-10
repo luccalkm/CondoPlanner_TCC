@@ -1,7 +1,7 @@
 import { AccountBox, Email, Numbers, Visibility, VisibilityOff, Save, Logout } from "@mui/icons-material";
 import { Divider, Grid, Paper, TextField, Typography, IconButton, Button, CircularProgress, useTheme, alpha } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import type { UsuarioDto, ChangePasswordInput } from "../../apiClient";
+import type { ChangePasswordInput, UserDto } from "../../apiClient";
 import { UsersApi } from "../../apiClient";
 import { ApiConfiguration } from "../../apiClient/apiConfig";
 import { useAuthStore } from "../../stores/auth.store";
@@ -15,7 +15,7 @@ export const SettingsPage = () => {
     const theme = useTheme();
 
     const [savingUser, setSavingUser] = useState(false);
-    const [currentUser, setCurrentUser] = useState<UsuarioDto>({});
+    const [currentUser, setCurrentUser] = useState<UserDto>({});
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -101,7 +101,7 @@ export const SettingsPage = () => {
         }
     }
 
-    function handleUserFieldChange<K extends keyof UsuarioDto>(field: K, value: UsuarioDto[K]) {
+    function handleUserFieldChange<K extends keyof UserDto>(field: K, value: UserDto[K]) {
         const updated = { ...currentUser, [field]: value };
         setCurrentUser(updated);
         setUser(updated);
@@ -110,7 +110,7 @@ export const SettingsPage = () => {
     const handleSaveUserChanges = async () => {
         setSavingUser(true);
         await usersApi.apiUsersPut({
-            usuarioDto: currentUser
+            userDto: currentUser
         }).then(() => {
             showAlert("Perfil atualizado com sucesso!", "success");
         }).catch((error: Error) => {
