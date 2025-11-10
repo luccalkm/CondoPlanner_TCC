@@ -8,8 +8,8 @@ import CondominiumPage from "../features/condominium/CondominiumPage";
 import { SettingsPage } from "../features/settings/SettingsPage";
 import { RegisterPage } from "../features/auth/Register/RegisterPage";
 import { InstanceLayout } from "../features/common/InstanceLayout";
-import AreasPage from "../features/instance/AreasPage";
-import NoticesPage from "../features/instance/NoticesPage";
+import CommonAreasPage from "../features/instance/CommonAreas/CommonAreasPage";
+import NotificationsPage from "../features/instance/NotificationsPage";
 import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
@@ -29,8 +29,8 @@ export function AppRouter() {
                     <Route path="c/:condominiumId" element={<InstanceGuard />}>
                         <Route element={<InstanceLayout />}>
                             <Route index element={<Navigate to="areas" replace />} />
-                            <Route path="areas" element={<AreasPage />} />
-                            <Route path="comunicados" element={<NoticesPage />} />
+                            <Route path="areas" element={<CommonAreasPage />} />
+                            <Route path="comunicados" element={<NotificationsPage />} />
                             <Route path="configuracoes" element={<CondominiumSettingsPage />} />
                         </Route>
                     </Route>

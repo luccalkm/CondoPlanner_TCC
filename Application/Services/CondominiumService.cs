@@ -105,7 +105,7 @@ namespace Application.Services
         {
             var userRelations = _usuarioCondominioRepository
                 .Include("Condominio", "Condominio.Endereco", "Usuario")
-                .Where(uc => uc.UsuarioId == userId)
+                .Where(uc => uc.UsuarioId == userId && uc.Ativo)
                 .ToList();
 
             if (!userRelations.Any())
@@ -119,7 +119,9 @@ namespace Application.Services
             var adminRelation = await _usuarioCondominioRepository
                 .FirstOrDefaultAsync(uc => uc.UsuarioId == currentUserId && uc.CondominioId == condominiumId);
 
-            if (adminRelation is null || adminRelation.TipoUsuario != ETipoUsuario.ADMINISTRADOR)
+            if (adminRelation is null || 
+                adminRelation.TipoUsuario == ETipoUsuario.MORADOR ||
+                adminRelation.TipoUsuario == ETipoUsuario.PORTEIRO)
                 throw new UserFriendlyException("Somente administradores podem visualizar todas as relações deste condomínio.");
 
             var relations = _usuarioCondominioRepository
@@ -133,6 +135,7 @@ namespace Application.Services
             return relations.Select(MapRelation).ToList();
         }
 
+        #region Private Methods
         private async Task CreateCondominiumAsync(CreateOrEditCondominiumInput input)
         {
             if (input.Address is null)
@@ -266,5 +269,6 @@ namespace Application.Services
                 Condominium = condDto
             };
         }
+        #endregion
     }
 }

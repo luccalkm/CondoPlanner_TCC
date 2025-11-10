@@ -1,5 +1,6 @@
 apis/AddressApi.ts
 apis/AuthApi.ts
+apis/CommonAreaApi.ts
 apis/CondominiumApi.ts
 apis/CondominiumInviteApi.ts
 apis/UsersApi.ts
@@ -11,6 +12,9 @@ docs/AddressDto.md
 docs/AuthApi.md
 docs/AuthenticationResponse.md
 docs/ChangePasswordInput.md
+docs/CommonAreaApi.md
+docs/CommonAreaDto.md
+docs/CommonAreaPhotoDto.md
 docs/CondominiumApi.md
 docs/CondominiumDto.md
 docs/CondominiumInviteApi.md
@@ -21,6 +25,8 @@ docs/GenerateInviteResponse.md
 docs/LoginRequest.md
 docs/RegisterRequest.md
 docs/RegisterResponse.md
+docs/UploadCommonAreaPhotoInput.md
+docs/UpsertCommonAreaInput.md
 docs/UpsertUserCondominiumInput.md
 docs/UserCondominiumDto.md
 docs/UserDto.md
@@ -31,6 +37,8 @@ models/AcceptInviteResponse.ts
 models/AddressDto.ts
 models/AuthenticationResponse.ts
 models/ChangePasswordInput.ts
+models/CommonAreaDto.ts
+models/CommonAreaPhotoDto.ts
 models/CondominiumDto.ts
 models/CreateOrEditCondominiumInput.ts
 models/ETipoUsuario.ts
@@ -39,6 +47,8 @@ models/GenerateInviteResponse.ts
 models/LoginRequest.ts
 models/RegisterRequest.ts
 models/RegisterResponse.ts
+models/UploadCommonAreaPhotoInput.ts
+models/UpsertCommonAreaInput.ts
 models/UpsertUserCondominiumInput.ts
 models/UserCondominiumDto.ts
 models/UserDto.ts

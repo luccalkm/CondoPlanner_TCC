@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Card, CardContent, Button, CircularProgress, Divider, Paper } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, Button, CircularProgress, Divider, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useInstanceStore } from '../../../stores/instance.store';
 import { useAlertStore } from '../../../stores/alert.store';
 import { ETipoUsuario, CondominiumInviteApi, type GenerateInviteRequest, type GenerateInviteResponse } from '../../../apiClient';
@@ -19,6 +19,7 @@ const roleOptions: { label: string; type: ETipoUsuario; description: string }[] 
 const CondominiumSettingsPage = () => {
     const { selectedCondominium, isAdminSelected } = useInstanceStore();
     const showAlert = useAlertStore(s => s.showAlert);
+    const theme = useTheme();
 
     const [loadingInvite, setLoadingInvite] = useState<ETipoUsuario | null>(null);
 
@@ -26,6 +27,8 @@ const CondominiumSettingsPage = () => {
     const [inviteData, setInviteData] = useState<InviteData | null>(null);
 
     const condominiumName = useMemo(() => selectedCondominium?.name ?? null, [selectedCondominium]);
+
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     async function generateInvite(role: ETipoUsuario) {
         if (!selectedCondominium) {
@@ -71,7 +74,7 @@ const CondominiumSettingsPage = () => {
     }
 
     return (
-        <Box p={3}>
+        <Box p={3} sx={{ width: isMobile ? 'auto' : '60%', margin: '0 auto' }}>
             <Paper variant='outlined' sx={{ p: 2, mb: 3 }}>
                 <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <AdminPanelSettings sx={{ color: 'primary.main' }} />

@@ -18,7 +18,8 @@ import {
     Switch,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import RefreshIcon from '@mui/icons-material/Refresh'; import { CondominiumApi, type UpsertUserCondominiumInput, type UserCondominiumDto, type UserDto } from '../../../../apiClient';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { CondominiumApi, type UpsertUserCondominiumInput, type UserCondominiumDto, type UserDto } from '../../../../apiClient';
 import { ApiConfiguration } from '../../../../apiClient/apiConfig';
 import { useInstanceStore } from '../../../../stores/instance.store';
 import { useCondominiumStore } from '../../../../stores/condominium.store';
@@ -28,7 +29,7 @@ import EditMemberDialog from './EditMemberDialog';
 const condominiumApi = new CondominiumApi(ApiConfiguration);
 
 const MembersList: React.FC = () => {
-    const { selectedCondominium, isAdminSelected } = useInstanceStore();
+    const { selectedCondominium, isAdminSelected, isSyndicSelected } = useInstanceStore();
     const { userCondominiumRelations, condominiumRelations, fetchCondominiumRelations } = useCondominiumStore();
     const showAlert = useAlertStore(s => s.showAlert);
 
@@ -40,6 +41,9 @@ const MembersList: React.FC = () => {
     const [editOpen, setEditOpen] = useState(false);
     const [selectedMember, setSelectedMember] = useState<{ user: UserDto; relation?: UserCondominiumDto } | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const isAdmin = isAdminSelected();
+    const isSyndic = isSyndicSelected();
 
     useEffect(() => {
         if (!selectedCondominium) return;
@@ -61,24 +65,23 @@ const MembersList: React.FC = () => {
     }, [selectedCondominium, refreshKey, showAlert]);
 
     useEffect(() => {
-        if (selectedCondominium && isAdminSelected()) {
+        if (selectedCondominium && (isAdmin || isSyndic)) {
             fetchCondominiumRelations(selectedCondominium.id!);
         }
-    }, [selectedCondominium, isAdminSelected, fetchCondominiumRelations, refreshKey]);
+    }, [selectedCondominium, isAdmin, isSyndic, fetchCondominiumRelations, refreshKey]);
 
     const relationsByUserId = useMemo(() => {
-        const source = (isAdminSelected() && condominiumRelations.length > 0)
-            ? condominiumRelations
-            : userCondominiumRelations;
+        const canSeeAll = (isAdmin || isSyndic) && condominiumRelations.length > 0;
+        const source = canSeeAll ? condominiumRelations : userCondominiumRelations;
 
         const map = new Map<number, UserCondominiumDto>();
         source.forEach(r => {
-            if (r.user && r.condominiumId === selectedCondominium?.id) {
-                map.set(r.userId!, r);
+            if (r.userId != null && r.condominiumId === selectedCondominium?.id) {
+                map.set(r.userId, r);
             }
         });
         return map;
-    }, [userCondominiumRelations, condominiumRelations, selectedCondominium, isAdminSelected]);
+    }, [userCondominiumRelations, condominiumRelations, selectedCondominium, isAdmin, isSyndic]);
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
@@ -125,7 +128,7 @@ const MembersList: React.FC = () => {
     const rows = filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
-        <Paper sx={{ p: 2 }}>
+        <Paper sx={{ p: 2 }} variant="outlined">
             <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2} mb={2}>
                 <Typography variant="h6" fontWeight={600}>Membros</Typography>
                 <TextField
@@ -167,6 +170,7 @@ const MembersList: React.FC = () => {
                                 {rows.map(u => {
                                     const rel = relationsByUserId.get(u.id!) ?? undefined;
                                     const active = rel?.active;
+                                    const canToggle = (isAdmin || isSyndic) && !!rel;
                                     return (
                                         <TableRow key={u.id}>
                                             <TableCell>
@@ -174,8 +178,15 @@ const MembersList: React.FC = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                                    <Typography variant="body2">{active ? 'Sim' : 'Não'}</Typography>
-                                                    <Switch size="small" checked={active} onChange={() => toggleActive(u, rel)} />
+                                                    <Typography variant="body2">
+                                                        {active === undefined ? '-' : (active ? 'Sim' : 'Não')}
+                                                    </Typography>
+                                                    <Switch
+                                                        size="small"
+                                                        checked={!!active}
+                                                        disabled={!canToggle}
+                                                        onChange={() => canToggle && toggleActive(u, rel)}
+                                                    />
                                                 </Stack>
                                             </TableCell>
                                             <TableCell align="right">

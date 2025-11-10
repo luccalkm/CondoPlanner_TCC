@@ -21,5 +21,6 @@ namespace Domain.Entities
         public int CondominioId { get; set; }
         public Condominio Condominio { get; set; } = null!;
         public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
+        public ICollection<AreaComumFoto> Fotos { get; set; } = new List<AreaComumFoto>();
     }
 }

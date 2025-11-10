@@ -10,6 +10,7 @@ interface InstanceState {
     selectCondominium: (id: number) => void;
     clearSelection: () => void;
     isAdminSelected: () => boolean;
+    isSyndicSelected: () => boolean;
     syncFromParam: (id: number) => void;
 }
 
@@ -35,6 +36,14 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         );
     },
 
+    isSyndicSelected: () => {
+        const user = useAuthStore.getState().user;
+        return get().selectedCondominiumId !== null && useCondominiumStore.getState().userCondominiumRelations.some(r =>
+            r.condominiumId === get().selectedCondominium?.id &&
+            r.userId === user?.id &&
+            r.userType === ETipoUsuario.Sindico
+        );
+    },
     syncFromParam: (id: number) => {
         const currentId = get().selectedCondominiumId;
         if (currentId !== id) {

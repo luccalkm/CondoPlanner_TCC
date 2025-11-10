@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { useInstanceStore } from '../../stores/instance.store';
 
-const NoticesPage = () => {
+const NotificationsPage = () => {
     const { selectedCondominium } = useInstanceStore();
     return (
         <Box p={3}>
@@ -11,4 +11,4 @@ const NoticesPage = () => {
     );
 };
 
-export default NoticesPage;
+export default NotificationsPage;
