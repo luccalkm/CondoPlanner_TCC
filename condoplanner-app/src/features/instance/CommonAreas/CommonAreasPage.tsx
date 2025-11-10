@@ -22,7 +22,7 @@ import { UploadPhotoButton } from './components/UploadPhotoButton';
 import { CommonAreaDialog } from './components/CommonAreaDialog';
 import { AddBusiness, DomainDisabled } from '@mui/icons-material';
 import { CommonAreaCarousel } from './components/CommonAreaCarousel';
-import { useCommonAreasStore } from './commonAreasStore';
+import { useCommonAreasStore } from '../../../stores/commonArea.store';
 import { placeholderImage as placeholderHelper } from './utils';
 
 const placeholderImage = (seed: number) => placeholderHelper(seed);

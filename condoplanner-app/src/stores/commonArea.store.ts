@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CommonAreaDto, UpsertCommonAreaInput, UploadCommonAreaPhotoInput, CommonAreaPhotoDto } from '../../../apiClient';
-import { listByCondominium, upsert, uploadPhoto, getAreaPhotos, invalidateAreaPhotos } from './commonAreasClient';
+import type { CommonAreaDto, UpsertCommonAreaInput, UploadCommonAreaPhotoInput, CommonAreaPhotoDto } from '../apiClient';
+import { listByCondominium, upsert, uploadPhoto, getAreaPhotos, invalidateAreaPhotos } from '../features/instance/CommonAreas/commonAreasClient';
 
 type StoreState = {
   areas: CommonAreaDto[];

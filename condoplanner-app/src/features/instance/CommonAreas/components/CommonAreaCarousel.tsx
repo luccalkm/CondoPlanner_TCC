@@ -28,10 +28,10 @@ export function CommonAreaCarousel({
     const [visible, setVisible] = useState(false);
 
     const idsKey = useMemo(() => ids.join(','), [ids]);
-    const api = new CommonAreaApi(ApiConfiguration);
 
     useEffect(() => {
         let active = true;
+        const api = new CommonAreaApi(ApiConfiguration);
         async function loadAll() {
             const list = await api.apiCommonAreaAreasAreaIdPhotosGet({ areaId, includeData: true });
             if (!active) return;
@@ -44,7 +44,6 @@ export function CommonAreaCarousel({
         loadAll();
         return () => { active = false; };
     }, [areaId, fallbackUrl]);
-
     useEffect(() => {
         const el = containerRef.current;
         if (!el) return;
@@ -73,7 +72,6 @@ export function CommonAreaCarousel({
         ensureLoaded();
     }
 
-    // No photos case
     if (!ids.length) {
         return (
             <img
