@@ -102,7 +102,7 @@ namespace Application.Services
             if (input.Id.HasValue && input.Id.Value > 0)
             {
                 entity = await _areaRepository.GetTrackedAsync(a => a.Id == input.Id.Value)
-                    ?? throw new UserFriendlyException("Common area not found.");
+                    ?? throw new UserFriendlyException("Área comum não encontrada. Recarregue a página ou entre em contato.");
             }
             else
             {

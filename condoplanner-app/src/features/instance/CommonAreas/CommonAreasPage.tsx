@@ -16,6 +16,9 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { useInstanceStore } from '../../../stores/instance.store';
+import useCommonAreaViewStore from '../../../stores/commonAreaView.store';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import { useNavigate } from 'react-router-dom';
 import type { CommonAreaDto, UpsertCommonAreaInput } from '../../../apiClient';
 import { UploadPhotoButton } from './components/UploadPhotoButton';
 import { CommonAreaDialog } from './components/CommonAreaDialog';
@@ -29,6 +32,7 @@ const placeholderImage = (seed: number) => placeholderHelper(seed);
 export default function CommonAreasPage() {
     const { selectedCondominium, isAdminSelected, isSyndicSelected } = useInstanceStore();
     const { areas, loadingAreas, saveArea, loadAreas } = useCommonAreasStore(selectedCondominium?.id);
+    const { setCurrentArea } = useCommonAreaViewStore();
     const [openDialog, setOpenDialog] = useState(false);
     const [editing, setEditing] = useState<CommonAreaDto | null>(null);
     const canManage = useMemo(() => isAdminSelected() || isSyndicSelected(), [isAdminSelected, isSyndicSelected]);
@@ -36,6 +40,7 @@ export default function CommonAreasPage() {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const condominiumId = selectedCondominium?.id;
+    const navigate = useNavigate();
 
     function openNew() {
         setEditing(null);
@@ -132,19 +137,24 @@ export default function CommonAreasPage() {
                                         <Typography variant="caption" color={area.available ? 'success.main' : 'error.main'}>
                                             {area.available ? 'Disponível' : 'Indisponível'}
                                         </Typography>
-                                        {canManage && (
-                                            <Box display="flex" gap={1}>
-                                                <UploadPhotoButton
-                                                    areaId={area.id!}
-                                                    onUploaded={() => loadAreas()}
-                                                    size="small"
-                                                    icon={<AddAPhoto fontSize="small" />}
-                                                />
-                                                <IconButton size="small" onClick={() => openEdit(area)} aria-label="Editar">
-                                                    <EditIcon fontSize="small" />
-                                                </IconButton>
-                                            </Box>
-                                        )}
+                                        <Box display="flex" gap={1} alignItems="center">
+                                            <IconButton size="small" onClick={() => { setCurrentArea(area); navigate(condominiumId ? `/c/${condominiumId}/areas/${area.id}` : `/areas/${area.id}`); }} aria-label="Ir">
+                                                <ArrowForward fontSize="small" />
+                                            </IconButton>
+                                            {canManage && (
+                                                <Box display="flex" gap={1}>
+                                                    <UploadPhotoButton
+                                                        areaId={area.id!}
+                                                        onUploaded={() => loadAreas()}
+                                                        size="small"
+                                                        icon={<AddAPhoto fontSize="small" />}
+                                                    />
+                                                    <IconButton size="small" onClick={() => openEdit(area)} aria-label="Editar">
+                                                        <EditIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Box>
+                                            )}
+                                        </Box>
                                     </CardActions>
                                 </Paper>
                             </Grid>

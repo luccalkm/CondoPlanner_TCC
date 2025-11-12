@@ -9,6 +9,7 @@ import { SettingsPage } from "../features/settings/SettingsPage";
 import { RegisterPage } from "../features/auth/Register/RegisterPage";
 import { InstanceLayout } from "../features/common/InstanceLayout";
 import CommonAreasPage from "../features/instance/CommonAreas/CommonAreasPage";
+import CommonAreaViewPage from "../features/instance/CommonAreas/CommonAreaView/CommonAreaViewPage";
 import NotificationsPage from "../features/instance/NotificationsPage";
 import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
@@ -30,6 +31,7 @@ export function AppRouter() {
                         <Route element={<InstanceLayout />}>
                             <Route index element={<Navigate to="areas" replace />} />
                             <Route path="areas" element={<CommonAreasPage />} />
+                            <Route path="areas/:areaId" element={<CommonAreaViewPage />} />
                             <Route path="comunicados" element={<NotificationsPage />} />
                             <Route path="configuracoes" element={<CondominiumSettingsPage />} />
                         </Route>
