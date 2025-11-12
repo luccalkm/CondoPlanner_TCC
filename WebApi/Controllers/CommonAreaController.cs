@@ -50,27 +50,7 @@ namespace WebApi.Controllers
             return Ok(new { message = "Enviado com sucesso." });
         }
 
-        [HttpGet("Photos/{photoId:int}")]
-        public async Task<ActionResult<CommonAreaPhotoDto>> GetPhoto(int photoId, [FromQuery] bool includeData = false)
-        {
-            var dto = await _service.GetPhotoAsync(photoId, includeData);
-            return Ok(dto);
-        }
-
-        [HttpGet("Areas/{areaId:int}/Photos")]
-        public async Task<ActionResult<List<CommonAreaPhotoDto>>> GetAreaPhotos(int areaId, [FromQuery] bool includeData = false)
-        {
-            var list = await _service.GetPhotosByAreaAsync(areaId, includeData);
-            return Ok(list);
-        }
-
-        [HttpGet("Photos/{photoId:int}/Raw")]
-        public async Task<IActionResult> GetPhotoRaw(int photoId)
-        {
-            var dto = await _service.GetPhotoAsync(photoId, includeData: true);
-            var bytes = Convert.FromBase64String(dto.Base64Data!);
-            return File(bytes, dto.ContentType, dto.OriginalFileName);
-        }
+        // Photo retrieval endpoints removed. Photo data is included in the CommonAreaDto returned by GetByCondominium.
 
         [HttpDelete("Photos/{photoId:int}")]
         public async Task<IActionResult> RemovePhoto(int photoId)

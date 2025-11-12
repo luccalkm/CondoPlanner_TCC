@@ -16,25 +16,17 @@
 import * as runtime from '../runtime';
 import type {
   CommonAreaDto,
-  CommonAreaPhotoDto,
   UploadCommonAreaPhotoInput,
   UpsertCommonAreaInput,
 } from '../models/index';
 import {
     CommonAreaDtoFromJSON,
     CommonAreaDtoToJSON,
-    CommonAreaPhotoDtoFromJSON,
-    CommonAreaPhotoDtoToJSON,
     UploadCommonAreaPhotoInputFromJSON,
     UploadCommonAreaPhotoInputToJSON,
     UpsertCommonAreaInputFromJSON,
     UpsertCommonAreaInputToJSON,
 } from '../models/index';
-
-export interface ApiCommonAreaAreasAreaIdPhotosGetRequest {
-    areaId: number;
-    includeData?: boolean;
-}
 
 export interface ApiCommonAreaCondominiumCondominiumIdGetRequest {
     condominiumId: number;
@@ -45,15 +37,6 @@ export interface ApiCommonAreaIdGetRequest {
 }
 
 export interface ApiCommonAreaPhotosPhotoIdDeleteRequest {
-    photoId: number;
-}
-
-export interface ApiCommonAreaPhotosPhotoIdGetRequest {
-    photoId: number;
-    includeData?: boolean;
-}
-
-export interface ApiCommonAreaPhotosPhotoIdRawGetRequest {
     photoId: number;
 }
 
@@ -69,53 +52,6 @@ export interface ApiCommonAreaUpsertPostRequest {
  * 
  */
 export class CommonAreaApi extends runtime.BaseAPI {
-
-    /**
-     */
-    async apiCommonAreaAreasAreaIdPhotosGetRaw(requestParameters: ApiCommonAreaAreasAreaIdPhotosGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CommonAreaPhotoDto>>> {
-        if (requestParameters['areaId'] == null) {
-            throw new runtime.RequiredError(
-                'areaId',
-                'Required parameter "areaId" was null or undefined when calling apiCommonAreaAreasAreaIdPhotosGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['includeData'] != null) {
-            queryParameters['includeData'] = requestParameters['includeData'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/CommonArea/Areas/{areaId}/Photos`;
-        urlPath = urlPath.replace(`{${"areaId"}}`, encodeURIComponent(String(requestParameters['areaId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CommonAreaPhotoDtoFromJSON));
-    }
-
-    /**
-     */
-    async apiCommonAreaAreasAreaIdPhotosGet(requestParameters: ApiCommonAreaAreasAreaIdPhotosGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CommonAreaPhotoDto>> {
-        const response = await this.apiCommonAreaAreasAreaIdPhotosGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      */
@@ -243,95 +179,6 @@ export class CommonAreaApi extends runtime.BaseAPI {
      */
     async apiCommonAreaPhotosPhotoIdDelete(requestParameters: ApiCommonAreaPhotosPhotoIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiCommonAreaPhotosPhotoIdDeleteRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiCommonAreaPhotosPhotoIdGetRaw(requestParameters: ApiCommonAreaPhotosPhotoIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CommonAreaPhotoDto>> {
-        if (requestParameters['photoId'] == null) {
-            throw new runtime.RequiredError(
-                'photoId',
-                'Required parameter "photoId" was null or undefined when calling apiCommonAreaPhotosPhotoIdGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['includeData'] != null) {
-            queryParameters['includeData'] = requestParameters['includeData'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/CommonArea/Photos/{photoId}`;
-        urlPath = urlPath.replace(`{${"photoId"}}`, encodeURIComponent(String(requestParameters['photoId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => CommonAreaPhotoDtoFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiCommonAreaPhotosPhotoIdGet(requestParameters: ApiCommonAreaPhotosPhotoIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CommonAreaPhotoDto> {
-        const response = await this.apiCommonAreaPhotosPhotoIdGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiCommonAreaPhotosPhotoIdRawGetRaw(requestParameters: ApiCommonAreaPhotosPhotoIdRawGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['photoId'] == null) {
-            throw new runtime.RequiredError(
-                'photoId',
-                'Required parameter "photoId" was null or undefined when calling apiCommonAreaPhotosPhotoIdRawGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/CommonArea/Photos/{photoId}/Raw`;
-        urlPath = urlPath.replace(`{${"photoId"}}`, encodeURIComponent(String(requestParameters['photoId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiCommonAreaPhotosPhotoIdRawGet(requestParameters: ApiCommonAreaPhotosPhotoIdRawGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiCommonAreaPhotosPhotoIdRawGetRaw(requestParameters, initOverrides);
     }
 
     /**

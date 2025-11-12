@@ -6,13 +6,14 @@ using Domain.Enums;
 using Shared.Exceptions;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class CommonAreaService : ICommonAreaService
     {
         private readonly IRepository<AreaComum> _areaRepository;
-        private readonly IRepository<AreaComumFoto> _fotoRepository;
+        private readonly IRepository<AreaComumFoto> _photoRepository;
         private readonly IRepository<UsuarioCondominio> _usuarioCondRepo;
         private readonly IMapper _mapper;
 
@@ -23,7 +24,7 @@ namespace Application.Services
             IMapper mapper)
         {
             _areaRepository = areaRepository;
-            _fotoRepository = fotoRepository;
+            _photoRepository = fotoRepository;
             _usuarioCondRepo = usuarioCondRepo;
             _mapper = mapper;
         }
@@ -35,7 +36,48 @@ namespace Application.Services
                 .Where(a => a.CondominioId == condominiumId)
                 .ToList();
 
-            return query.Select(_mapper.Map<CommonAreaDto>).ToList();
+            var dtos = query.Select(_mapper.Map<CommonAreaDto>).ToList();
+
+            var work = new List<(AreaComumFoto entity, CommonAreaPhotoDto dto)>();
+            for (int i = 0; i < query.Count; i++)
+            {
+                var entityPhotos = query[i].Fotos?.ToList() ?? new List<AreaComumFoto>();
+                var dtoPhotos = dtos[i].Photos ?? new List<CommonAreaPhotoDto>();
+
+                var count = Math.Min(entityPhotos.Count, dtoPhotos.Count);
+                for (int j = 0; j < count; j++)
+                {
+                    work.Add((entityPhotos[j], dtoPhotos[j]));
+                }
+            }
+
+            if (work.Count > 0)
+            {
+                var semaphore = new System.Threading.SemaphoreSlim(Math.Max(1, Environment.ProcessorCount - 1));
+                var tasks = new List<Task>();
+                foreach (var item in work)
+                {
+                    await semaphore.WaitAsync();
+                    var e = item.entity;
+                    var d = item.dto;
+                    tasks.Add(Task.Run(() =>
+                    {
+                        try
+                        {
+                            var decompressed = Decompress(e.ConteudoZip);
+                            d.Base64Data = Convert.ToBase64String(decompressed);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    }));
+                }
+
+                await Task.WhenAll(tasks);
+            }
+
+            return dtos;
         }
 
         public async Task<CommonAreaDto?> GetByIdAsync(int id)
@@ -86,7 +128,7 @@ namespace Application.Services
                 (uc.TipoUsuario == ETipoUsuario.ADMINISTRADOR || uc.TipoUsuario == ETipoUsuario.SINDICO));
 
             if (relation is null)
-                throw new UserFriendlyException("Você não tem permissão para enviar fotos.");
+                throw new UserFriendlyException("Você não tem permissão para enviar photos.");
 
             var originalBytes = Convert.FromBase64String(input.Base64Original);
             var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(originalBytes));
@@ -107,48 +149,16 @@ namespace Application.Services
                 HashSha256 = hash
             };
 
-            await _fotoRepository.AddAsync(foto);
-            await _fotoRepository.SaveChangesAsync();
-        }
-
-        public async Task<CommonAreaPhotoDto> GetPhotoAsync(int photoId, bool includeData = false)
-        {
-            var foto = await _fotoRepository.GetTrackedAsync(f => f.Id == photoId)
-                ?? throw new UserFriendlyException("Foto não encontrada.");
-
-            var dto = _mapper.Map<CommonAreaPhotoDto>(foto);
-
-            if (includeData)
-            {
-                var decompressed = Decompress(foto.ConteudoZip);
-                dto.Base64Data = Convert.ToBase64String(decompressed);
-            }
-
-            return dto;
+            await _photoRepository.AddAsync(foto);
+            await _photoRepository.SaveChangesAsync();
         }
 
         public async Task RemovePhotoAsync(int photoId)
         {
-            var foto = await _fotoRepository.GetByIdAsync(photoId)
+            var photo = await _photoRepository.GetByIdAsync(photoId)
                 ?? throw new UserFriendlyException("Foto não encontrada.");
-            _fotoRepository.Delete(foto);
-            await _fotoRepository.SaveChangesAsync();
-        }
-        
-        public async Task<List<CommonAreaPhotoDto>> GetPhotosByAreaAsync(int areaId, bool includeData = false)
-        {
-            var fotos = await _fotoRepository.FetchAsync(f => f.AreaComumId == areaId);
-            var listafotos = fotos.ToList();
-            var list = fotos.Select(_mapper.Map<CommonAreaPhotoDto>).ToList();
-            if (includeData)
-            {
-                for (int i = 0; i < listafotos.Count; i++)
-                {
-                    var decompressed = Decompress(listafotos[i].ConteudoZip);
-                    list[i].Base64Data = Convert.ToBase64String(decompressed);
-                }
-            }
-            return list;
+            _photoRepository.Delete(photo);
+            await _photoRepository.SaveChangesAsync();
         }
         
         #region Private Methods

@@ -6,7 +6,15 @@ const api = new CommonAreaApi(ApiConfiguration);
 const photosCache = new Map<number, CommonAreaPhotoDto[]>();
 
 export async function listByCondominium(condominiumId: number): Promise<CommonAreaDto[]> {
-  return api.apiCommonAreaCondominiumCondominiumIdGet({ condominiumId });
+  const list = await api.apiCommonAreaCondominiumCondominiumIdGet({ condominiumId });
+
+  for (const area of list) {
+    if (area.id && area.photos && area.photos.length > 0) {
+      photosCache.set(area.id, area.photos);
+    }
+  }
+
+  return list;
 }
 
 export async function upsert(input: UpsertCommonAreaInput): Promise<void> {
@@ -16,13 +24,6 @@ export async function upsert(input: UpsertCommonAreaInput): Promise<void> {
 export async function uploadPhoto(input: UploadCommonAreaPhotoInput): Promise<void> {
   await api.apiCommonAreaPhotosUploadPost({ uploadCommonAreaPhotoInput: input });
   if (typeof input.areaId === 'number') photosCache.delete(input.areaId);
-}
-
-export async function getAreaPhotos(areaId: number): Promise<CommonAreaPhotoDto[]> {
-  if (photosCache.has(areaId)) return photosCache.get(areaId)!;
-  const list = await api.apiCommonAreaAreasAreaIdPhotosGet({ areaId, includeData: true });
-  photosCache.set(areaId, list);
-  return list;
 }
 
 export function invalidateAreaPhotos(areaId: number) {

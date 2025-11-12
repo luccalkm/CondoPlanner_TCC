@@ -9,8 +9,6 @@ namespace Application.Interfaces
         Task<int> UpsertAsync(UpsertCommonAreaInput input, int userId);
 
         Task UploadPhotoAsync(UploadCommonAreaPhotoInput input, int currentUserId);
-        Task<CommonAreaPhotoDto> GetPhotoAsync(int photoId, bool includeData = false);
-        Task<List<CommonAreaPhotoDto>> GetPhotosByAreaAsync(int areaId, bool includeData = false);
         Task RemovePhotoAsync(int photoId);
     }
 }

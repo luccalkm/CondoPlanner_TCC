@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Box, IconButton, Skeleton, Stack } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { CommonAreaApi } from '../../../../apiClient';
-import { ApiConfiguration } from '../../../../apiClient/apiConfig';
+
+type Photo = { id?: number; base64Data?: string | null; contentType?: string | null };
 
 type Props = {
     areaId: number;
@@ -11,83 +11,34 @@ type Props = {
     fallbackUrl?: string;
     height?: number | string;
     rounded?: number;
+    photos?: Photo[];
 };
 
 export function CommonAreaCarousel({
-    areaId,
     alt,
     fallbackUrl,
     height = 160,
-    rounded = 4
+    rounded = 4,
+    photos
 }: Props) {
-    const [ids, setIds] = useState<number[]>([]);
     const [index, setIndex] = useState(0);
-    const [sources, setSources] = useState<(string | null)[]>(() => ids.map(() => null));
-    const [loading, setLoading] = useState<boolean[]>(() => ids.map(() => false));
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [visible, setVisible] = useState(false);
 
-    const idsKey = useMemo(() => ids.join(','), [ids]);
+    const ids = useMemo(() => (photos || []).map(p => p.id ?? 0), [photos]);
+    const sources = useMemo(() => (photos || []).map(p => p.base64Data ? `data:${p.contentType};base64,${p.base64Data}` : (fallbackUrl || null)), [photos, fallbackUrl]);
+    const loading = useMemo(() => (photos || []).map(p => !p.base64Data), [photos]);
 
-    useEffect(() => {
-        let active = true;
-        const api = new CommonAreaApi(ApiConfiguration);
-        async function loadAll() {
-            const list = await api.apiCommonAreaAreasAreaIdPhotosGet({ areaId, includeData: true });
-            if (!active) return;
-            const newIds = list.map(p => p.id).filter((v): v is number => typeof v === 'number');
-            setIds(newIds);
-            setSources(list.map(p => p.base64Data ? `data:${p.contentType};base64,${p.base64Data}` : (fallbackUrl || null)));
-            setLoading(list.map(p => !p.base64Data));
-            setIndex(0);
-        }
-        loadAll();
-        return () => { active = false; };
-    }, [areaId, fallbackUrl]);
-    useEffect(() => {
-        const el = containerRef.current;
-        if (!el) return;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries.some((e) => e.isIntersecting)) {
-                    setVisible(true);
-                }
-            },
-            { rootMargin: '100px' }
-        );
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, []);
-
-    const ensureLoaded = useCallback(() => { }, []);
-
-    useEffect(() => {
-        if (!visible || ids.length === 0) return;
-    }, [visible, idsKey, ids]);
+    const currentSrc = sources[index] ?? fallbackUrl ?? null;
 
     function go(delta: number) {
         if (ids.length === 0) return;
         const next = ((index + delta) % ids.length + ids.length) % ids.length;
         setIndex(next);
-        ensureLoaded();
     }
-
-    if (!ids.length) {
-        return (
-            <img
-                src={fallbackUrl || ''}
-                alt={alt}
-                height={height}
-                style={{ padding: 2, width: '100%', objectFit: 'cover', borderRadius: rounded }}
-            />
-        );
-    }
-
-    const currentSrc = sources[index];
 
     return (
         <Box ref={containerRef} position="relative" sx={{ width: '100%' }}>
-            {!currentSrc || loading[index] ? (
+            {!currentSrc || (loading[index] ?? false) ? (
                 <Skeleton variant="rectangular" height={height} sx={{ borderRadius: rounded }} />
             ) : (
                 <img
@@ -141,7 +92,7 @@ export function CommonAreaCarousel({
                     {ids.map((_, i) => (
                         <Box
                             key={i}
-                            onClick={() => { setIndex(i); ensureLoaded(); }}
+                            onClick={() => { setIndex(i); }}
                             sx={{
                                 width: 8,
                                 height: 8,

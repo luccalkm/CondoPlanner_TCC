@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CommonAreaDto, UpsertCommonAreaInput, UploadCommonAreaPhotoInput, CommonAreaPhotoDto } from '../apiClient';
-import { listByCondominium, upsert, uploadPhoto, getAreaPhotos, invalidateAreaPhotos } from '../features/instance/CommonAreas/commonAreasClient';
+import { listByCondominium, upsert, uploadPhoto, invalidateAreaPhotos } from '../features/instance/CommonAreas/commonAreasClient';
 
 type StoreState = {
   areas: CommonAreaDto[];
@@ -22,19 +22,17 @@ export function useCommonAreasStore(condominiumId?: number) {
     setState(s => ({ ...s, loadingAreas: true }));
     try {
       const list = await listByCondominium(condoRef.current);
-      setState(s => ({ ...s, areas: list }));
+
+      const photosMap: Record<number, CommonAreaPhotoDto[]> = {};
+      for (const a of list) {
+        if (a.id && a.photos && a.photos.length > 0) {
+          photosMap[a.id] = a.photos;
+        }
+      }
+
+      setState(s => ({ ...s, areas: list, photos: { ...s.photos, ...photosMap } }));
     } finally {
       setState(s => ({ ...s, loadingAreas: false }));
-    }
-  }, []);
-
-  const loadPhotosForArea = useCallback(async (areaId: number) => {
-    setState(s => ({ ...s, loadingPhotos: { ...s.loadingPhotos, [areaId]: true } }));
-    try {
-      const list = await getAreaPhotos(areaId);
-      setState(s => ({ ...s, photos: { ...s.photos, [areaId]: list } }));
-    } finally {
-      setState(s => ({ ...s, loadingPhotos: { ...s.loadingPhotos, [areaId]: false } }));
     }
   }, []);
 
@@ -46,8 +44,8 @@ export function useCommonAreasStore(condominiumId?: number) {
   const sendPhoto = useCallback(async (input: UploadCommonAreaPhotoInput) => {
     await uploadPhoto(input);
     invalidateAreaPhotos(input.areaId as number);
-    await loadPhotosForArea(input.areaId as number);
-  }, [loadPhotosForArea]);
+    await loadAreas();
+  }, [loadAreas]);
 
   useEffect(() => { loadAreas(); }, [loadAreas, condominiumId]);
 
@@ -57,7 +55,6 @@ export function useCommonAreasStore(condominiumId?: number) {
     photos: state.photos,
     loadingPhotos: state.loadingPhotos,
     loadAreas,
-    loadPhotosForArea,
     saveArea,
     sendPhoto,
   };

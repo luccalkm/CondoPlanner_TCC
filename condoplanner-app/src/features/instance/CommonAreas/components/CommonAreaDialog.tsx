@@ -91,13 +91,22 @@ export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing
                             onChange={e => update('description', e.target.value)}
                         />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 4}}>
+                    <Grid size={{ xs: 6, sm: 4}}>
                         <TextField
                             label="Capacidade"
                             type="number"
                             fullWidth
                             value={form.capacity ?? 0}
                             onChange={e => update('capacity', Number(e.target.value))}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 6, sm: 4}}>
+                        <TextField
+                            label="Dias Disponíveis"
+                            type="number"
+                            fullWidth
+                            value={form.availableDays ?? 7}
+                            onChange={e => update('availableDays', Number(e.target.value))}
                         />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 4}}>
@@ -109,17 +118,8 @@ export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing
                             onChange={e => update('maxDuration', Number(e.target.value))}
                         />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 4}}>
-                        <TextField
-                            label="Dias Disponíveis"
-                            type="number"
-                            fullWidth
-                            value={form.availableDays ?? 7}
-                            onChange={e => update('availableDays', Number(e.target.value))}
-                        />
-                    </Grid>
 
-                    <Grid size={{ xs: 12, sm: 6}}>
+                    <Grid size={6}>
                         <TextField
                             label="Hora Abertura"
                             type="time"
@@ -129,7 +129,7 @@ export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing
                             inputProps={{ step: 60 }}
                         />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 6}}>
+                    <Grid size={6}>
                         <TextField
                             label="Hora Fechamento"
                             type="time"

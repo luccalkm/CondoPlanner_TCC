@@ -15,12 +15,11 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import ImageIcon from '@mui/icons-material/Image';
 import { useInstanceStore } from '../../../stores/instance.store';
 import type { CommonAreaDto, UpsertCommonAreaInput } from '../../../apiClient';
 import { UploadPhotoButton } from './components/UploadPhotoButton';
 import { CommonAreaDialog } from './components/CommonAreaDialog';
-import { AddBusiness, DomainDisabled } from '@mui/icons-material';
+import { AddAPhoto, AddBusiness, DomainDisabled } from '@mui/icons-material';
 import { CommonAreaCarousel } from './components/CommonAreaCarousel';
 import { useCommonAreasStore } from '../../../stores/commonArea.store';
 import { placeholderImage as placeholderHelper } from './utils';
@@ -98,7 +97,10 @@ export default function CommonAreasPage() {
                                     <CommonAreaCarousel
                                         alt={area.name ?? 'Área Comum'}
                                         fallbackUrl={placeholderImage(area.id ?? Math.random() * 1000)}
-                                        height={160} areaId={area.id ?? 0}                                    />
+                                        height={160}
+                                        areaId={area.id ?? 0}
+                                        photos={area.photos || []}
+                                    />
                                     <CardContent sx={{ flexGrow: 1 }}>
                                         <Tooltip title={area.name ?? ''}>
                                             <Typography variant="subtitle1" fontWeight={600} gutterBottom noWrap>
@@ -136,7 +138,7 @@ export default function CommonAreasPage() {
                                                     areaId={area.id!}
                                                     onUploaded={() => loadAreas()}
                                                     size="small"
-                                                    icon={<ImageIcon fontSize="small" />}
+                                                    icon={<AddAPhoto fontSize="small" />}
                                                 />
                                                 <IconButton size="small" onClick={() => openEdit(area)} aria-label="Editar">
                                                     <EditIcon fontSize="small" />
