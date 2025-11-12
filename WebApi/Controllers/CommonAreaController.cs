@@ -50,8 +50,6 @@ namespace WebApi.Controllers
             return Ok(new { message = "Enviado com sucesso." });
         }
 
-        // Photo retrieval endpoints removed. Photo data is included in the CommonAreaDto returned by GetByCondominium.
-
         [HttpDelete("Photos/{photoId:int}")]
         public async Task<IActionResult> RemovePhoto(int photoId)
         {
