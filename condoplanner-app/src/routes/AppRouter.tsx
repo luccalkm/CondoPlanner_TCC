@@ -9,21 +9,22 @@ import { SettingsPage } from "../features/settings/SettingsPage";
 import { RegisterPage } from "../features/auth/Register/RegisterPage";
 import { InstanceLayout } from "../features/common/InstanceLayout";
 import CommonAreasPage from "../features/instance/CommonAreas/CommonAreasPage";
-import CommonAreaViewPage from "../features/instance/CommonAreas/CommonAreaView/CommonAreaViewPage";
+import CommonAreaViewPage from "../features/instance/CommonAreas/CommonAreaViewPage";
 import NotificationsPage from "../features/instance/NotificationsPage";
 import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
+import { useAuth } from "../hooks/useAuth";
 
 export function AppRouter() {
+    const { hasAuthenticationToken } = useAuth();
     return (
         <BrowserRouter>
             <Routes>
+                <Route index element={<Navigate to={hasAuthenticationToken() ? "/condominios" : "/login"} replace />} />
                 <Route element={<ProtectedRoutes />}>
                     <Route element={<MainLayout />}>
-                        {/* <Route index element={<HomePage />} /> */}
                         <Route path="condominios" element={<CondominiumPage />} />
-                        {/* <Route path="reservation" element={<ReservationPage />} /> */}
                         <Route path="configuracoes" element={<SettingsPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>

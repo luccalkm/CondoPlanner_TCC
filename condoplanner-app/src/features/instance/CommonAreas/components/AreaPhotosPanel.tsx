@@ -1,8 +1,8 @@
 import { Paper } from '@mui/material';
-import { CommonAreaCarousel } from '../../components/CommonAreaCarousel';
-import { placeholderImage } from '../../utils';
+import { CommonAreaCarousel } from './CommonAreaCarousel';
+import { placeholderImage } from '../utils';
 
-import type { CommonAreaDto } from '../../../../../apiClient';
+import type { CommonAreaDto } from '../../../../apiClient';
 
 interface AreaPhotosPanelProps {
   area: CommonAreaDto | null | undefined;

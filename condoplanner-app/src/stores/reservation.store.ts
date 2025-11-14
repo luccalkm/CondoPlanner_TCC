@@ -42,9 +42,9 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
   },
   create: async (input) => {
     await api.apiReservationPost({ createReservationInput: input });
-    // refresh month cache
-    if (input.areaId && input.date) {
-      const d = new Date(input.date);
+    // refresh month cache usando startDate
+    if (input.areaId && input.startDate) {
+      const d = new Date(input.startDate);
       await get().fetchForAreaMonth(input.areaId, d.getFullYear(), d.getMonth());
     }
   },

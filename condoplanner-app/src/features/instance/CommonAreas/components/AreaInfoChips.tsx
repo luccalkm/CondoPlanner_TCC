@@ -1,6 +1,6 @@
 import { Paper, Chip, Typography } from '@mui/material';
 import { AccessTime, People, CalendarMonth, CheckCircleOutline, Cancel } from '@mui/icons-material';
-import type { CommonAreaDto } from '../../../../../apiClient';
+import type { CommonAreaDto } from '../../../../apiClient';
 
 interface AreaInfoChipsProps {
     area: CommonAreaDto | null | undefined;

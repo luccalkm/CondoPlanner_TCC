@@ -44,11 +44,8 @@ namespace Application.Services
 
         public async Task<int> CreateAsync(CreateReservationInput input, int userId)
         {
-            var startDate = input.Date.Date;
-            var startDateTime = startDate.Add(input.StartTime);
-            var endDateTimeSameDay = startDate.Add(input.EndTime);
-            var crossesMidnight = input.EndTime <= input.StartTime;
-            var endDateTime = crossesMidnight ? startDate.AddDays(1).Add(input.EndTime) : endDateTimeSameDay;
+            var startDateTime = input.StartDate;
+            var endDateTime = input.EndDate;
 
             if (endDateTime <= startDateTime)
                 throw new UserFriendlyException("Período inválido: data/hora final deve ser maior que a inicial.");
@@ -59,10 +56,9 @@ namespace Application.Services
             if (!area.Disponivel)
                 throw new UserFriendlyException("Área indisponível para reservas.");
 
-            // Horários por dia: no dia inicial, início >= abertura; no dia final, término <= fechamento
-            if (input.StartTime < area.HoraAbertura)
+            if (startDateTime.TimeOfDay < area.HoraAbertura)
                 throw new UserFriendlyException("Horário de início antes da abertura da área.");
-            if (input.EndTime > area.HoraFechamento)
+            if (endDateTime.TimeOfDay > area.HoraFechamento)
                 throw new UserFriendlyException("Horário de término após o fechamento da área.");
 
             var duration = (int)(endDateTime - startDateTime).TotalMinutes;
@@ -73,35 +69,36 @@ namespace Application.Services
                 throw new UserFriendlyException("Número de convidados excede a capacidade da área.");
 
             var today = DateTime.UtcNow.Date;
-            if (startDate < today)
+            if (startDateTime.Date < today)
                 throw new UserFriendlyException("Não é possível reservar em data passada.");
 
-            if ((startDate - today).TotalDays > area.DiasDisponiveis)
+            if ((startDateTime.Date - today).TotalDays > area.DiasDisponiveis)
                 throw new UserFriendlyException("Data desejada fora da janela de agendamento permitida.");
 
             var vinculo = _vinculoRepo
                 .Include("Apartamento", "Apartamento.Bloco")
                 .FirstOrDefault(v => v.UsuarioId == userId
                     && v.Ativo
-                    && v.DataInicio <= startDate
-                    && (v.DataFim == null || v.DataFim.Value.Date >= startDate)
+                    && v.DataInicio <= startDateTime.Date
+                    && (v.DataFim == null || v.DataFim.Value.Date >= startDateTime.Date)
                     && v.Apartamento.Bloco.CondominioId == area.CondominioId);
 
             if (vinculo is null)
                 throw new UserFriendlyException("Você não possui vínculo residencial ativo neste condomínio para reservar esta área.");
 
+            // Buscar reservas potencialmente conflitantes (dia inicial e dia anterior se atravessa meia-noite)
             var existing = _reservationRepo
                 .Include(r => r.AreaComum)
-                .Where(r => r.AreaComumId == area.Id && r.Data >= startDate.AddDays(-1) && r.Data <= startDate)
+                .Where(r => r.AreaComumId == area.Id && r.Data >= startDateTime.Date.AddDays(-1) && r.Data <= startDateTime.Date)
                 .Where(r => r.Status != EStatusReserva.CANCELADO && r.Status != EStatusReserva.REJEITADO)
                 .ToList();
 
             bool overlapping = existing.Any(r =>
             {
-                var rStart = r.Data.Date.Add(r.HoraInicio);
+                var rStart = r.HoraInicio;
                 var rEnd = r.HoraTermino <= r.HoraInicio
-                    ? r.Data.Date.AddDays(1).Add(r.HoraTermino)
-                    : r.Data.Date.Add(r.HoraTermino);
+                    ? r.HoraTermino.AddDays(1)
+                    : r.HoraTermino;
                 return DateRangesOverlap(rStart, rEnd, startDateTime, endDateTime);
             });
 

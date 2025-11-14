@@ -3,6 +3,7 @@ import { Button, IconButton, Tooltip } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { CommonAreaApi, type UploadCommonAreaPhotoInput } from '../../../../apiClient';
 import { ApiConfiguration } from '../../../../apiClient/apiConfig';
+import { useAlertStore } from '../../../../stores/alert.store';
 
 const api = new CommonAreaApi(ApiConfiguration);
 
@@ -22,6 +23,7 @@ export function UploadPhotoButton({
     variant = 'outlined'
 }: Props) {
     const [loading, setLoading] = useState(false);
+    const showAlert = useAlertStore((state) => state.showAlert);
 
     async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -43,8 +45,8 @@ export function UploadPhotoButton({
 
             await api.apiCommonAreaPhotosUploadPost({ uploadCommonAreaPhotoInput: input });
             await onUploaded();
-        } catch (err) {
-            console.error('Erro ao enviar foto', err);
+        } catch (error: unknown) {
+            showAlert('Erro ao enviar foto ' + (error instanceof Error ? error.message : String(error)), 'error');
         } finally {
             setLoading(false);
             e.target.value = '';

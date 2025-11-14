@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { alpha, Box, Chip, Stack, Typography, useMediaQuery, useTheme, Paper, Button } from '@mui/material';
 import CalendarHeader from './CalendarHeader';
 import CreateReservationDialog from './CreateReservationDialog';
-import useCommonAreaViewStore from '../../../../../stores/commonAreaView.store';
-import useReservationStore from '../../../../../stores/reservation.store';
-import { EStatusReserva, type ReservationDto } from '../../../../../apiClient';
+import useCommonAreaViewStore from '../../../../stores/commonAreaView.store';
+import useReservationStore from '../../../../stores/reservation.store';
+import { EStatusReserva, type ReservationDto } from '../../../../apiClient';
 
 function buildMonth(year: number, month: number) {
     const first = new Date(year, month, 1);

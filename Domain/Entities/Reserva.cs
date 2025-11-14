@@ -9,8 +9,8 @@ namespace Domain.Entities
         public string Finalidade { get; set; } = string.Empty;
         public DateTime Data { get; set; }
         public int NumeroConvidados { get; set; }
-        public TimeSpan HoraInicio { get; set; }
-        public TimeSpan HoraTermino { get; set; }
+        public DateTime HoraInicio { get; set; }
+        public DateTime HoraTermino { get; set; }
         public EStatusReserva Status { get; set; }
         public string Observacoes { get; set; } = string.Empty;
 

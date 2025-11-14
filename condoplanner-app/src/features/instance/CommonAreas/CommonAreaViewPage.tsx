@@ -1,13 +1,14 @@
 import { useMemo, useEffect } from 'react';
 import { Box, useTheme, useMediaQuery, Grid } from '@mui/material';
-import { CommonAreaApi } from '../../../../apiClient';
-import { ApiConfiguration } from '../../../../apiClient/apiConfig';
-import { useInstanceStore } from '../../../../stores/instance.store';
-import useCommonAreaViewStore from '../../../../stores/commonAreaView.store';
+import { CommonAreaApi } from '../../../apiClient';
+import { ApiConfiguration } from '../../../apiClient/apiConfig';
+import { useInstanceStore } from '../../../stores/instance.store';
+import useCommonAreaViewStore from '../../../stores/commonAreaView.store';
 import AreaHeader from './components/AreaHeader';
 import AreaPhotosPanel from './components/AreaPhotosPanel';
 import AreaInfoChips from './components/AreaInfoChips';
 import CommonAreaCalendar from './components/CommonAreaCalendar';
+import { useAlertStore } from '../../../stores/alert.store';
 
 const api = new CommonAreaApi(ApiConfiguration);
 
@@ -17,6 +18,8 @@ const CommonAreaViewPage: React.FC = () => {
     const { isAdminSelected } = useInstanceStore();
     const { currentArea, setCurrentArea } = useCommonAreaViewStore();
 
+    const showAlert = useAlertStore((state) => state.showAlert);
+    
     useEffect(() => {
         let mounted = true;
         async function ensureAreaFromUrl() {
@@ -30,13 +33,13 @@ const CommonAreaViewPage: React.FC = () => {
                 if (!Number.isFinite(id)) return;
                 const fetched = await api.apiCommonAreaIdGet({ id });
                 if (mounted) setCurrentArea(fetched);
-            } catch {
-                // ignore - UI will show empty state
+            } catch (error: unknown) {
+                showAlert("CEP não encontrado ou inválido. Error: " + (error instanceof Error ? error.message : String(error)), "error");
             }
         }
         ensureAreaFromUrl();
         return () => { mounted = false; };
-    }, [currentArea, setCurrentArea]);
+    }, [currentArea, setCurrentArea, showAlert]);
 
     const area = currentArea;
     
