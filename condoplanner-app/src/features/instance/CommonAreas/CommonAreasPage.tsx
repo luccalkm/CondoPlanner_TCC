@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -12,7 +12,7 @@ import {
     Paper,
     useMediaQuery,
     useTheme,
-    alpha
+    Alert
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -20,15 +20,18 @@ import { useInstanceStore } from '../../../stores/instance.store';
 import useCommonAreaViewStore from '../../../stores/commonAreaView.store';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
-import type { CommonAreaDto, UpsertCommonAreaInput } from '../../../apiClient';
+import { EStatusVinculoResidencial, ResidentialLinksApi, type CommonAreaDto, type UpsertCommonAreaInput } from '../../../apiClient';
 import { UploadPhotoButton } from './components/UploadPhotoButton';
 import { CommonAreaDialog } from './components/CommonAreaDialog';
 import { AddAPhoto, AddBusiness, DomainDisabled } from '@mui/icons-material';
 import { CommonAreaCarousel } from './components/CommonAreaCarousel';
 import { useCommonAreasStore } from '../../../stores/commonArea.store';
 import { placeholderImage as placeholderHelper } from './utils';
+import { ApiConfiguration } from '../../../apiClient/apiConfig';
 
 const placeholderImage = (seed: number) => placeholderHelper(seed);
+
+const residentialLinkApi = new ResidentialLinksApi(ApiConfiguration);
 
 export default function CommonAreasPage() {
     const { selectedCondominium, isAdminSelected, isSyndicSelected } = useInstanceStore();
@@ -36,12 +39,38 @@ export default function CommonAreasPage() {
     const { setCurrentArea } = useCommonAreaViewStore();
     const [openDialog, setOpenDialog] = useState(false);
     const [editing, setEditing] = useState<CommonAreaDto | null>(null);
+    const [missingResidentialLink, setMissingResidentialLink] = useState(false);
     const canManage = useMemo(() => isAdminSelected() || isSyndicSelected(), [isAdminSelected, isSyndicSelected]);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const condominiumId = selectedCondominium?.id;
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let active = true;
+        if (!condominiumId) {
+            setMissingResidentialLink(false);
+            return;
+        }
+
+        (async () => {
+            try {
+                const userLink = await residentialLinkApi.apiResidentialLinksMyCondominiumIdGet({
+                    condominiumId,
+                });
+                const missing =
+                    !userLink || userLink.status === EStatusVinculoResidencial.Pendente;
+                if (active) setMissingResidentialLink(missing);
+            } catch {
+                if (active) setMissingResidentialLink(true);
+            }
+        })();
+
+        return () => {
+            active = false;
+        };
+    }, [condominiumId]);
 
     function openNew() {
         setEditing(null);
@@ -58,12 +87,10 @@ export default function CommonAreasPage() {
     return (
         <Box width={isMobile ? "auto" : "70%"} margin={"0 auto"} p={3}>
 
-            {true && (
-                <Box bgcolor={alpha(theme.palette.warning.main, 0.1)} border={1} borderColor={alpha(theme.palette.warning.main, 0.2)} p={2} mb={2} borderRadius={2}>
-                    <Typography variant="body2" color="text.secondary">
-                        Usuário não possui permissão para realizar agendamentos. Por favor, informe o apartamento de residência na aba de configurações.
-                    </Typography>
-                </Box>
+            {missingResidentialLink && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                    Usuário não possui nenhum vínculo residencial neste condomínio. O acesso às áreas comuns pode estar restrito.
+                </Alert>
             )}
 
             <Paper variant='outlined' sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>

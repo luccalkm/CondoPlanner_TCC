@@ -1,12 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Remove="DTOs\NovaPasta\**" />
-    <EmbeddedResource Remove="DTOs\NovaPasta\**" />
-    <None Remove="DTOs\NovaPasta\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="DTOs\Address\GetCepInput.cs" />
   </ItemGroup>
 

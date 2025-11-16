@@ -31,41 +31,71 @@ export const ApiConfiguration = new Configuration({
         {
             async post(context: ResponseContext) {
                 const res = context.response;
+
                 if (res.status === 401) {
                     handleUnauthorized();
-
                     throw new Error('Não autorizado. Redirecionando para login.');
                 }
-                const contentType = res.headers.get('content-type');
-                if (contentType && contentType.includes('json')) {
-                    if ([400, 500].includes(res.status)) {
-                        const json = await res.json().catch(() => null);
-                        throw new Error(json?.message || json?.error?.message || 'Erro inesperado.');
-                    } else {
 
-                        const jsonClone = async () => {
-                            const result = await res.clone().json().catch(() => null);
-                            return result;
-                        };
-                        res.json = jsonClone;
+                if (res.status >= 400) {
+                    const contentType = res.headers.get('content-type') || '';
+                    let message = '';
+
+                    try {
+                        if (contentType.includes('json')) {
+                            const json = await res.clone().json().catch(() => null);
+                            message = json?.message || json?.error?.message || json?.title || res.statusText || 'Erro inesperado.';
+                        } else {
+                            const text = await res.clone().text().catch(() => null);
+                            message = (text && text.trim()) ? text : (res.statusText || 'Erro inesperado.');
+                        }
+                    } catch {
+                        message = res.statusText || 'Erro inesperado.';
                     }
+
+                    throw new Error(message);
+                }
+
+                const okContentType = res.headers.get('content-type') || '';
+                if (okContentType.includes('json')) {
+                    const jsonClone = async () => {
+                        const result = await res.clone().json().catch(() => null);
+                        return result;
+                    };
+                    res.json = jsonClone;
                 }
                 return res;
             }
         },
         {
             async onError(context: ErrorContext) {
-                const status = context.response?.status;
-                if (status === 401) {
+                const res = context.response;
+
+                if (res?.status === 401) {
                     handleUnauthorized();
                     throw new Error('Não autorizado. Redirecionando para login.');
                 }
-                const contentType = context.response?.headers.get('content-type');
-                if (contentType && contentType.includes('json')) {
-                    const json = await context.response?.json().catch(() => null);
-                    throw new Error(json?.message || json?.error?.message || 'Erro desconhecido.');
+
+                if (res) {
+                    const contentType = res.headers.get('content-type') || '';
+                    try {
+                        if (contentType.includes('json')) {
+                            const json = await res.clone().json().catch(() => null);
+                            throw new Error(json?.message || json?.error?.message || json?.title || res.statusText || 'Erro desconhecido.');
+                        } else {
+                            const text = await res.clone().text().catch(() => null);
+                            throw new Error((text && text.trim()) ? text : (res.statusText || 'Erro desconhecido.'));
+                        }
+                    } catch {
+                        throw new Error(res?.statusText || 'Erro desconhecido.');
+                    }
                 }
-                return context.response;
+
+                const errorObj = context.error;
+                const fallback = (errorObj && typeof errorObj.message === 'string')
+                    ? errorObj.message
+                    : (context.error ? String(context.error) : 'Falha de rede ou CORS.');
+                throw new Error(fallback);
             }
         }
     ]

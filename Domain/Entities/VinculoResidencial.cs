@@ -10,6 +10,7 @@ namespace Domain.Entities
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
         public bool Ativo { get; set; }
+        public EStatusVinculoResidencial Status { get; set; } = EStatusVinculoResidencial.Pendente;
 
 
         public int UsuarioId { get; set; }

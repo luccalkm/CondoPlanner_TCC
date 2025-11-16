@@ -6,4 +6,5 @@ export * from './CommonAreaApi';
 export * from './CondominiumApi';
 export * from './CondominiumInviteApi';
 export * from './ReservationApi';
+export * from './ResidentialLinksApi';
 export * from './UsersApi';

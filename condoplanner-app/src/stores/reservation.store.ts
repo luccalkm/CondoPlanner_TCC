@@ -5,7 +5,7 @@ import type { ReservationDto, CreateReservationInput } from '../apiClient';
 
 const api = new ReservationApi(ApiConfiguration);
 
-type MonthKey = `${number}-${number}-${number}`; // areaId-year-month
+type MonthKey = `${number}-${number}-${number}`;
 
 interface ReservationState {
   loading: boolean;
@@ -34,15 +34,14 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
       const end = new Date(year, monthIndex0 + 1, 0, 23, 59, 59, 999);
       const list = await api.apiReservationAreaAreaIdGet({ areaId, start, end });
       set(state => ({ byMonth: { ...state.byMonth, [k]: list } }));
-    } catch (e: any) {
-      set({ error: e?.message ?? 'Falha ao carregar reservas.' });
+    } catch (e: unknown) {
+      set({ error: (e as Error)?.message ?? 'Falha ao carregar reservas.' });
     } finally {
       set({ loading: false });
     }
   },
   create: async (input) => {
     await api.apiReservationPost({ createReservationInput: input });
-    // refresh month cache usando startDate
     if (input.areaId && input.startDate) {
       const d = new Date(input.startDate);
       await get().fetchForAreaMonth(input.areaId, d.getFullYear(), d.getMonth());

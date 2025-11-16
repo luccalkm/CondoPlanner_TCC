@@ -4,6 +4,7 @@ apis/CommonAreaApi.ts
 apis/CondominiumApi.ts
 apis/CondominiumInviteApi.ts
 apis/ReservationApi.ts
+apis/ResidentialLinksApi.ts
 apis/UsersApi.ts
 apis/index.ts
 docs/AcceptInviteRequest.md
@@ -26,7 +27,10 @@ docs/CondominiumDto.md
 docs/CondominiumInviteApi.md
 docs/CreateOrEditCondominiumInput.md
 docs/CreateReservationInput.md
+docs/CreateResidentialLinkRequest.md
 docs/EStatusReserva.md
+docs/EStatusVinculoResidencial.md
+docs/ETipoOcupacao.md
 docs/ETipoUsuario.md
 docs/GenerateInviteRequest.md
 docs/GenerateInviteResponse.md
@@ -35,6 +39,9 @@ docs/RegisterRequest.md
 docs/RegisterResponse.md
 docs/ReservationApi.md
 docs/ReservationDto.md
+docs/ResidentialLinkDto.md
+docs/ResidentialLinksApi.md
+docs/ReviewResidentialLinkRequest.md
 docs/UploadCommonAreaPhotoInput.md
 docs/UpsertCommonAreaInput.md
 docs/UpsertUserCondominiumInput.md
@@ -57,7 +64,10 @@ models/CommonAreaPhotoDto.ts
 models/CondominiumDto.ts
 models/CreateOrEditCondominiumInput.ts
 models/CreateReservationInput.ts
+models/CreateResidentialLinkRequest.ts
 models/EStatusReserva.ts
+models/EStatusVinculoResidencial.ts
+models/ETipoOcupacao.ts
 models/ETipoUsuario.ts
 models/GenerateInviteRequest.ts
 models/GenerateInviteResponse.ts
@@ -65,6 +75,8 @@ models/LoginRequest.ts
 models/RegisterRequest.ts
 models/RegisterResponse.ts
 models/ReservationDto.ts
+models/ResidentialLinkDto.ts
+models/ReviewResidentialLinkRequest.ts
 models/UploadCommonAreaPhotoInput.ts
 models/UpsertCommonAreaInput.ts
 models/UpsertUserCondominiumInput.ts

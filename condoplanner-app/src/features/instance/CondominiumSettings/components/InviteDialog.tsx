@@ -15,8 +15,8 @@ import {
 import { Close, ContentCopy, Share, PictureAsPdf } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
 import jsPDF from 'jspdf';
-import { useAlertStore } from '../../../stores/alert.store';
-import { ETipoUsuario } from '../../../apiClient';
+import { useAlertStore } from '../../../../stores/alert.store';
+import { ETipoUsuario } from '../../../../apiClient';
 
 export interface InviteData {
     roleType: ETipoUsuario;

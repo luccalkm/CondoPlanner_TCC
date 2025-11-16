@@ -15,11 +15,12 @@ import { useDebounce } from "use-debounce";
 import { useCondominiumStore } from "../../../stores/condominium.store";
 import { useAuthStore } from "../../../stores/auth.store";
 import { useAlertStore } from "../../../stores/alert.store";
-import { AddressApi } from "../../../apiClient";
+import { AddressApi, type ApartmentDto, type BlockDto } from "../../../apiClient";
 import { ApiConfiguration } from "../../../apiClient/apiConfig";
 import { StepCondoAddress } from "./steps/StepCondoAddress";
 import { StepBlocks } from "./steps/StepBlocks";
 import { StepFloorsApartments } from "./steps/StepFloorsApartments";
+import type { CondominioDto } from "../../../apiClient/models/CondominioDto";
 
 type ApartmentForm = { id?: number; number: string; floorNumber: number; };
 type BlockForm = {
@@ -111,7 +112,7 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
     useEffect(() => {
         if (!condominiumId) return;
         setLoadingData(true);
-        const cond = condominiums.find((c: any) => c.id === condominiumId);
+        const cond = condominiums.find((c: CondominioDto) => c.id === condominiumId);
         if (cond) {
             setForm({
                 id: cond.id,
@@ -129,10 +130,10 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
                     country: cond.address?.country || "Brasil",
                 },
             });
-            const existingBlocks: BlockForm[] = (cond.blocks || []).map((b: any, idx: number) => {
-                const apartments: ApartmentForm[] = (b.apartments || []).map((a: any) => ({
+            const existingBlocks: BlockForm[] = (cond.blocks || []).map((b: BlockDto, idx: number) => {
+                const apartments: ApartmentForm[] = (b.apartments || []).map((a: ApartmentDto) => ({
                     id: a.id,
-                    number: String(a.number ?? a.name ?? ""),
+                    number: String(a.number ?? a.number ?? ""),
                     floorNumber: Number(a.floorNumber ?? 0),
                 }));
                 const floors = Array.from(new Set(apartments.map((a) => a.floorNumber))).sort((a, b) => a - b);
@@ -209,7 +210,7 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
             })
         );
 
-        const payload: any = {
+        const payload = {
             id: form.id,
             name: form.name,
             cnpj: form.cnpj,
@@ -232,8 +233,8 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
             await fetchCondominiums(user?.id);
             showAlert("Condomínio salvo com sucesso.", "success");
             onClose();
-        } catch (err: any) {
-            showAlert(err?.message || "Erro ao salvar o condomínio.", "error");
+        } catch (err: unknown) {
+            showAlert((err as Error)?.message || "Erro ao salvar o condomínio.", "error");
         } finally {
             setSaving(false);
         }
@@ -256,7 +257,7 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
             maxWidth="sm"
             sx={{
                 '& .MuiDialog-container': {
-                    alignItems: 'center', // força centralização vertical mesmo com pouca altura
+                    alignItems: 'center',
                 },
                 '& .MuiDialog-paper': {
                     borderRadius: 3,

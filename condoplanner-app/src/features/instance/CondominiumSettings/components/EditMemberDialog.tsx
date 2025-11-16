@@ -87,7 +87,7 @@ const EditMemberDialog: React.FC<Props> = ({ open, onClose, member, onSaved }) =
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
             <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 2 }}>
-                <Typography variant="h6" fontWeight={700}>Editar membro</Typography>
+                <Typography fontWeight={700}>Editar membro</Typography>
                 <IconButton onClick={onClose}><Close /></IconButton>
             </DialogTitle>
 

@@ -15,6 +15,7 @@ import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
 import { useAuth } from "../hooks/useAuth";
+import ResidentialLinkGate from "../features/instance/ResidentialLink/ResidentiaLinkGate";
 
 export function AppRouter() {
     const { hasAuthenticationToken } = useAuth();
@@ -29,12 +30,14 @@ export function AppRouter() {
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>
                     <Route path="c/:condominiumId" element={<InstanceGuard />}>
-                        <Route element={<InstanceLayout />}>
-                            <Route index element={<Navigate to="areas" replace />} />
-                            <Route path="areas" element={<CommonAreasPage />} />
-                            <Route path="areas/:areaId" element={<CommonAreaViewPage />} />
-                            <Route path="comunicados" element={<NotificationsPage />} />
-                            <Route path="configuracoes" element={<CondominiumSettingsPage />} />
+                        <Route element={<ResidentialLinkGate />}>
+                            <Route element={<InstanceLayout />}>
+                                <Route index element={<Navigate to="areas" replace />} />
+                                <Route path="areas" element={<CommonAreasPage />} />
+                                <Route path="areas/:areaId" element={<CommonAreaViewPage />} />
+                                <Route path="comunicados" element={<NotificationsPage />} />
+                                <Route path="configuracoes" element={<CondominiumSettingsPage />} />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>

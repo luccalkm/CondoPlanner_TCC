@@ -1,12 +1,14 @@
-import { Box, Typography, Grid, Card, CardContent, Button, CircularProgress, Divider, Paper, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography, Divider, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useInstanceStore } from '../../../stores/instance.store';
 import { useAlertStore } from '../../../stores/alert.store';
 import { ETipoUsuario, CondominiumInviteApi, type GenerateInviteRequest, type GenerateInviteResponse } from '../../../apiClient';
 import { ApiConfiguration } from '../../../apiClient/apiConfig';
 import { useState, useMemo } from 'react';
-import InviteDialog, { type InviteData } from './InviteDialog';
+import InviteDialog, { type InviteData } from './components/InviteDialog';
 import MembersList from './components/MembersList';
 import { AdminPanelSettings } from '@mui/icons-material';
+import RoleInviteGrid from './components/RoleInviteGrid';
+import PendingResidentialLinks from './components/PendingResidentialLinks';
 
 const inviteApi = new CondominiumInviteApi(ApiConfiguration);
 
@@ -86,42 +88,22 @@ const CondominiumSettingsPage = () => {
             </Paper>
             <Divider sx={{ my: 3 }} />
             {isAdminSelected() && (
-                <Box>
-                    <Grid container spacing={2}>
-                        {roleOptions.map(r => (
-                            <Grid key={r.type} size={{ xs: 12, sm: 4 }}>
-                                <Card variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                    <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant="subtitle1" fontWeight={600}>{r.label}</Typography>
-                                        <Typography variant="caption" color="text.secondary" display="block" mb={1}>{r.description}</Typography>
-                                        <Button
-                                            variant="contained"
-                                            fullWidth
-                                            size="small"
-                                            onClick={() => generateInvite(r.type)}
-                                            disabled={loadingInvite === r.type}
-                                            startIcon={loadingInvite === r.type ? <CircularProgress size={16} /> : undefined}
-                                        >
-                                            {loadingInvite === r.type ? 'Gerando...' : 'Gerar QRCode'}
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
-                    <Divider sx={{ my: 3 }} />
-
-                </Box>
+                <RoleInviteGrid
+                    roles={roleOptions}
+                    loadingRole={loadingInvite}
+                    onGenerate={generateInvite}
+                />
             )}
-            
             <MembersList />
-            
             <InviteDialog
                 open={inviteDialogOpen}
                 onClose={() => setInviteDialogOpen(false)}
                 invite={inviteData}
                 condominiumName={condominiumName}
             />
+
+            <Divider sx={{ my: 3 }} />
+            <PendingResidentialLinks />
         </Box>
     );
 };

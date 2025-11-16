@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useAuthStore } from '../stores/auth.store';
-import { useInviteStore } from '../stores/invite.store'; // Importar o novo store
+import { useInviteStore } from '../stores/invite.store';
 import type { LoginRequest, RegisterRequest } from '../apiClient';
 
 export function useAuth() {
     const { login, register, logout, isAuthenticated, user } = useAuthStore();
-    const { pendingInviteToken, clearPendingInviteToken } = useInviteStore(); // Usar o store
+    const { pendingInviteToken, clearPendingInviteToken } = useInviteStore();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
