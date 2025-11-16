@@ -11,7 +11,8 @@ import {
     Tooltip,
     Paper,
     useMediaQuery,
-    useTheme
+    useTheme,
+    alpha
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -53,10 +54,18 @@ export default function CommonAreasPage() {
     }
 
     async function handleSave(input: UpsertCommonAreaInput) { await saveArea(input); }
-    
 
     return (
         <Box width={isMobile ? "auto" : "70%"} margin={"0 auto"} p={3}>
+
+            {true && (
+                <Box bgcolor={alpha(theme.palette.warning.main, 0.1)} border={1} borderColor={alpha(theme.palette.warning.main, 0.2)} p={2} mb={2} borderRadius={2}>
+                    <Typography variant="body2" color="text.secondary">
+                        Usuário não possui permissão para realizar agendamentos. Por favor, informe o apartamento de residência na aba de configurações.
+                    </Typography>
+                </Box>
+            )}
+
             <Paper variant='outlined' sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box>
                     <Typography variant="h5" fontWeight={700}>Áreas Comuns</Typography>
