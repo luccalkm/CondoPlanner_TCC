@@ -44,6 +44,7 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
     }, [currentArea?.id, curYear, curMonth, fetchForAreaMonth]);
 
     const weeks = useMemo(() => buildMonth(curYear, curMonth), [curYear, curMonth]);
+    const today0 = useMemo(() => { const d = new Date(); d.setHours(0,0,0,0); return d; }, []);
 
     function prevMonth() {
         const d = new Date(curYear, curMonth - 1, 1);
@@ -142,6 +143,7 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
                                         const key = dt ? dt.toISOString().slice(0, 10) : `n${wi}-${di}`;
                                         const isToday = dt ? new Date().toDateString() === dt.toDateString() : false;
                                         const items = dt ? (dayMap.get(key) ?? []) : [];
+                                        const isPast = dt ? new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) < today0 : false;
                                         return (
                                             <Box key={key} sx={{ minWidth: 44, position: 'relative' }}>
                                                 <Paper
@@ -155,7 +157,9 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
                                                         justifyContent: 'flex-start',
                                                         bgcolor: isToday ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
                                                         border: isToday ? `1px solid ${alpha(theme.palette.primary.main, 0.4)}` : undefined,
-                                                        borderRadius: 1
+                                                        borderRadius: 1,
+                                                        opacity: isPast ? 0.5 : 1,
+                                                        filter: isPast ? 'grayscale(0.3)' : 'none'
                                                     }}
                                                 >
                                                     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
@@ -175,7 +179,7 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
                                                         )}
                                                     </Stack>
                                                 </Paper>
-                                                {canEdit && dt && (
+                                                {canEdit && dt && !isPast && (
                                                     <Box position="absolute" top={0} left={0} right={0} bottom={0} onClick={() => { setSelectedDate(dt); setOpenDialog(true); }} sx={{ cursor: 'pointer' }} />
                                                 )}
                                             </Box>
@@ -216,9 +220,10 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
                                             const key = dt ? dt.toISOString().slice(0, 10) : `n${wi}-${di}`;
                                             const items = dt ? (dayMap.get(key) ?? []) : [];
                                             const isToday = dt ? new Date().toDateString() === dt.toDateString() : false;
+                                            const isPast = dt ? new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) < today0 : false;
                                             return (
                                                 <Box key={key} position="relative">
-                                                    <Paper variant="outlined" sx={{ minHeight: 92, p: 1, bgcolor: isToday ? alpha(theme.palette.primary.main, 0.1) : 'transparent', border: isToday ? `1px solid ${alpha(theme.palette.primary.main, 0.4)}` : undefined, borderRadius: 1 }}>
+                                                    <Paper variant="outlined" sx={{ minHeight: 92, p: 1, bgcolor: isToday ? alpha(theme.palette.primary.main, 0.1) : 'transparent', border: isToday ? `1px solid ${alpha(theme.palette.primary.main, 0.4)}` : undefined, borderRadius: 1, opacity: isPast ? 0.5 : 1, filter: isPast ? 'grayscale(0.3)' : 'none' }}>
                                                         <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                                                             <Typography variant="caption">{dt ? dt.getDate() : ''}</Typography>
                                                             {items.length > 0 && (
@@ -239,7 +244,7 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
                                                             )}
                                                         </Stack>
                                                     </Paper>
-                                                    {canEdit && dt && (
+                                                    {canEdit && dt && !isPast && (
                                                         <Box position="absolute" top={0} left={0} right={0} bottom={0} onClick={() => { setSelectedDate(dt); setOpenDialog(true); }} sx={{ cursor: 'pointer' }} />
                                                     )}
                                                 </Box>
@@ -255,9 +260,8 @@ export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {
             <CreateReservationDialog
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
-                areaId={currentArea?.id ?? 0}
+                area={currentArea!}
                 defaultDate={selectedDate ?? new Date(curYear, curMonth, 1)}
-                capacity={currentArea?.capacity}
             />
         </>
     );

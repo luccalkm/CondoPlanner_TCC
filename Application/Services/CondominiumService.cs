@@ -36,6 +36,7 @@ namespace Application.Services
             _enderecoRepository = enderecoRepository;
             _mapper = mapper;
         }
+
         public async Task CreateOrEditCondominium(CreateOrEditCondominiumInput input)
         {
             if (input is null)
@@ -104,7 +105,7 @@ namespace Application.Services
         public async Task<List<UserCondominiumDto>> GetAllRelationsByUserAsync(int userId)
         {
             var userRelations = _usuarioCondominioRepository
-                .Include("Condominio", "Condominio.Endereco", "Usuario")
+                .Include("Condominio", "Condominio.Endereco", "Usuario", "Condominio.Blocos", "Condominio.Blocos.Apartamentos")
                 .Where(uc => uc.UsuarioId == userId && uc.Ativo)
                 .ToList();
 
@@ -148,6 +149,22 @@ namespace Application.Services
             var condominium = _mapper.Map<Condominio>(input);
             condominium.EnderecoId = endereco.Id;
 
+            if (input.Blocks != null && input.Blocks.Any())
+            {
+                var blocos = _mapper.Map<List<Bloco>>(input.Blocks);
+                
+                foreach (var bloco in blocos)
+                {
+                    bloco.Condominio = condominium;
+                    foreach (var apt in bloco.Apartamentos)
+                    {
+                        apt.Bloco = bloco;
+                    }
+                }
+
+                condominium.Blocos = blocos;
+            }
+
             await _condominioRepository.AddAsync(condominium);
             await _condominioRepository.SaveChangesAsync();
 
@@ -157,9 +174,9 @@ namespace Application.Services
         private async Task UpdateCondominiumAsync(CreateOrEditCondominiumInput input)
         {
             var query = _condominioRepository
-                .Include(condominium => condominium.Endereco);
+                .Include("Endereco", "Blocos", "Blocos.Apartamentos");
 
-            var condominium = query.FirstOrDefault(c => c.Id == input.Id.Value)
+            var condominium = query.FirstOrDefault(c => c.Id == input.Id!.Value)
                 ?? throw new UserFriendlyException("Condomínio não encontrado.");
 
             if (input.Name != condominium.Nome)
@@ -180,6 +197,9 @@ namespace Application.Services
                     _mapper.Map(input.Address, condominium.Endereco);
                 }
             }
+
+            if (input.Blocks is not null)
+                UpdateBlocksAndApartments(condominium, input.Blocks);
 
             _condominioRepository.Update(condominium);
             await _condominioRepository.SaveChangesAsync();
@@ -242,7 +262,8 @@ namespace Application.Services
                 Name = cond.Nome,
                 Cnpj = cond.Cnpj,
                 Email = cond.Email,
-                Address = _mapper.Map<AddressDto>(cond.Endereco)
+                Address = _mapper.Map<AddressDto>(cond.Endereco),
+                Blocks = _mapper.Map<List<BlockDto>>(cond.Blocos)
             };
 
             var userDto = new UserDto
@@ -270,5 +291,61 @@ namespace Application.Services
             };
         }
         #endregion
+
+        private void UpdateBlocksAndApartments(Condominio condo, List<BlockInputDto> blocksDto)
+        {
+            var dtoIds = blocksDto.Where(b => b.Id.HasValue).Select(b => b.Id!.Value).ToHashSet();
+            var blocksToRemove = condo.Blocos.Where(b => b.Id != 0 && !dtoIds.Contains(b.Id)).ToList();
+            foreach (var b in blocksToRemove)
+                condo.Blocos.Remove(b);
+
+            foreach (var blockDto in blocksDto)
+            {
+                Bloco block;
+                if (blockDto.Id.HasValue && blockDto.Id.Value != 0)
+                {
+                    block = condo.Blocos.FirstOrDefault(b => b.Id == blockDto.Id.Value)
+                        ?? throw new UserFriendlyException($"Bloco {blockDto.Id.Value} não encontrado.");
+                    block.Nome = blockDto.Name;
+
+                    UpdateApartments(block, blockDto.Apartments);
+                }
+                else
+                {
+                    block = _mapper.Map<Bloco>(blockDto);
+                    block.Condominio = condo;
+
+                    foreach (var apt in block.Apartamentos)
+                        apt.Bloco = block;
+
+                    condo.Blocos.Add(block);
+                }
+            }
+        }
+
+        private void UpdateApartments(Bloco block, List<ApartmentInputDto> apartmentsDto)
+        {
+            var dtoIds = apartmentsDto.Where(a => a.Id.HasValue).Select(a => a.Id!.Value).ToHashSet();
+            var toRemove = block.Apartamentos.Where(a => a.Id != 0 && !dtoIds.Contains(a.Id)).ToList();
+            foreach (var a in toRemove)
+                block.Apartamentos.Remove(a);
+
+            foreach (var aptDto in apartmentsDto)
+            {
+                if (aptDto.Id.HasValue && aptDto.Id.Value != 0)
+                {
+                    var existing = block.Apartamentos.FirstOrDefault(a => a.Id == aptDto.Id.Value)
+                        ?? throw new UserFriendlyException($"Apartamento {aptDto.Id.Value} não encontrado.");
+                    existing.Numero = aptDto.Number;
+                    existing.Andar = aptDto.FloorNumber;
+                }
+                else
+                {
+                    var novo = _mapper.Map<Apartamento>(aptDto);
+                    novo.Bloco = block;
+                    block.Apartamentos.Add(novo);
+                }
+            }
+        }
     }
 }

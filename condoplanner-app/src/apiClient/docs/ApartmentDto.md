@@ -1,5 +1,5 @@
 
-# CondominiumDto
+# ApartmentDto
 
 
 ## Properties
@@ -7,26 +7,22 @@
 Name | Type
 ------------ | -------------
 `id` | number
-`name` | string
-`cnpj` | string
-`email` | string
-`address` | [AddressDto](AddressDto.md)
-`blocks` | [Array&lt;BlockDto&gt;](BlockDto.md)
+`number` | string
+`floorNumber` | string
+`blockId` | number
 
 ## Example
 
 ```typescript
-import type { CondominiumDto } from ''
+import type { ApartmentDto } from ''
 
 // TODO: Update the object below with actual values
 const example = {
   "id": null,
-  "name": null,
-  "cnpj": null,
-  "email": null,
-  "address": null,
-  "blocks": null,
-} satisfies CondominiumDto
+  "number": null,
+  "floorNumber": null,
+  "blockId": null,
+} satisfies ApartmentDto
 
 console.log(example)
 
@@ -35,7 +31,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as CondominiumDto
+const exampleParsed = JSON.parse(exampleJSON) as ApartmentDto
 console.log(exampleParsed)
 ```
 

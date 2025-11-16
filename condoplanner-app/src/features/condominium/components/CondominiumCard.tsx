@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Edit, OpenInNew } from "@mui/icons-material";
 import UserTypeChip from "./UserTypeChip";
-import type { UserCondominiumDto } from "../../../apiClient";
+import { ETipoUsuario, type UserCondominiumDto } from "../../../apiClient";
 
 interface Props {
     userCondominiumRelation: UserCondominiumDto;
@@ -100,20 +100,22 @@ const CondominiumCard: React.FC<Props> = ({ userCondominiumRelation, onOpen, onE
                         </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="Editar condomínio" arrow>
-                        <IconButton
-                            size="small"
-                            sx={{
-                                bgcolor: alpha(theme.palette.success.main, 0.1),
-                                "&:hover": {
-                                    bgcolor: alpha(theme.palette.success.main, 0.2),
-                                },
-                            }}
-                            onClick={() => onEdit(userCondominiumRelation.condominiumId!)}
-                        >
-                            <Edit fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
+                    {userCondominiumRelation?.userType === ETipoUsuario.Administrador && (
+                        <Tooltip title="Editar condomínio" arrow>
+                            <IconButton
+                                size="small"
+                                sx={{
+                                    bgcolor: alpha(theme.palette.success.main, 0.1),
+                                    "&:hover": {
+                                        bgcolor: alpha(theme.palette.success.main, 0.2),
+                                    },
+                                }}
+                                onClick={() => onEdit(userCondominiumRelation.condominiumId!)}
+                            >
+                                <Edit fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
+                    )}
                 </Grid>
             </CardActions>
             <Grid size={12} container spacing={2}>

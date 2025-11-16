@@ -7,10 +7,9 @@ namespace Domain.Entities
     public class Reserva : EntidadeRastreadaComum
     {
         public string Finalidade { get; set; } = string.Empty;
-        public DateTime Data { get; set; }
         public int NumeroConvidados { get; set; }
-        public DateTime HoraInicio { get; set; }
-        public DateTime HoraTermino { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
         public EStatusReserva Status { get; set; }
         public string Observacoes { get; set; } = string.Empty;
 

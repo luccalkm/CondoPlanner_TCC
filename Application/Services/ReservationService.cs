@@ -31,12 +31,14 @@ namespace Application.Services
 
         public async Task<List<ReservationDto>> GetByAreaAsync(int areaId, DateTime start, DateTime end)
         {
-            var startDate = start.Date;
-            var endDate = end.Date;
+            var startInclusive = start.Date;
+            var endExclusive = end.Date.AddDays(1);
 
             var query = _reservationRepo
                 .Include(r => r.AreaComum)
-                .Where(r => r.AreaComumId == areaId && r.Data >= startDate && r.Data <= endDate)
+                .Where(r => r.AreaComumId == areaId
+                    && r.DataInicio < endExclusive
+                    && r.DataFim > startInclusive)
                 .ToList();
 
             return query.Select(_mapper.Map<ReservationDto>).ToList();
@@ -86,21 +88,16 @@ namespace Application.Services
             if (vinculo is null)
                 throw new UserFriendlyException("Você não possui vínculo residencial ativo neste condomínio para reservar esta área.");
 
-            // Buscar reservas potencialmente conflitantes (dia inicial e dia anterior se atravessa meia-noite)
             var existing = _reservationRepo
                 .Include(r => r.AreaComum)
-                .Where(r => r.AreaComumId == area.Id && r.Data >= startDateTime.Date.AddDays(-1) && r.Data <= startDateTime.Date)
-                .Where(r => r.Status != EStatusReserva.CANCELADO && r.Status != EStatusReserva.REJEITADO)
+                .Where(r => r.AreaComumId == area.Id
+                    && r.Status != EStatusReserva.CANCELADO
+                    && r.Status != EStatusReserva.REJEITADO
+                    && r.DataInicio < endDateTime
+                    && r.DataFim > startDateTime)
                 .ToList();
 
-            bool overlapping = existing.Any(r =>
-            {
-                var rStart = r.HoraInicio;
-                var rEnd = r.HoraTermino <= r.HoraInicio
-                    ? r.HoraTermino.AddDays(1)
-                    : r.HoraTermino;
-                return DateRangesOverlap(rStart, rEnd, startDateTime, endDateTime);
-            });
+            bool overlapping = existing.Any();
 
             if (overlapping)
                 throw new UserFriendlyException("Já existe uma reserva nesse período.");

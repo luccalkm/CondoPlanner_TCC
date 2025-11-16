@@ -1,43 +1,61 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
     Box,
-    Grid,
-    TextField,
-    Typography,
-    Paper,
-    CircularProgress,
-    InputAdornment,
-    Divider,
     Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Step,
+    StepLabel,
+    Stepper,
 } from "@mui/material";
-import { useCondominiumStore } from "../../../stores/condominium.store";
 import { useDebounce } from "use-debounce";
-import { DomainAdd, Email, LocationOn, Numbers } from "@mui/icons-material";
-import { AddressApi, type CondominiumDto } from "../../../apiClient";
-import { ApiConfiguration } from "../../../apiClient/apiConfig";
+import { useCondominiumStore } from "../../../stores/condominium.store";
 import { useAuthStore } from "../../../stores/auth.store";
 import { useAlertStore } from "../../../stores/alert.store";
+import { AddressApi } from "../../../apiClient";
+import { ApiConfiguration } from "../../../apiClient/apiConfig";
+import { StepCondoAddress } from "./steps/StepCondoAddress";
+import { StepBlocks } from "./steps/StepBlocks";
+import { StepFloorsApartments } from "./steps/StepFloorsApartments";
 
-type CreateOrEditCondominiumProps = {
-    condominiumId?: number | null;
-    onClose: () => void;
+type ApartmentForm = { id?: number; number: string; floorNumber: number; };
+type BlockForm = {
+    id?: number;
+    name: string;
+    startFloorNumber: number;
+    residentialFloors: number;
+    apartmentsPerFloor: number;
+    apartments: ApartmentForm[];
 };
 
-export default function CreateOrEditCondominium({
-    condominiumId,
-    onClose
-}: CreateOrEditCondominiumProps) {
+
+interface CreateOrEditCondominiumProps {
+    open: boolean;
+    onClose: () => void;
+    fullScreen?: boolean;
+    condominiumId?: number | null;
+}
+
+export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = ({ open, onClose, fullScreen, condominiumId }) => {
     const { condominiums, createOrEditCondominium, fetchCondominiums } = useCondominiumStore();
     const { user } = useAuthStore();
+    const showAlert = useAlertStore((s) => s.showAlert);
+    const { isCondominiumAdmin } = useCondominiumStore();
+
     const addressApi = useMemo(() => new AddressApi(ApiConfiguration), []);
-    const showAlert = useAlertStore((state) => state.showAlert);
 
     const [saving, setSaving] = useState(false);
     const [loadingCep, setLoadingCep] = useState(false);
     const [cepValido, setCepValido] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
 
-    const [form, setForm] = useState<CondominiumDto>({
+    const [activeStep, setActiveStep] = useState(0);
+    const steps = ["Condomínio e Endereço", "Blocos", "Andares e Apartamentos"];
+
+    const [form, setForm] = useState({
         id: condominiumId || undefined,
         name: "",
         cnpj: "",
@@ -54,16 +72,18 @@ export default function CreateOrEditCondominium({
         },
     });
 
-    const [debouncedCep] = useDebounce(form.address?.zipCode, 1300);
+    const [blocks, setBlocks] = useState<BlockForm[]>([]);
+    const [debouncedCep] = useDebounce(form.address.zipCode, 800);
+    const [blockLoadingStatus, setBlockLoadingStatus] = useState<{ [key: number]: "idle" | "loading" | "success"; }>({});
+
+    const canEditBlocks = !condominiumId || isCondominiumAdmin(condominiumId, user?.id ?? 0);
 
     const fetchAddress = useCallback(async () => {
         const cep = debouncedCep?.replace(/\D/g, "");
-        if (cep?.length !== 8) return;
-
+        if (!cep || cep.length !== 8) return;
         setLoadingCep(true);
         try {
             const response = await addressApi.apiAddressCepGet({ cep });
-
             setForm((prev) => ({
                 ...prev,
                 address: {
@@ -76,10 +96,9 @@ export default function CreateOrEditCondominium({
                 },
             }));
             setCepValido(true);
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
-            showAlert("CEP não encontrado ou inválido. Error: " + errorMessage, "error");
+        } catch {
             setCepValido(false);
+            showAlert("CEP inválido.", "error");
         } finally {
             setLoadingCep(false);
         }
@@ -91,10 +110,8 @@ export default function CreateOrEditCondominium({
 
     useEffect(() => {
         if (!condominiumId) return;
-
         setLoadingData(true);
-        const cond = condominiums.find((c) => c.id === condominiumId);
-
+        const cond = condominiums.find((c: any) => c.id === condominiumId);
         if (cond) {
             setForm({
                 id: cond.id,
@@ -112,37 +129,115 @@ export default function CreateOrEditCondominium({
                     country: cond.address?.country || "Brasil",
                 },
             });
-            setCepValido(true);
+            const existingBlocks: BlockForm[] = (cond.blocks || []).map((b: any, idx: number) => {
+                const apartments: ApartmentForm[] = (b.apartments || []).map((a: any) => ({
+                    id: a.id,
+                    number: String(a.number ?? a.name ?? ""),
+                    floorNumber: Number(a.floorNumber ?? 0),
+                }));
+                const floors = Array.from(new Set(apartments.map((a) => a.floorNumber))).sort((a, b) => a - b);
+                const startFloorNumber = floors.length ? floors[0] : 1;
+                const residentialFloors = floors.length || 1;
+                const apartmentsPerFloor = Math.max(
+                    1,
+                    ...floors.map((f) => apartments.filter((a) => a.floorNumber === f).length)
+                );
+                return {
+                    id: b.id,
+                    name: b.name || `Bloco ${idx + 1}`,
+                    startFloorNumber,
+                    residentialFloors,
+                    apartmentsPerFloor,
+                    apartments,
+                };
+            });
+            setBlocks(existingBlocks);
+            setCepValido(Boolean(cond.address?.zipCode));
         }
-
         setLoadingData(false);
     }, [condominiumId, condominiums]);
 
     const handleChange = (field: string, value: string) => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
-
     const handleAddressChange = (field: string, value: string) => {
-        setForm((prev) => ({
-            ...prev,
-            address: { ...prev.address, [field]: value },
-        }));
+        setForm((prev) => ({ ...prev, address: { ...prev.address, [field]: value } }));
+    };
+
+    const canGoNext = () => {
+        if (activeStep === 0) return Boolean(form.name && form.email);
+        if (activeStep === 1) return blocks.length > 0 && blocks.every((b) => b.name.trim());
+        if (activeStep === 2)
+            return blocks.every(
+                (b) => b.residentialFloors > 0 && b.apartmentsPerFloor > 0
+            );
+        return true;
+    };
+
+    const handleNext = () => {
+        if (activeStep < steps.length - 1) setActiveStep((s) => s + 1);
+    };
+    const handleBack = () => {
+        if (activeStep > 0) setActiveStep((s) => s - 1);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSaving(true);
-        await createOrEditCondominium(form)
-            .then(() => {
-                fetchCondominiums(user?.id);
-                onClose();
-            })
-            .finally(() => {
-                setSaving(false);
-            });
-    };
 
-    const isFormValid = cepValido && form.name && form.email;
+        const blockLoadingStatus: { [key: number]: "idle" | "loading" | "success"; } = {};
+        blocks.forEach((_, idx) => (blockLoadingStatus[idx] = "idle"));
+        setBlockLoadingStatus(blockLoadingStatus);
+
+        const updatedBlocks = await Promise.all(
+            blocks.map(async (block, idx) => {
+                setBlockLoadingStatus((prev) => ({ ...prev, [idx]: "loading" }));
+
+                const { startFloorNumber, residentialFloors, apartmentsPerFloor } = block;
+                const apartments: ApartmentForm[] = [];
+                for (let floor = 0; floor < residentialFloors; floor++) {
+                    const floorNumber = startFloorNumber + floor;
+                    for (let apt = 1; apt <= apartmentsPerFloor; apt++) {
+                        const apartmentNumber = `${floorNumber}${String(apt).padStart(2, "0")}`;
+                        apartments.push({ number: apartmentNumber, floorNumber });
+                    }
+                }
+
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                setBlockLoadingStatus((prev) => ({ ...prev, [idx]: "success" }));
+                return { ...block, apartments };
+            })
+        );
+
+        const payload: any = {
+            id: form.id,
+            name: form.name,
+            cnpj: form.cnpj,
+            email: form.email,
+            address: { ...form.address },
+            blocks: updatedBlocks.map((block) => ({
+                id: block.id,
+                name: block.name,
+                apartments: block.apartments.map((apartment) => ({
+                    id: apartment.id,
+                    number: apartment.number,
+                    floorNumber: apartment.floorNumber,
+                })),
+            })),
+        };
+
+        setSaving(true);
+        try {
+            await createOrEditCondominium(payload);
+            await fetchCondominiums(user?.id);
+            showAlert("Condomínio salvo com sucesso.", "success");
+            onClose();
+        } catch (err: any) {
+            showAlert(err?.message || "Erro ao salvar o condomínio.", "error");
+        } finally {
+            setSaving(false);
+        }
+    };
 
     if (loadingData) {
         return (
@@ -153,187 +248,75 @@ export default function CreateOrEditCondominium({
     }
 
     return (
-        <>
-            <Paper
-                sx={{
-                    p: 2,
+        <Dialog
+            open={open}
+            onClose={onClose}
+            fullScreen={fullScreen}
+            fullWidth
+            maxWidth="sm"
+            sx={{
+                '& .MuiDialog-container': {
+                    alignItems: 'center', // força centralização vertical mesmo com pouca altura
+                },
+                '& .MuiDialog-paper': {
                     borderRadius: 3,
-                    maxWidth: 600,
-                    mx: "auto",
-                }}
-            >
-                <Typography variant="h6" gutterBottom>
-                    {condominiumId ? "Editar Condomínio" : "Dados do Condomínio"}
-                </Typography>
-                <Divider sx={{ my: 2 }} />
+                },
+            }}
+        >
+            <DialogTitle>
+                <Stepper activeStep={activeStep} sx={{ mb: 2 }}>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+            </DialogTitle>
+            <DialogContent>
 
-                <Box>
-                    <Grid container spacing={2}>
-                        <Grid size={12}>
-                            <TextField
-                                label="Nome do condomínio"
-                                fullWidth
-                                value={form.name}
-                                onChange={(e) => handleChange("name", e.target.value)}
-                                required
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <DomainAdd color="action" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Grid>
+                {activeStep === 0 && (
+                    <StepCondoAddress
+                        form={form}
+                        onField={handleChange}
+                        onAddress={handleAddressChange}
+                        loadingCep={loadingCep}
+                        cepValido={cepValido}
+                    />
+                )}
 
-                        <Grid size={12}>
-                            <TextField
-                                label="CNPJ"
-                                fullWidth
-                                value={form.cnpj}
-                                onChange={(e) => handleChange("cnpj", e.target.value)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Numbers color="action" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Grid>
+                {activeStep === 1 && (
+                    <StepBlocks blocks={blocks} setBlocks={setBlocks} canEditBlocks={canEditBlocks} />
+                )}
 
-                        <Grid size={12}>
-                            <TextField
-                                label="Email"
-                                fullWidth
-                                required
-                                value={form.email}
-                                onChange={(e) => handleChange("email", e.target.value)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Email color="action" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                {activeStep === 2 && (
+                    <StepFloorsApartments
+                        blocks={blocks}
+                        setBlocks={setBlocks}
+                        canEditBlocks={canEditBlocks}
+                        blockLoadingStatus={blockLoadingStatus}
+                    />
+                )}
+            </DialogContent>
+            <DialogActions>
+
+                <Box display="flex" gap={1} mt={2} justifyContent="flex-end">
+                    <Button variant="outlined" onClick={handleBack} disabled={activeStep === 0}>
+                        Voltar
+                    </Button>
+                    {activeStep < steps.length - 1 && (
+                        <Button variant="contained" onClick={handleNext} disabled={!canGoNext()}>
+                            Próximo
+                        </Button>
+                    )}
+                    {activeStep === steps.length - 1 && (
+                        <Button onClick={handleSubmit} type="submit" variant="contained" disabled={!canGoNext() || saving}>
+                            {saving ? "Salvando..." : condominiumId ? "Salvar alterações" : "Salvar condomínio"}
+                        </Button>
+                    )}
                 </Box>
-            </Paper>
+            </DialogActions>
 
-            <Paper
-                sx={{
-                    p: 2,
-                    borderRadius: 3,
-                    maxWidth: 600,
-                    mx: "auto",
-                    my: 2,
-                }}
-            >
-                <Typography variant="h6" gutterBottom>
-                    Endereço
-                </Typography>
-                <Divider sx={{ my: 2 }} />
-
-                <Grid container spacing={2}>
-                    <Grid size={12}>
-                        <TextField
-                            label="CEP"
-                            fullWidth
-                            value={form.address?.zipCode}
-                            onChange={(e) =>
-                                handleAddressChange("zipCode", e.target.value.replace(/\D/g, ""))
-                            }
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {loadingCep ? (
-                                            <CircularProgress size={18} />
-                                        ) : (
-                                            <LocationOn color="action" />
-                                        )}
-                                    </InputAdornment>
-                                ),
-                            }}
-                            helperText="Digite o CEP para buscar automaticamente"
-                        />
-                    </Grid>
-
-                    <Grid size={12}>
-                        <TextField
-                            label="Logradouro"
-                            fullWidth
-                            value={form.address?.street}
-                            disabled={!cepValido}
-                            onChange={(e) => handleAddressChange("street", e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid size={8}>
-                        <TextField
-                            label="Complemento"
-                            fullWidth
-                            disabled={!cepValido}
-                            value={form.address?.complement}
-                            onChange={(e) => handleAddressChange("complement", e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid size={4}>
-                        <TextField
-                            label="Número"
-                            fullWidth
-                            disabled={!cepValido}
-                            value={form.address?.number}
-                            onChange={(e) => handleAddressChange("number", e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid size={12}>
-                        <TextField
-                            label="Bairro"
-                            fullWidth
-                            disabled={!cepValido}
-                            value={form.address?.district}
-                            onChange={(e) => handleAddressChange("district", e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid size={8}>
-                        <TextField
-                            label="Cidade"
-                            fullWidth
-                            disabled={!cepValido}
-                            value={form.address?.city}
-                            onChange={(e) => handleAddressChange("city", e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid size={4}>
-                        <TextField
-                            label="Estado"
-                            fullWidth
-                            disabled={!cepValido}
-                            value={form.address?.state}
-                            onChange={(e) => handleAddressChange("state", e.target.value)}
-                        />
-                    </Grid>
-                </Grid>
-            </Paper>
-
-            <Grid size={12}>
-                <Button
-                    loading={saving}
-                    variant="contained"
-                    fullWidth
-                    type="submit"
-                    disabled={!isFormValid}
-                    onClick={handleSubmit}
-                >
-                    {condominiumId ? "Salvar Alterações" : "Salvar Condomínio"}
-                </Button>
-            </Grid>
-        </>
+        </Dialog>
     );
-}
+};
+

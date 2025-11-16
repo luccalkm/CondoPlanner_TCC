@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 interface CalendarHeaderProps {
     year: number;
-    month: number; // 0-based
+    month: number;
     onPrev: () => void;
     onNext: () => void;
     canEdit: boolean;

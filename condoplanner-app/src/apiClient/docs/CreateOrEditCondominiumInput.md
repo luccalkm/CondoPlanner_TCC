@@ -12,6 +12,7 @@ Name | Type
 `email` | string
 `address` | [AddressDto](AddressDto.md)
 `userIds` | Array&lt;number&gt;
+`blocks` | [Array&lt;BlockInputDto&gt;](BlockInputDto.md)
 
 ## Example
 
@@ -26,6 +27,7 @@ const example = {
   "email": null,
   "address": null,
   "userIds": null,
+  "blocks": null,
 } satisfies CreateOrEditCondominiumInput
 
 console.log(example)

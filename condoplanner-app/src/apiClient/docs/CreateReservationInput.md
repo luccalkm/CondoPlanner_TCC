@@ -7,12 +7,12 @@
 Name | Type
 ------------ | -------------
 `areaId` | number
-`date` | Date
-`startTime` | string
-`endTime` | string
+`startDate` | Date
+`endDate` | Date
 `guests` | number
 `purpose` | string
 `notes` | string
+`userId` | number
 
 ## Example
 
@@ -22,12 +22,12 @@ import type { CreateReservationInput } from ''
 // TODO: Update the object below with actual values
 const example = {
   "areaId": null,
-  "date": null,
-  "startTime": null,
-  "endTime": null,
+  "startDate": null,
+  "endDate": null,
   "guests": null,
   "purpose": null,
   "notes": null,
+  "userId": null,
 } satisfies CreateReservationInput
 
 console.log(example)

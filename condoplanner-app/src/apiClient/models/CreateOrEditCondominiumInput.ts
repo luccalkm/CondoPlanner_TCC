@@ -20,6 +20,13 @@ import {
     AddressDtoToJSON,
     AddressDtoToJSONTyped,
 } from './AddressDto';
+import type { BlockInputDto } from './BlockInputDto';
+import {
+    BlockInputDtoFromJSON,
+    BlockInputDtoFromJSONTyped,
+    BlockInputDtoToJSON,
+    BlockInputDtoToJSONTyped,
+} from './BlockInputDto';
 
 /**
  * 
@@ -63,6 +70,12 @@ export interface CreateOrEditCondominiumInput {
      * @memberof CreateOrEditCondominiumInput
      */
     userIds?: Array<number> | null;
+    /**
+     * 
+     * @type {Array<BlockInputDto>}
+     * @memberof CreateOrEditCondominiumInput
+     */
+    blocks?: Array<BlockInputDto> | null;
 }
 
 /**
@@ -88,6 +101,7 @@ export function CreateOrEditCondominiumInputFromJSONTyped(json: any, ignoreDiscr
         'email': json['email'] == null ? undefined : json['email'],
         'address': json['address'] == null ? undefined : AddressDtoFromJSON(json['address']),
         'userIds': json['userIds'] == null ? undefined : json['userIds'],
+        'blocks': json['blocks'] == null ? undefined : ((json['blocks'] as Array<any>).map(BlockInputDtoFromJSON)),
     };
 }
 
@@ -108,6 +122,7 @@ export function CreateOrEditCondominiumInputToJSONTyped(value?: CreateOrEditCond
         'email': value['email'],
         'address': AddressDtoToJSON(value['address']),
         'userIds': value['userIds'],
+        'blocks': value['blocks'] == null ? undefined : ((value['blocks'] as Array<any>).map(BlockInputDtoToJSON)),
     };
 }
 

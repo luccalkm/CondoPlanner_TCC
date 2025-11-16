@@ -20,37 +20,47 @@ import { mapValues } from '../runtime';
  */
 export interface CreateReservationInput {
     /**
+     * 
      * @type {number}
      * @memberof CreateReservationInput
      */
     areaId?: number;
     /**
-     * Início completo (data e hora)
+     * 
      * @type {Date}
      * @memberof CreateReservationInput
      */
     startDate?: Date;
     /**
-     * Fim completo (data e hora)
+     * 
      * @type {Date}
      * @memberof CreateReservationInput
      */
     endDate?: Date;
     /**
+     * 
      * @type {number}
      * @memberof CreateReservationInput
      */
     guests?: number;
     /**
+     * 
      * @type {string}
      * @memberof CreateReservationInput
      */
     purpose?: string | null;
     /**
+     * 
      * @type {string}
      * @memberof CreateReservationInput
      */
     notes?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateReservationInput
+     */
+    userId?: number;
 }
 
 /**
@@ -69,12 +79,14 @@ export function CreateReservationInputFromJSONTyped(json: any, ignoreDiscriminat
         return json;
     }
     return {
+        
         'areaId': json['areaId'] == null ? undefined : json['areaId'],
         'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
         'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
         'guests': json['guests'] == null ? undefined : json['guests'],
         'purpose': json['purpose'] == null ? undefined : json['purpose'],
         'notes': json['notes'] == null ? undefined : json['notes'],
+        'userId': json['userId'] == null ? undefined : json['userId'],
     };
 }
 
@@ -88,12 +100,14 @@ export function CreateReservationInputToJSONTyped(value?: CreateReservationInput
     }
 
     return {
+        
         'areaId': value['areaId'],
         'startDate': value['startDate'] == null ? value['startDate'] : value['startDate'].toISOString(),
         'endDate': value['endDate'] == null ? value['endDate'] : value['endDate'].toISOString(),
         'guests': value['guests'],
         'purpose': value['purpose'],
         'notes': value['notes'],
+        'userId': value['userId'],
     };
 }
 

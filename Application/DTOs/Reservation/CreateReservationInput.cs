@@ -8,5 +8,6 @@ namespace Application.DTOs.Reservation
         public int Guests { get; set; }
         public string Purpose { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 }

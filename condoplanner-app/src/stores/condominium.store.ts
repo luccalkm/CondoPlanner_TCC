@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CondominiumApi, type CondominiumDto, type CreateOrEditCondominiumInput, type UserCondominiumDto } from '../apiClient';
+import { CondominiumApi, ETipoUsuario, type CondominiumDto, type CreateOrEditCondominiumInput, type UserCondominiumDto } from '../apiClient';
 import { ApiConfiguration } from '../apiClient/apiConfig';
 import { useAuthStore } from './auth.store';
 
@@ -12,7 +12,8 @@ interface CondominiumState {
     loading: boolean;
     fetchCondominiums: (userId?: number) => Promise<void>;
     fetchCondominiumRelations: (condominiumId: number) => Promise<void>;
-    createOrEditCondominium: (condominiumDto: CondominiumDto) => Promise<void>;
+    createOrEditCondominium: (input: CreateOrEditCondominiumInput) => Promise<void>;
+    isCondominiumAdmin: (condominiumId: number, userId: number) => boolean;
 }
 
 export const useCondominiumStore = create<CondominiumState>((set) => ({
@@ -20,6 +21,13 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
     userCondominiumRelations: [],
     condominiumRelations: [],
     loading: false,
+
+    isCondominiumAdmin: (condominiumId: number, userId: number): boolean => {
+        const relation = useCondominiumStore.getState().userCondominiumRelations.find(r => 
+            r.condominiumId === condominiumId && r.userId === userId
+        );
+        return relation?.userType === ETipoUsuario.Administrador;
+    },
 
     fetchCondominiums: async (userId?: number) => {
         set({ loading: true });
@@ -53,22 +61,26 @@ export const useCondominiumStore = create<CondominiumState>((set) => ({
         }
     },
 
-    createOrEditCondominium: async (condominiumDto: CondominiumDto) => {
+    createOrEditCondominium: async (input: CreateOrEditCondominiumInput) => {
         try {
             const { id: currentUserId } = useAuthStore.getState().user || {};
-            const userIds: number[] = [];
-            if (currentUserId) userIds.push(currentUserId);
+            const mergedUserIds = Array.from(new Set([...(input.userIds ?? []), ...(currentUserId ? [currentUserId] : [])]));
 
-            const input: CreateOrEditCondominiumInput = {
-                id: condominiumDto.id ?? null,
-                name: condominiumDto.name ?? null,
-                cnpj: condominiumDto.cnpj ?? null,
-                email: condominiumDto.email ?? null,
-                address: condominiumDto.address,
-                userIds
+            const finalInput: CreateOrEditCondominiumInput = {
+                ...input,
+                userIds: mergedUserIds,
+                blocks: (input.blocks ?? [])?.map(b => ({
+                    id: b.id ?? null,
+                    name: b.name ?? '',
+                    apartments: (b.apartments ?? [])?.map(a => ({
+                        id: a.id ?? null,
+                        number: a.number ?? '',
+                        floorNumber: a.floorNumber ?? 0
+                    }))
+                }))
             };
 
-            await condominiumApi.apiCondominiumCreateOrEditPost({ createOrEditCondominiumInput: input });
+            await condominiumApi.apiCondominiumCreateOrEditPost({ createOrEditCondominiumInput: finalInput });
         } catch (error) {
             console.error('Error creating or editing condominium:', error);
             throw error;

@@ -20,6 +20,13 @@ import {
     AddressDtoToJSON,
     AddressDtoToJSONTyped,
 } from './AddressDto';
+import type { BlockDto } from './BlockDto';
+import {
+    BlockDtoFromJSON,
+    BlockDtoFromJSONTyped,
+    BlockDtoToJSON,
+    BlockDtoToJSONTyped,
+} from './BlockDto';
 
 /**
  * 
@@ -57,6 +64,12 @@ export interface CondominiumDto {
      * @memberof CondominiumDto
      */
     address?: AddressDto;
+    /**
+     * 
+     * @type {Array<BlockDto>}
+     * @memberof CondominiumDto
+     */
+    blocks?: Array<BlockDto> | null;
 }
 
 /**
@@ -81,6 +94,7 @@ export function CondominiumDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         'cnpj': json['cnpj'] == null ? undefined : json['cnpj'],
         'email': json['email'] == null ? undefined : json['email'],
         'address': json['address'] == null ? undefined : AddressDtoFromJSON(json['address']),
+        'blocks': json['blocks'] == null ? undefined : ((json['blocks'] as Array<any>).map(BlockDtoFromJSON)),
     };
 }
 
@@ -100,6 +114,7 @@ export function CondominiumDtoToJSONTyped(value?: CondominiumDto | null, ignoreD
         'cnpj': value['cnpj'],
         'email': value['email'],
         'address': AddressDtoToJSON(value['address']),
+        'blocks': value['blocks'] == null ? undefined : ((value['blocks'] as Array<any>).map(BlockDtoToJSON)),
     };
 }
 

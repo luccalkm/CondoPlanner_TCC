@@ -10,9 +10,13 @@ docs/AcceptInviteRequest.md
 docs/AcceptInviteResponse.md
 docs/AddressApi.md
 docs/AddressDto.md
+docs/ApartmentDto.md
+docs/ApartmentInputDto.md
 docs/ApproveRequest.md
 docs/AuthApi.md
 docs/AuthenticationResponse.md
+docs/BlockDto.md
+docs/BlockInputDto.md
 docs/ChangePasswordInput.md
 docs/CommonAreaApi.md
 docs/CommonAreaDto.md
@@ -41,8 +45,12 @@ index.ts
 models/AcceptInviteRequest.ts
 models/AcceptInviteResponse.ts
 models/AddressDto.ts
+models/ApartmentDto.ts
+models/ApartmentInputDto.ts
 models/ApproveRequest.ts
 models/AuthenticationResponse.ts
+models/BlockDto.ts
+models/BlockInputDto.ts
 models/ChangePasswordInput.ts
 models/CommonAreaDto.ts
 models/CommonAreaPhotoDto.ts
