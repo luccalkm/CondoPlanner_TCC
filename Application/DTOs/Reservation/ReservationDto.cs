@@ -1,3 +1,4 @@
+using Application.DTOs.CommonArea;
 using Domain.Enums;
 
 namespace Application.DTOs.Reservation
@@ -6,6 +7,7 @@ namespace Application.DTOs.Reservation
     {
         public int Id { get; set; }
         public int AreaId { get; set; }
+        public CommonAreaDto Area { get; set; }
         public int CondominiumId { get; set; }
         public int VinculoResidencialId { get; set; }
 

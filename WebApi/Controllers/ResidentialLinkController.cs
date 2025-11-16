@@ -48,16 +48,42 @@ public class ResidentialLinksController : ControllerBase
     [HttpGet("pending/{condominiumId:int}")]
     public async Task<ActionResult<IEnumerable<ResidentialLinkDto>>> Pending(int condominiumId)
     {
-        var items = await _service.ListPendingAsync(condominiumId);
-        return Ok(items);
+        try
+        {
+            var items = await _service.ListPendingAsync(condominiumId);
+            return Ok(items);
+        }
+        catch (UserFriendlyException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch
+        {
+            return StatusCode(500, new { message = $"Erro ao buscar solicitações pendentes." });
+        }
     }
 
     [HttpPost("review")]
     public async Task<ActionResult<ResidentialLinkDto>> Review([FromBody] ReviewResidentialLinkRequest input)
     {
-        var reviewerId = CurrentUserId();
-        var result = await _service.ReviewAsync(reviewerId, input);
-        return Ok(result);
+        try
+        {
+            var reviewerId = CurrentUserId();
+            var result = await _service.ReviewAsync(reviewerId, input);
+            return Ok(result);
+
+        }
+        catch (UserFriendlyException ex)
+        {
+            return BadRequest(new
+            {
+                message = ex.Message
+            });
+        }
+        catch
+        {
+            return StatusCode(500, new { message = $"Erro ao efetuar a alteração no vinculo residencial. Tente novamente mais tarde." });
+        }
     }
     private int CurrentUserId()
     {

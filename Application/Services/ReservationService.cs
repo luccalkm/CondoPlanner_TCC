@@ -81,8 +81,6 @@ namespace Application.Services
                 .Include("Apartamento", "Apartamento.Bloco")
                 .FirstOrDefault(v => v.UsuarioId == userId
                     && v.Ativo
-                    && v.DataInicio <= startDateTime.Date
-                    && (v.DataFim == null || v.DataFim.Value.Date >= startDateTime.Date)
                     && v.Apartamento.Bloco.CondominioId == area.CondominioId);
 
             if (vinculo is null)
@@ -154,9 +152,14 @@ namespace Application.Services
             await _reservationRepo.SaveChangesAsync();
         }
 
-        private static bool DateRangesOverlap(DateTime aStart, DateTime aEnd, DateTime bStart, DateTime bEnd)
+        public async Task<List<ReservationDto>> GetPendingReservationsAsync(int condominiumId)
         {
-            return aStart < bEnd && bStart < aEnd;
+            var pendingReservations = _reservationRepo
+                .Include("AreaComum")
+                .Where(r => r.Status == EStatusReserva.PENDENTE && r.AreaComum.CondominioId == condominiumId)
+                .ToList();
+
+            return pendingReservations.Select(_mapper.Map<ReservationDto>).ToList();
         }
     }
 }

@@ -23,7 +23,7 @@ import { useInstanceStore } from '../../../../stores/instance.store';
 import { useCondominiumStore } from '../../../../stores/condominium.store';
 import { useAlertStore } from '../../../../stores/alert.store';
 import EditMemberDialog from './EditMemberDialog';
-import CenteredDataGrid from '../../../../components/CenteredDataGrid';
+import CenteredDataGrid from '../../../common/CenteredDataGrid';
 
 const condominiumApi = new CondominiumApi(ApiConfiguration);
 

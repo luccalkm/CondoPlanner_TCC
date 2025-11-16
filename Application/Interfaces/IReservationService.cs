@@ -8,5 +8,6 @@ namespace Application.Interfaces
         Task<int> CreateAsync(CreateReservationInput input, int userId);
         Task CancelAsync(int reservationId, int userId);
         Task ApproveAsync(int reservationId, int userId, bool approve);
+        Task<List<ReservationDto>> GetPendingReservationsAsync(int condominiumId);
     }
 }

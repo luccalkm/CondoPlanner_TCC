@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { CommonAreaDto } from './CommonAreaDto';
+import {
+    CommonAreaDtoFromJSON,
+    CommonAreaDtoFromJSONTyped,
+    CommonAreaDtoToJSON,
+    CommonAreaDtoToJSONTyped,
+} from './CommonAreaDto';
 import type { EStatusReserva } from './EStatusReserva';
 import {
     EStatusReservaFromJSON,
@@ -39,6 +46,12 @@ export interface ReservationDto {
      * @memberof ReservationDto
      */
     areaId?: number;
+    /**
+     * 
+     * @type {CommonAreaDto}
+     * @memberof ReservationDto
+     */
+    area?: CommonAreaDto;
     /**
      * 
      * @type {number}
@@ -116,6 +129,7 @@ export function ReservationDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'] == null ? undefined : json['id'],
         'areaId': json['areaId'] == null ? undefined : json['areaId'],
+        'area': json['area'] == null ? undefined : CommonAreaDtoFromJSON(json['area']),
         'condominiumId': json['condominiumId'] == null ? undefined : json['condominiumId'],
         'vinculoResidencialId': json['vinculoResidencialId'] == null ? undefined : json['vinculoResidencialId'],
         'purpose': json['purpose'] == null ? undefined : json['purpose'],
@@ -141,6 +155,7 @@ export function ReservationDtoToJSONTyped(value?: ReservationDto | null, ignoreD
         
         'id': value['id'],
         'areaId': value['areaId'],
+        'area': CommonAreaDtoToJSON(value['area']),
         'condominiumId': value['condominiumId'],
         'vinculoResidencialId': value['vinculoResidencialId'],
         'purpose': value['purpose'],

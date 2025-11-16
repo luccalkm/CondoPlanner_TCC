@@ -13,7 +13,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { type GridColDef } from '@mui/x-data-grid';
-import CenteredDataGrid from '../../../../components/CenteredDataGrid';
+import CenteredDataGrid from '../../../common/CenteredDataGrid';
 import {
     ResidentialLinksApi,
     type ResidentialLinkDto,

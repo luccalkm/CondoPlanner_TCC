@@ -12,7 +12,7 @@ export const InstanceLayout = () => {
     const navigate = useNavigate();
     const { condominiumId } = useParams();
     const id = Number(condominiumId);
-    const { selectedCondominium, clearSelection } = useInstanceStore();
+    const { selectedCondominium, clearSelection, isAdminSelected } = useInstanceStore();
     const { logout } = useAuth();
 
     const handleLeave = () => {
@@ -32,11 +32,11 @@ export const InstanceLayout = () => {
                 <AppBar position="fixed" color="primary" elevation={2}>
                     <Toolbar>
                         <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
-                            {selectedCondominium?.nome || `Condomínio #${id}`}
+                            {selectedCondominium?.name || `Condomínio #${id}`}
                         </Typography>
                         <IconButton color="inherit" onClick={() => navigate('areas')}><SpaceDashboard /></IconButton>
                         <IconButton color="inherit" onClick={() => navigate('comunicados')}><Article /></IconButton>
-                        <IconButton color="inherit" onClick={() => navigate('configuracoes')}><Settings /></IconButton>
+                        {isAdminSelected() && <IconButton color="inherit" onClick={() => navigate('configuracoes')}><Settings /></IconButton>}
                         <IconButton color="inherit" onClick={handleLeave}><MeetingRoom /></IconButton>
                         <IconButton color="inherit" onClick={handleLogout}><Logout /></IconButton>
                     </Toolbar>

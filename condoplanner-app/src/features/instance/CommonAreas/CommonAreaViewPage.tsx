@@ -3,6 +3,7 @@ import { Box, useTheme, useMediaQuery, Grid } from '@mui/material';
 import { CommonAreaApi } from '../../../apiClient';
 import { ApiConfiguration } from '../../../apiClient/apiConfig';
 import { useInstanceStore } from '../../../stores/instance.store';
+import { useCondominiumStore } from '../../../stores/condominium.store';
 import useCommonAreaViewStore from '../../../stores/commonAreaView.store';
 import AreaHeader from './components/AreaHeader';
 import AreaPhotosPanel from './components/AreaPhotosPanel';
@@ -15,7 +16,8 @@ const api = new CommonAreaApi(ApiConfiguration);
 const CommonAreaViewPage: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const { isAdminSelected } = useInstanceStore();
+    const { selectedCondominium } = useInstanceStore();
+    const { userCondominiumRelations } = useCondominiumStore();
     const { currentArea, setCurrentArea } = useCommonAreaViewStore();
 
     const showAlert = useAlertStore((state) => state.showAlert);
@@ -43,14 +45,14 @@ const CommonAreaViewPage: React.FC = () => {
 
     const area = currentArea;
     
-    const canEdit = useMemo(() => {
-        if (isAdminSelected && isAdminSelected()) return true;
-        return false;
-    }, [isAdminSelected]);
+    const canCreateReservation = useMemo(() => {
+        if (!selectedCondominium) return false;
+        return userCondominiumRelations.some(r => r.condominiumId === selectedCondominium.id);
+    }, [selectedCondominium, userCondominiumRelations]);
 
     return (
         <Box p={isMobile ? 1 : 3} sx={{ maxWidth: 1000, margin: '0 auto' }}>
-            <AreaHeader area={area} canEdit={canEdit} />
+            <AreaHeader area={area} />
 
             <Grid container spacing={2} sx={{ mb: 2 }}>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -63,7 +65,7 @@ const CommonAreaViewPage: React.FC = () => {
                     />
                 </Grid>
             </Grid>
-            <CommonAreaCalendar canEdit={canEdit} />
+            <CommonAreaCalendar canEdit={canCreateReservation} />
         </Box>
     );
 };

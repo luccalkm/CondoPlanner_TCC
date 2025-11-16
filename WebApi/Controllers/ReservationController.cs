@@ -2,6 +2,7 @@ using Application.DTOs.Reservation;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Exceptions;
 using System.Security.Claims;
 
 namespace WebApi.Controllers
@@ -29,9 +30,24 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateReservationInput input)
         {
-            if (input is null) return BadRequest("Solicitação inválida.");
-            var id = await _service.CreateAsync(input, CurrentUserId());
-            return Ok(new { id });
+            try
+            {
+                if (input is null) return BadRequest("Solicitação inválida.");
+                var id = await _service.CreateAsync(input, CurrentUserId());
+                return Ok(new { id });
+
+            }
+            catch (UserFriendlyException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch
+            {
+                return StatusCode(500, new { message = $"Erro ao buscar relações." });
+            }
         }
 
         [HttpPost("{reservationId:int}/Cancel")]
@@ -49,6 +65,24 @@ namespace WebApi.Controllers
             if (req is null) return BadRequest("Solicitação inválida.");
             await _service.ApproveAsync(reservationId, CurrentUserId(), req.Approve);
             return Ok();
+        }
+
+        [HttpGet("Pending/{condominiumId:int}")]
+        public async Task<ActionResult<List<ReservationDto>>> GetPendingReservations(int condominiumId)
+        {
+            try
+            {
+                var reservations = await _service.GetPendingReservationsAsync(condominiumId);
+                return Ok(reservations);
+            }
+            catch (UserFriendlyException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "Erro ao buscar reservas pendentes." });
+            }
         }
 
         private int CurrentUserId()

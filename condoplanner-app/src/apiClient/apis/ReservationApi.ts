@@ -34,6 +34,10 @@ export interface ApiReservationAreaAreaIdGetRequest {
     end?: Date;
 }
 
+export interface ApiReservationPendingCondominiumIdGetRequest {
+    condominiumId: number;
+}
+
 export interface ApiReservationPostRequest {
     createReservationInput?: CreateReservationInput;
 }
@@ -100,6 +104,49 @@ export class ReservationApi extends runtime.BaseAPI {
      */
     async apiReservationAreaAreaIdGet(requestParameters: ApiReservationAreaAreaIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ReservationDto>> {
         const response = await this.apiReservationAreaAreaIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiReservationPendingCondominiumIdGetRaw(requestParameters: ApiReservationPendingCondominiumIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ReservationDto>>> {
+        if (requestParameters['condominiumId'] == null) {
+            throw new runtime.RequiredError(
+                'condominiumId',
+                'Required parameter "condominiumId" was null or undefined when calling apiReservationPendingCondominiumIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Reservation/Pending/{condominiumId}`;
+        urlPath = urlPath.replace(`{${"condominiumId"}}`, encodeURIComponent(String(requestParameters['condominiumId'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ReservationDtoFromJSON));
+    }
+
+    /**
+     */
+    async apiReservationPendingCondominiumIdGet(requestParameters: ApiReservationPendingCondominiumIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ReservationDto>> {
+        const response = await this.apiReservationPendingCondominiumIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**apiReservationAreaAreaIdGet**](ReservationApi.md#apireservationareaareaidget) | **GET** /api/Reservation/Area/{areaId} |  |
+| [**apiReservationPendingCondominiumIdGet**](ReservationApi.md#apireservationpendingcondominiumidget) | **GET** /api/Reservation/Pending/{condominiumId} |  |
 | [**apiReservationPost**](ReservationApi.md#apireservationpost) | **POST** /api/Reservation |  |
 | [**apiReservationReservationIdApprovePost**](ReservationApi.md#apireservationreservationidapprovepost) | **POST** /api/Reservation/{reservationId}/Approve |  |
 | [**apiReservationReservationIdCancelPost**](ReservationApi.md#apireservationreservationidcancelpost) | **POST** /api/Reservation/{reservationId}/Cancel |  |
@@ -63,6 +64,75 @@ example().catch(console.error);
 | **areaId** | `number` |  | [Defaults to `undefined`] |
 | **start** | `Date` |  | [Optional] [Defaults to `undefined`] |
 | **end** | `Date` |  | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+[**Array&lt;ReservationDto&gt;**](ReservationDto.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiReservationPendingCondominiumIdGet
+
+> Array&lt;ReservationDto&gt; apiReservationPendingCondominiumIdGet(condominiumId)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ReservationApi,
+} from '';
+import type { ApiReservationPendingCondominiumIdGetRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new ReservationApi(config);
+
+  const body = {
+    // number
+    condominiumId: 56,
+  } satisfies ApiReservationPendingCondominiumIdGetRequest;
+
+  try {
+    const data = await api.apiReservationPendingCondominiumIdGet(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **condominiumId** | `number` |  | [Defaults to `undefined`] |
 
 ### Return type
 
