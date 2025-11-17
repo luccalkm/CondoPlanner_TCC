@@ -6,9 +6,9 @@ All URIs are relative to *http://localhost*
 |------------- | ------------- | -------------|
 | [**apiReservationApproveOrRejectPost**](ReservationApi.md#apireservationapproveorrejectpost) | **POST** /api/Reservation/ApproveOrReject |  |
 | [**apiReservationAreaAreaIdGet**](ReservationApi.md#apireservationareaareaidget) | **GET** /api/Reservation/Area/{areaId} |  |
+| [**apiReservationCancelPost**](ReservationApi.md#apireservationcancelpost) | **POST** /api/Reservation/Cancel |  |
 | [**apiReservationPendingCondominiumIdGet**](ReservationApi.md#apireservationpendingcondominiumidget) | **GET** /api/Reservation/Pending/{condominiumId} |  |
 | [**apiReservationPost**](ReservationApi.md#apireservationpost) | **POST** /api/Reservation |  |
-| [**apiReservationReservationIdCancelPost**](ReservationApi.md#apireservationreservationidcancelpost) | **POST** /api/Reservation/{reservationId}/Cancel |  |
 
 
 
@@ -156,6 +156,75 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
+## apiReservationCancelPost
+
+> apiReservationCancelPost(reservationId)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ReservationApi,
+} from '';
+import type { ApiReservationCancelPostRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new ReservationApi(config);
+
+  const body = {
+    // number (optional)
+    reservationId: 56,
+  } satisfies ApiReservationCancelPostRequest;
+
+  try {
+    const data = await api.apiReservationCancelPost(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **reservationId** | `number` |  | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
 ## apiReservationPendingCondominiumIdGet
 
 > Array&lt;ReservationDto&gt; apiReservationPendingCondominiumIdGet(condominiumId)
@@ -283,75 +352,6 @@ example().catch(console.error);
 ### HTTP request headers
 
 - **Content-Type**: `application/json`, `text/json`, `application/*+json`
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## apiReservationReservationIdCancelPost
-
-> apiReservationReservationIdCancelPost(reservationId)
-
-
-
-### Example
-
-```ts
-import {
-  Configuration,
-  ReservationApi,
-} from '';
-import type { ApiReservationReservationIdCancelPostRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: Bearer
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new ReservationApi(config);
-
-  const body = {
-    // number
-    reservationId: 56,
-  } satisfies ApiReservationReservationIdCancelPostRequest;
-
-  try {
-    const data = await api.apiReservationReservationIdCancelPost(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **reservationId** | `number` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
 - **Accept**: Not defined
 
 

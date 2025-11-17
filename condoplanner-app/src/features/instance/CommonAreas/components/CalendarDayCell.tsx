@@ -1,6 +1,10 @@
 import { alpha, Box, Chip, Stack, Typography, useTheme, Grid } from '@mui/material';
-import { EStatusReserva, type ReservationDto } from '../../apiClient';
+import { EStatusReserva, ReservationApi, type ReservationDto } from '../../../../apiClient';
 import { memo } from 'react';
+import { ApiConfiguration } from '../../../../apiClient/apiConfig';
+import useReservationStore from '../../../../stores/reservation.store';
+import { useInstanceStore } from '../../../../stores/instance.store';
+import { useAlertStore } from '../../../../stores/alert.store';
 
 export interface CalendarDayCellProps {
     date: Date | null;
@@ -23,16 +27,48 @@ function statusColor(s?: EStatusReserva) {
     }
 }
 
+const api = new ReservationApi(ApiConfiguration);
+
 export const CalendarDayCell = memo(function CalendarDayCell({ date, items, isToday, isPast, canEdit, variant, onSelect }: CalendarDayCellProps) {
     const theme = useTheme();
     const key = date ? date.toISOString().slice(0, 10) : 'empty';
     const isMobile = variant === 'mobile';
     const minHeight = isMobile ? 92 : 120;
-
+    const { fetchForAreaMonth } = useReservationStore();
+    const { currentResidentialLink, isAdminSelected, isSyndicSelected } = useInstanceStore();
+    const { showAlert } = useAlertStore();
+    
     const handleSelectDate = () => {
         if (canEdit && date && !isPast) {
             onSelect?.(date);
         }
+    };
+
+    const canCancelReservation = (r: ReservationDto): boolean => {
+        const sameResidentialLink = currentResidentialLink?.id === r.vinculoResidencialId && r.id != null;
+        const isCondominiumAdministrator = isAdminSelected() || isSyndicSelected();
+        return !isPast && (sameResidentialLink || isCondominiumAdministrator);
+    };
+
+    const handleCancelReservation = async (reservation: ReservationDto) => {
+        if (!canCancelReservation(reservation)) return;
+
+        await api.apiReservationCancelPost({ reservationId: reservation.id! })
+            .then(async () => {
+                if (date) {
+                    const areaId = items[0]?.areaId;
+                    if (areaId) {
+                        const year = date.getFullYear();
+                        const monthIndex0 = date.getMonth();
+                        await fetchForAreaMonth(areaId, year, monthIndex0);
+                    }
+                }
+                showAlert('Reserva cancelada com sucesso.', "success");
+            })
+            .catch((error) => {
+                console.error('Failed to cancel reservation:', error);
+                showAlert('Erro ao cancelar reserva. Por favor, tente novamente.', "error");
+            });
     };
 
     return (
@@ -70,6 +106,7 @@ export const CalendarDayCell = memo(function CalendarDayCell({ date, items, isTo
                 <Stack spacing={isMobile ? 0.25 : 0.5} sx={{ mt: 0.25, width: '100%' }}>
                     {items.slice(0, isMobile ? 1 : 2).map((r, idx) => (
                         <Chip
+                            onDelete={canCancelReservation(r) ? () => handleCancelReservation(r) : undefined}
                             key={idx}
                             size="small"
                             color={statusColor(r.status)}

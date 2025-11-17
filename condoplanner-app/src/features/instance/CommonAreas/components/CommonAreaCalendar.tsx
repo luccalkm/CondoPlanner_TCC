@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, useMediaQuery, useTheme, Paper } from '@mui/material';
-import CalendarHeader from '../../../common/CalendarHeader';
+import CalendarHeader from './CalendarHeader';
 import CreateReservationDialog from './CreateReservationDialog';
 import useCommonAreaViewStore from '../../../../stores/commonAreaView.store';
 import useReservationStore from '../../../../stores/reservation.store';

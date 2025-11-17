@@ -6,7 +6,7 @@ import { ApiConfiguration } from '../../../apiClient/apiConfig';
 import { useState, useMemo } from 'react';
 import InviteDialog, { type InviteData } from './components/InviteDialog';
 import MembersList from './components/MembersList';
-import { AdminPanelSettings, AvTimer, AvTimerSharp, AvTimerTwoTone, NotificationImportant, WatchLater } from '@mui/icons-material';
+import { AdminPanelSettings, NotificationImportant } from '@mui/icons-material';
 import RoleInviteGrid from './components/RoleInviteGrid';
 import PendingResidentialLinks from './components/PendingResidentialLinks';
 import PendingReservations from './components/PendingReservations';
@@ -16,11 +16,11 @@ const inviteApi = new CondominiumInviteApi(ApiConfiguration);
 const roleOptions: { label: string; type: ETipoUsuario; description: string }[] = [
     { label: 'Síndico', type: ETipoUsuario.Sindico, description: 'Responsável pela gestão do condomínio.' },
     { label: 'Morador', type: ETipoUsuario.Morador, description: 'Acesso padrão para residentes.' },
-    { label: 'Funcionário', type: ETipoUsuario.Porteiro, description: 'Equipe operacional / apoio.' },
+    { label: 'Porteiro', type: ETipoUsuario.Porteiro, description: 'Equipe operacional / apoio.' },
 ];
 
 const CondominiumSettingsPage = () => {
-    const { selectedCondominium, isAdminSelected } = useInstanceStore();
+    const { selectedCondominium, isAdminSelected, isSyndicSelected } = useInstanceStore();
     const showAlert = useAlertStore(s => s.showAlert);
     const theme = useTheme();
 
@@ -95,7 +95,7 @@ const CondominiumSettingsPage = () => {
                         </Typography>
                     </Paper>
                     <Divider sx={{ my: 3 }} />
-                    {isAdminSelected() && (
+                    {(isAdminSelected() || isSyndicSelected()) && (
                         <RoleInviteGrid
                             roles={roleOptions}
                             loadingRole={loadingInvite}

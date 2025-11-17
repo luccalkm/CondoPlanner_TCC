@@ -53,6 +53,7 @@ const PendingReservations = () => {
 
     useEffect(() => {
         fetchPendingReservations();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showAlert, selectedCondominiumId]);
 
     const totalCount = pendingReservations?.length ?? 0;

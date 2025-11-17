@@ -12,7 +12,7 @@ export const InstanceLayout = () => {
     const navigate = useNavigate();
     const { condominiumId } = useParams();
     const id = Number(condominiumId);
-    const { selectedCondominium, clearSelection, isAdminSelected } = useInstanceStore();
+    const { selectedCondominium, clearSelection, isAdminSelected, isSyndicSelected } = useInstanceStore();
     const { logout } = useAuth();
 
     const handleLeave = () => {
@@ -36,7 +36,7 @@ export const InstanceLayout = () => {
                         </Typography>
                         <IconButton color="inherit" onClick={() => navigate('areas')}><SpaceDashboard /></IconButton>
                         <IconButton color="inherit" onClick={() => navigate('comunicados')}><Article /></IconButton>
-                        {isAdminSelected() && <IconButton color="inherit" onClick={() => navigate('configuracoes')}><Settings /></IconButton>}
+                        {(isAdminSelected() || isSyndicSelected()) && <IconButton color="inherit" onClick={() => navigate('configuracoes')}><Settings /></IconButton>}
                         <IconButton color="inherit" onClick={handleLeave}><MeetingRoom /></IconButton>
                         <IconButton color="inherit" onClick={handleLogout}><Logout /></IconButton>
                     </Toolbar>

@@ -38,16 +38,16 @@ export interface ApiReservationAreaAreaIdGetRequest {
     end?: Date;
 }
 
+export interface ApiReservationCancelPostRequest {
+    reservationId?: number;
+}
+
 export interface ApiReservationPendingCondominiumIdGetRequest {
     condominiumId: number;
 }
 
 export interface ApiReservationPostRequest {
     createReservationInput?: CreateReservationInput;
-}
-
-export interface ApiReservationReservationIdCancelPostRequest {
-    reservationId: number;
 }
 
 /**
@@ -145,6 +145,44 @@ export class ReservationApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiReservationCancelPostRaw(requestParameters: ApiReservationCancelPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['reservationId'] != null) {
+            queryParameters['reservationId'] = requestParameters['reservationId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Reservation/Cancel`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiReservationCancelPost(requestParameters: ApiReservationCancelPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiReservationCancelPostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
     async apiReservationPendingCondominiumIdGetRaw(requestParameters: ApiReservationPendingCondominiumIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ReservationDto>>> {
         if (requestParameters['condominiumId'] == null) {
             throw new runtime.RequiredError(
@@ -221,48 +259,6 @@ export class ReservationApi extends runtime.BaseAPI {
      */
     async apiReservationPost(requestParameters: ApiReservationPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiReservationPostRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiReservationReservationIdCancelPostRaw(requestParameters: ApiReservationReservationIdCancelPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['reservationId'] == null) {
-            throw new runtime.RequiredError(
-                'reservationId',
-                'Required parameter "reservationId" was null or undefined when calling apiReservationReservationIdCancelPost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/Reservation/{reservationId}/Cancel`;
-        urlPath = urlPath.replace(`{${"reservationId"}}`, encodeURIComponent(String(requestParameters['reservationId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiReservationReservationIdCancelPost(requestParameters: ApiReservationReservationIdCancelPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiReservationReservationIdCancelPostRaw(requestParameters, initOverrides);
     }
 
 }

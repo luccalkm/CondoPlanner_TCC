@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import type { ReservationDto } from "../../../../apiClient";
-import CalendarDayCell from "../../../common/CalendarDayCell";
+import CalendarDayCell from "./CalendarDayCell";
 
 export function CalendarGrid({
     weeks,

@@ -50,11 +50,26 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPost("{reservationId:int}/Cancel")]
+        [HttpPost("Cancel")]
         public async Task<IActionResult> Cancel(int reservationId)
         {
-            await _service.CancelAsync(reservationId, CurrentUserId());
-            return Ok();
+            try
+            {
+                var currentUserId = CurrentUserId();
+                await _service.CancelAsync(reservationId, currentUserId);
+                return Ok();
+            }
+            catch (UserFriendlyException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch
+            {
+                return StatusCode(500, new { message = $"Erro ao cancelar reserva." });
+            }
         }
 
 

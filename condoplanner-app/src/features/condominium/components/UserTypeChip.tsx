@@ -28,7 +28,7 @@ const map: Record<string, UserTypeMeta> = {
         color: "#6a1b9a",
         icon: <SupervisorAccount fontSize="small" />,
     },
-    PORTEIRO: {
+    Porteiro: {
         label: "Porteiro",
         color: "#00897b",
         icon: <DoorFront fontSize="small" />,

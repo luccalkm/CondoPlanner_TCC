@@ -10,12 +10,12 @@ import { RegisterPage } from "../features/auth/Register/RegisterPage";
 import { InstanceLayout } from "../features/common/InstanceLayout";
 import CommonAreasPage from "../features/instance/CommonAreas/CommonAreasPage";
 import CommonAreaViewPage from "../features/instance/CommonAreas/CommonAreaViewPage";
-import NotificationsPage from "../features/instance/NotificationsPage";
 import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
 import { useAuth } from "../hooks/useAuth";
 import ResidentialLinkGate from "../features/ResidentialLink/ResidentiaLinkGate";
+import NotificationsPage from "../features/instance/Notifications/NotificationsPage";
 
 export function AppRouter() {
     const { hasAuthenticationToken } = useAuth();

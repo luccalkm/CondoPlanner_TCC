@@ -33,7 +33,7 @@ const roleOptions = [
     { label: 'Administrador', value: ETipoUsuario.Administrador },
     { label: 'Síndico', value: ETipoUsuario.Sindico },
     { label: 'Morador', value: ETipoUsuario.Morador },
-    { label: 'Funcionário', value: ETipoUsuario.Porteiro },
+    { label: 'Porteiro', value: ETipoUsuario.Porteiro },
 ];
 
 const EditMemberDialog: React.FC<Props> = ({ open, onClose, member, onSaved }) => {

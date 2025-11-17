@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ETipoUsuario, type CondominiumDto } from '../apiClient';
+import { ETipoUsuario, type CondominiumDto, type ResidentialLinkDto } from '../apiClient';
 import { useCondominiumStore } from './condominium.store';
 import { useAuthStore } from './auth.store';
 
@@ -12,12 +12,16 @@ interface InstanceState {
     isAdminSelected: () => boolean;
     isSyndicSelected: () => boolean;
     syncFromParam: (id: number) => void;
+    currentResidentialLink: ResidentialLinkDto | null;
+    setCurrentResidentialLink: (link: ResidentialLinkDto) => void;
 }
 
 export const useInstanceStore = create<InstanceState>((set, get) => ({
     selectedCondominiumId: null,
     selectedCondominium: null,
     loadingSelected: false,
+    currentResidentialLink: null,
+    setCurrentResidentialLink: (link: ResidentialLinkDto) => set({ currentResidentialLink: link }),
 
     selectCondominium: (id: number) => {
         const { condominiums } = useCondominiumStore.getState();

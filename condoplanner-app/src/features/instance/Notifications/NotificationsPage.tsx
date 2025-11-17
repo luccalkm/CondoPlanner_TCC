@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useInstanceStore } from '../../stores/instance.store';
+import { useInstanceStore } from '../../../stores/instance.store';
 
 const NotificationsPage = () => {
     const { selectedCondominium } = useInstanceStore();
