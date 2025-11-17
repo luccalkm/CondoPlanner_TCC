@@ -14,7 +14,7 @@ function handleUnauthorized() {
 }
 
 export const ApiConfiguration = new Configuration({
-    basePath: import.meta.env.VITE_API_BASE_URL || "https://localhost:7257",
+    basePath: import.meta.env.VITE_API_BASE_URL,
     middleware: [
         {
             async pre(context: RequestContext) {
@@ -92,8 +92,8 @@ export const ApiConfiguration = new Configuration({
                 }
 
                 const errorObj = context.error;
-                const fallback = (errorObj && typeof errorObj.message === 'string')
-                    ? errorObj.message
+                const fallback = (errorObj && typeof (errorObj as Error).message === 'string')
+                    ? (errorObj as Error).message
                     : (context.error ? String(context.error) : 'Falha de rede ou CORS.');
                 throw new Error(fallback);
             }

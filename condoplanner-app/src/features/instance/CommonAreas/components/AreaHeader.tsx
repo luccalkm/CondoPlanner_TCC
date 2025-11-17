@@ -15,7 +15,7 @@ export function AreaHeader({ area, handleWorkingTime }: AreaHeaderProps) {
                 <Grid size={{ xs: 12 }}>
                     <Typography variant="h5" fontWeight={700}>{area?.name ?? 'Área comum'}</Typography>
                     <Typography variant="body2" color="text.secondary">{area?.description}</Typography>
-                    <Typography variant="body2" color={handleWorkingTime().open ? theme.palette.success.main : theme.palette.error.main}>{handleWorkingTime().text}</Typography>
+                    <Typography variant="body2" color={handleWorkingTime(area?.openingTime ?? '', area?.closingTime ?? '').open ? theme.palette.success.main : theme.palette.error.main}>{handleWorkingTime(area?.openingTime ?? '', area?.closingTime ?? '').text}</Typography>
                 </Grid>
             </Grid>
         </Paper>
