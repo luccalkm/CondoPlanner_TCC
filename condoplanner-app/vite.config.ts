@@ -12,8 +12,10 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             workbox: {
+                cleanupOutdatedCaches: true,
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             },
+            manifestFilename: 'site.webmanifest',
             includeAssets: [
                 'favicon.ico',
                 'robots.txt',
