@@ -29,7 +29,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ReservationDto>> GetByAreaAsync(int areaId, DateTime start, DateTime end)
+        public Task<List<ReservationDto>> GetByAreaAsync(int areaId, DateTime start, DateTime end)
         {
             var startInclusive = start.Date;
             var endExclusive = end.Date.AddDays(1);
@@ -43,7 +43,7 @@ namespace Application.Services
                     && r.DataFim > startInclusive)
                 .ToList();
 
-            return query.Select(_mapper.Map<ReservationDto>).ToList();
+            return Task.FromResult(query.Select(_mapper.Map<ReservationDto>).ToList());
         }
 
         public async Task<int> CreateAsync(CreateReservationInput input, int userId)
@@ -158,14 +158,14 @@ namespace Application.Services
             await _reservationRepo.SaveChangesAsync();
         }
 
-        public async Task<List<ReservationDto>> GetPendingReservationsAsync(int condominiumId)
+        public Task<List<ReservationDto>> GetPendingReservationsAsync(int condominiumId)
         {
             var pendingReservations = _reservationRepo
                 .Include("AreaComum")
                 .Where(r => r.Status == EStatusReserva.PENDENTE && r.AreaComum.CondominioId == condominiumId)
                 .ToList();
 
-            return _mapper.Map<List<ReservationDto>>(pendingReservations);
+            return Task.FromResult(_mapper.Map<List<ReservationDto>>(pendingReservations));
         }
     }
 }

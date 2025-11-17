@@ -99,11 +99,11 @@ namespace Infrastructure.ExternalServices
 
             var address = new AddressDto
             {
-                ZipCode = result.Cep,
-                Street = result.Logradouro,
-                District = result.Bairro,
-                City = result.Localidade,
-                State = result.Uf,
+                ZipCode = result.Cep ?? string.Empty,
+                Street = result.Logradouro ?? string.Empty,
+                District = result.Bairro ?? string.Empty,
+                City = result.Localidade ?? string.Empty,
+                State = result.Uf ?? string.Empty,
                 Complement = result.Complemento ?? string.Empty
             };
 

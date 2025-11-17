@@ -42,7 +42,7 @@ namespace Infrastructure.Persistence.Repositories
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(filtro, cancellationToken);
         }
 
-        private IQueryable<T> _query;
+        private IQueryable<T>? _query;
         public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
         {
             _query ??= _dbSet.AsQueryable();

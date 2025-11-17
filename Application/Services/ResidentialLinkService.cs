@@ -30,7 +30,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ResidentialLinkDto?> GetActiveForUserAsync(int userId, int condominiumId)
+        public Task<ResidentialLinkDto?> GetActiveForUserAsync(int userId, int condominiumId)
         {
             var vinculo = _linkRepo
                 .Include("Apartamento.Bloco.Condominio")
@@ -40,8 +40,8 @@ namespace Application.Services
                             v.Apartamento.Bloco.CondominioId == condominiumId)
                 .FirstOrDefault();
 
-            if (vinculo == null) return null;
-            return _mapper.Map<ResidentialLinkDto>(vinculo);
+            if (vinculo == null) return Task.FromResult<ResidentialLinkDto?>(null);
+            return Task.FromResult<ResidentialLinkDto?>(_mapper.Map<ResidentialLinkDto>(vinculo));
         }
 
         public async Task<ResidentialLinkDto> RequestAsync(int userId, CreateResidentialLinkRequest input)
@@ -115,7 +115,7 @@ namespace Application.Services
             return _mapper.Map<ResidentialLinkDto>(created);
         }
 
-        public async Task<IEnumerable<ResidentialLinkDto>> ListPendingAsync(int condominiumId)
+        public Task<IEnumerable<ResidentialLinkDto>> ListPendingAsync(int condominiumId)
         {
             var pending = _linkRepo
                 .Include("Apartamento.Bloco.Condominio", "Usuario")
@@ -124,7 +124,7 @@ namespace Application.Services
                             v.Apartamento.Bloco.CondominioId == condominiumId)
                 .ToList();
 
-            return pending.Select(_mapper.Map<ResidentialLinkDto>);
+            return Task.FromResult(pending.Select(_mapper.Map<ResidentialLinkDto>));
         }
 
         public async Task<ResidentialLinkDto> ReviewAsync(int reviewerUserId, ReviewResidentialLinkRequest input)

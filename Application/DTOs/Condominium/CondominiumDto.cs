@@ -11,6 +11,6 @@ namespace Application.DTOs.Condominium
         public string Email { get; set; } = string.Empty;
         public AddressDto Address { get; set; }
 
-        public List<BlockDto> Blocks { get; set; }
+        public List<BlockDto> Blocks { get; set; } = new();
     }
 }

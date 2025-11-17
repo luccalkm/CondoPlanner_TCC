@@ -62,7 +62,7 @@ namespace Application.Services
                 {
                     UsuarioId = input.UserId,
                     CondominioId = input.CondominiumId,
-                    TipoUsuario = input.UserType != null ? input.UserType : ETipoUsuario.MORADOR,
+                    TipoUsuario = input.UserType,
                     Ativo = true
                 };
 
@@ -102,7 +102,7 @@ namespace Application.Services
             return _mapper.Map<List<UserDto>>(users);
         }
 
-        public async Task<List<UserCondominiumDto>> GetAllRelationsByUserAsync(int userId)
+        public Task<List<UserCondominiumDto>> GetAllRelationsByUserAsync(int userId)
         {
             var userRelations = _usuarioCondominioRepository
                 .Include("Condominio", "Condominio.Endereco", "Usuario", "Condominio.Blocos", "Condominio.Blocos.Apartamentos")
@@ -110,9 +110,9 @@ namespace Application.Services
                 .ToList();
 
             if (!userRelations.Any())
-                return new List<UserCondominiumDto>();
+                return Task.FromResult(new List<UserCondominiumDto>());
 
-            return userRelations.Select(MapRelation).ToList();
+            return Task.FromResult(userRelations.Select(MapRelation).ToList());
         }
 
         public async Task<List<UserCondominiumDto>> GetRelationsByCondominiumAsync(int currentUserId, int condominiumId)
@@ -207,7 +207,7 @@ namespace Application.Services
             await AddUserRelationsAsync(condominium.Id, input.UserIds);
         }
 
-        private async Task AddUserRelationsAsync(int condominiumId, IEnumerable<int> userIds)
+        private async Task AddUserRelationsAsync(int condominiumId, IEnumerable<int>? userIds)
         {
             if (userIds is null)
                 return;

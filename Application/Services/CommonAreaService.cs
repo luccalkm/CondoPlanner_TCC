@@ -80,12 +80,13 @@ namespace Application.Services
             return dtos;
         }
 
-        public async Task<CommonAreaDto?> GetByIdAsync(int id)
+        public Task<CommonAreaDto?> GetByIdAsync(int id)
         {
             var entity = _areaRepository
                 .Include(a => a.Fotos)
                 .FirstOrDefault(a => a.Id == id);
-            return entity is null ? null : _mapper.Map<CommonAreaDto>(entity);
+
+            return Task.FromResult(entity is null ? null : _mapper.Map<CommonAreaDto>(entity));
         }
 
         public async Task<int> UpsertAsync(UpsertCommonAreaInput input, int userId)

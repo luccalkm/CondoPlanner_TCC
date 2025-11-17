@@ -7,7 +7,7 @@ namespace Application.DTOs.ResidentialLink
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
         public int CondominiumId { get; set; }
         public string CondominiumName { get; set; } = string.Empty;

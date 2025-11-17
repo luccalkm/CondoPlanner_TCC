@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.Authentication;
 using Application.DTOs.User;
-using Application.DTOs.User;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -21,7 +20,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<AuthenticationResponse?> LoginAsync(LoginRequest request)
+        public async Task<AuthenticationResponse> LoginAsync(LoginRequest request)
         {
             var user = await _userRepo.FirstOrDefaultAsync(u => u.Email == request.Email);
 
@@ -34,11 +33,11 @@ namespace Application.Services
                 };
             }
 
-            var token = _tokenService.GenerateToken(user);
+            var token = _tokenService.GenerateToken(user!);
 
             return new AuthenticationResponse
             {
-                Usuario = _mapper.Map<UserDto>(user),
+                Usuario = _mapper.Map<UserDto>(user!),
                 Token = token,
                 Sucesso = true
             };

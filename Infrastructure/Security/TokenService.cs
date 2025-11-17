@@ -19,7 +19,11 @@ namespace Infrastructure.Security
 
         public string GenerateToken(Usuario usuario)
         {
-            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT__KEY"));
+            var keyString = Environment.GetEnvironmentVariable("JWT__KEY") ?? "";
+            if (string.IsNullOrWhiteSpace(keyString))
+                throw new InvalidOperationException("Erro grave em JWT.");
+
+            var key = Encoding.UTF8.GetBytes(keyString);
 
             var claims = new[]
             {
@@ -36,8 +40,8 @@ namespace Infrastructure.Security
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature
                 ),
-                Audience = Environment.GetEnvironmentVariable("JWT__AUDIENCE"),
-                Issuer = Environment.GetEnvironmentVariable("JWT__ISSUER")
+                Audience = Environment.GetEnvironmentVariable("JWT__AUDIENCE") ?? "",
+                Issuer = Environment.GetEnvironmentVariable("JWT__ISSUER") ?? ""
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
