@@ -33,14 +33,9 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id:int}/UpdateStatus")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdatePackageStatusInput input)
+        [HttpPatch("UpdateStatus")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdatePackageStatusInput input)
         {
-            if (input.PackageId != 0 && input.PackageId != id)
-                return BadRequest(new { message = "Conflito de identificadores." });
-
-            input.PackageId = id;
-
             await _service.UpdateStatusAsync(input, CurrentUserId());
             return Ok();
         }

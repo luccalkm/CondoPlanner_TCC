@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-    Avatar, Box, Button, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText,
+    Avatar, Box, Button, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
     Menu, MenuItem, Paper, Skeleton, Stack, Tooltip, Typography, useMediaQuery, useTheme
 } from '@mui/material';
-import { Add, Edit, LocalShipping, MoreVert } from '@mui/icons-material';
+import { Add, DoneAll, Edit, LocalShipping, MoreVert, NotificationsActive } from '@mui/icons-material';
 import { useInstanceStore } from '../../../stores/instance.store';
 import { useCondominiumStore } from '../../../stores/condominium.store';
 import { useAuthStore } from '../../../stores/auth.store';
@@ -83,7 +83,6 @@ const PackagePage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCondominiumId, canManage]);
 
-    // Create/Edit dialog state
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [menuForId, setMenuForId] = useState<number | null>(null);
     const openMenu = Boolean(anchorEl);
@@ -174,6 +173,55 @@ const PackagePage = () => {
         await fetchPackages();
     };
 
+    const handleUpdateStatusToNotified = async () => {
+        if (!menuForId) return;
+        try {
+            await api.apiPackageUpdateStatusPatch({
+                updatePackageStatusInput: {
+                    packageId: menuForId,
+                    status: EStatusEncomenda.Notificado
+                }
+            });
+            showAlert('Morador notificado sobre a encomenda.', 'success');
+            await fetchPackages();
+        } catch (e) {
+            console.error('Error notifying package:', e);
+            showAlert('Erro ao notificar o morador.', 'error');
+        } finally {
+            handleCloseMenu();
+        }
+    };
+
+    const handleMarkAsPickedUp = async () => {
+        const pkg = packages.find(x => x.id === menuForId);
+        if (!pkg?.id) return;
+        try {
+            let pickupPersonName: string | undefined = undefined;
+            if (canManage) {
+                const input = window.prompt('Nome do retirante:', user?.name ?? '');
+                if (!input || !input.trim()) {
+                    showAlert('Informe o nome do retirante.', 'warning');
+                    return;
+                }
+                pickupPersonName = input.trim();
+            }
+            await api.apiPackageUpdateStatusPatch({
+                updatePackageStatusInput: {
+                    packageId: pkg.id,
+                    status: EStatusEncomenda.Retirado,
+                    pickupPersonName
+                }
+            });
+            showAlert('Status atualizado para RETIRADO.', 'success');
+            await fetchPackages();
+        } catch (e) {
+            console.error(e);
+            showAlert('Não foi possível atualizar o status.', 'error');
+        } finally {
+            handleCloseMenu();
+        }
+    };
+
     return (
         <Box p={3} sx={{ width: isMobile ? 'auto' : '70%', margin: '0 auto' }}>
             <Paper variant='outlined' sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -222,23 +270,25 @@ const PackagePage = () => {
                 )}
 
                 {!loadingPackages && !error && packages.length > 0 && (
-                    <List>
+                    <List sx={{ p: 1 }}>
                         {packages
                             .sort((a, b) => new Date(b.receivedAt ?? 0).getTime() - new Date(a.receivedAt ?? 0).getTime())
                             .map((p) => {
                                 const status = p.status ?? EStatusEncomenda.Recebido;
                                 const statusColor: 'default' | 'success' | 'warning' | 'info' =
                                     status === EStatusEncomenda.Retirado ? 'success' :
-                                    status === EStatusEncomenda.AguardandoRetirada ? 'warning' :
-                                    status === EStatusEncomenda.Notificado ? 'info' : 'default';
+                                        status === EStatusEncomenda.AguardandoRetirada ? 'warning' :
+                                            status === EStatusEncomenda.Notificado ? 'info' : 'default';
                                 return (
                                     <ListItem
                                         key={p.id}
-                                        secondaryAction={canManage ? (
-                                            <IconButton edge="end" onClick={(e) => handleOpenMenu(e, p.id!)}>
-                                                <MoreVert />
-                                            </IconButton>
-                                        ) : undefined}
+                                        secondaryAction={
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <IconButton edge="end" onClick={(e) => handleOpenMenu(e, p.id!)}>
+                                                    <MoreVert />
+                                                </IconButton>
+                                            </Box>
+                                        }
                                     >
                                         <ListItemAvatar>
                                             <Avatar>
@@ -273,13 +323,55 @@ const PackagePage = () => {
                 )}
             </Paper>
 
-            <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
-                <MenuItem onClick={() => {
+            <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu} MenuListProps={{ dense: true }}>
+                {(() => {
                     const pkg = packages.find(x => x.id === menuForId);
-                    if (pkg) handleOpenEdit(pkg);
-                }}>
-                    <Edit fontSize="small" style={{ marginRight: 8 }} /> Editar
-                </MenuItem>
+                    if (!pkg) return null;
+                    const status = pkg.status ?? EStatusEncomenda.Recebido;
+                    const statusColor: 'default' | 'success' | 'warning' | 'info' =
+                        status === EStatusEncomenda.Retirado ? 'success' :
+                            status === EStatusEncomenda.AguardandoRetirada ? 'warning' :
+                                status === EStatusEncomenda.Notificado ? 'info' : 'default';
+                    return (
+                        <Box px={2}>
+                            <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+                                {pkg.carrier || 'Transportadora N/D'}
+                            </Typography>
+                            <Chip size="small" label={status.toString().replace(/_/g, ' ')} color={statusColor} />
+                            {pkg.notes && (
+                                <Typography mt={1} variant="caption" color="text.secondary" display="block" sx={{ maxWidth: 240 }}>
+                                    {pkg.receivedAt ? new Date(pkg.receivedAt).toLocaleString() : 'N/D'}
+                                </Typography>
+                            )}
+                        </Box>
+                    );
+                })()}
+                <Divider sx={{ my: 1 }} />
+                {
+                    canManage && (
+                        <>
+                            <MenuItem onClick={() => {
+                                const pkg = packages.find(x => x.id === menuForId);
+                                if (pkg) { handleOpenEdit(pkg); handleCloseMenu(); }
+                            }}>
+                                <ListItemIcon><Edit fontSize="small" /></ListItemIcon>
+                                <ListItemText primary="Editar" />
+                            </MenuItem>
+                            <MenuItem disabled={packages.find(x => x.id === menuForId)?.status === EStatusEncomenda.Notificado} onClick={() => { handleUpdateStatusToNotified(); }}>
+                                <ListItemIcon><NotificationsActive fontSize="small" /></ListItemIcon>
+                                <ListItemText primary="Notificar usuário" />
+                            </MenuItem>
+                        </>
+                    )
+                }
+                {
+                    menuForId &&
+                    packages.find(x => x.id === menuForId)?.residentialLinkId === currentResidentialLink?.id &&
+                    <MenuItem onClick={() => { handleMarkAsPickedUp(); }}>
+                        <ListItemIcon><DoneAll fontSize="small" /></ListItemIcon>
+                        <ListItemText primary="Marcar como retirado" />
+                    </MenuItem>
+                }
             </Menu>
 
             <PackageDialog

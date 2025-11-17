@@ -40,7 +40,7 @@ namespace Application.Services
                 throw new UserFriendlyException("Você não tem permissão para registrar encomendas neste condomínio.");
 
             var entity = _mapper.Map<Encomenda>(input);
-            entity.Status = EStatusEncomenda.NOTIFICADO;
+            entity.Status = EStatusEncomenda.RECEBIDO;
 
             await _repo.AddAsync(entity);
             await _repo.SaveChangesAsync();
@@ -64,21 +64,38 @@ namespace Application.Services
         {
             var entity = await _repo.GetTrackedAsync(e => e.Id == input.PackageId)
                 ?? throw new UserFriendlyException("Encomenda não encontrada.");
+            var isOwner = await IsOwnerOfLinkAsync(currentUserId, entity.VinculoResidencialId);
 
-            if (!await IsStaffAsync(currentUserId, entity.CondominioId))
+            if (!isOwner)
                 throw new UserFriendlyException("Você não tem permissão para alterar o status desta encomenda.");
 
             entity.Status = input.Status;
 
             if (input.Status == EStatusEncomenda.RETIRADO)
             {
-                if (string.IsNullOrWhiteSpace(input.PickupPersonName))
-                    throw new UserFriendlyException("Informe o nome do retirante ao marcar como RETIRADO.");
-                entity.NomeRetirante = input.PickupPersonName.Trim();
+                var pickupName = input.PickupPersonName;
+                if (string.IsNullOrWhiteSpace(pickupName))
+                {
+                    if (isOwner)
+                    {
+                        var link = _linkRepo.Include("Usuario").FirstOrDefault(v => v.Id == entity.VinculoResidencialId);
+                        pickupName = link?.Usuario?.Nome ?? "Morador";
+                    }
+                    else
+                    {
+                        throw new UserFriendlyException("Informe o nome do retirante ao marcar como RETIRADO.");
+                    }
+                }
+                entity.NomeRetirante = pickupName!.Trim();
                 entity.DataRetirada = input.PickedUpAt ?? DateTime.UtcNow;
             }
             else
             {
+                var isStaff = await IsStaffAsync(currentUserId, entity.CondominioId);
+
+                if (!isStaff)
+                    throw new UserFriendlyException("Você não tem permissão para alterar este status.");
+
                 entity.NomeRetirante = string.Empty;
                 entity.DataRetirada = null;
             }
@@ -126,8 +143,19 @@ namespace Application.Services
         {
             if (!await IsOwnerOfLinkAsync(currentUserId, residentialLinkId))
                 throw new UserFriendlyException("Você não tem permissão para visualizar encomendas deste vínculo.");
-
             var list = (await _repo.FetchAsync(e => e.VinculoResidencialId == residentialLinkId)).ToList();
+
+            var toAck = list.Where(e => e.Status == EStatusEncomenda.NOTIFICADO).ToList();
+            if (toAck.Count > 0)
+            {
+                foreach (var encomenda in toAck)
+                {
+                    encomenda.Status = EStatusEncomenda.AGUARDANDO_RETIRADA;
+                    _repo.Update(encomenda);
+                }
+                await _repo.SaveChangesAsync();
+            }
+
             return list.Select(_mapper.Map<PackageDto>).ToList();
         }
 
@@ -136,9 +164,7 @@ namespace Application.Services
             var rel = await _userCondRepo.FirstOrDefaultAsync(uc =>
                 uc.UsuarioId == userId &&
                 uc.CondominioId == condominiumId &&
-                (uc.TipoUsuario == ETipoUsuario.ADMINISTRADOR ||
-                 uc.TipoUsuario == ETipoUsuario.SINDICO ||
-                 uc.TipoUsuario == ETipoUsuario.PORTEIRO));
+                uc.TipoUsuario != ETipoUsuario.MORADOR);
 
             return rel != null;
         }

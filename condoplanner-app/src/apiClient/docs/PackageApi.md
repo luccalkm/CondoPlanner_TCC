@@ -8,9 +8,9 @@ All URIs are relative to *http://localhost*
 | [**apiPackageIdDelete**](PackageApi.md#apipackageiddelete) | **DELETE** /api/Package/{id} |  |
 | [**apiPackageIdGet**](PackageApi.md#apipackageidget) | **GET** /api/Package/{id} |  |
 | [**apiPackageIdPut**](PackageApi.md#apipackageidput) | **PUT** /api/Package/{id} |  |
-| [**apiPackageIdUpdateStatusPatch**](PackageApi.md#apipackageidupdatestatuspatch) | **PATCH** /api/Package/{id}/UpdateStatus |  |
 | [**apiPackageLinkResidentialLinkIdGet**](PackageApi.md#apipackagelinkresidentiallinkidget) | **GET** /api/Package/Link/{residentialLinkId} |  |
 | [**apiPackagePost**](PackageApi.md#apipackagepost) | **POST** /api/Package |  |
+| [**apiPackageUpdateStatusPatch**](PackageApi.md#apipackageupdatestatuspatch) | **PATCH** /api/Package/UpdateStatus |  |
 
 
 
@@ -293,78 +293,6 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiPackageIdUpdateStatusPatch
-
-> apiPackageIdUpdateStatusPatch(id, updatePackageStatusInput)
-
-
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PackageApi,
-} from '';
-import type { ApiPackageIdUpdateStatusPatchRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: Bearer
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new PackageApi(config);
-
-  const body = {
-    // number
-    id: 56,
-    // UpdatePackageStatusInput (optional)
-    updatePackageStatusInput: ...,
-  } satisfies ApiPackageIdUpdateStatusPatchRequest;
-
-  try {
-    const data = await api.apiPackageIdUpdateStatusPatch(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **id** | `number` |  | [Defaults to `undefined`] |
-| **updatePackageStatusInput** | [UpdatePackageStatusInput](UpdatePackageStatusInput.md) |  | [Optional] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: `application/json`, `text/json`, `application/*+json`
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
 ## apiPackageLinkResidentialLinkIdGet
 
 > Array&lt;PackageDto&gt; apiPackageLinkResidentialLinkIdGet(residentialLinkId)
@@ -480,6 +408,75 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **createPackageInput** | [CreatePackageInput](CreatePackageInput.md) |  | [Optional] |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`, `text/json`, `application/*+json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiPackageUpdateStatusPatch
+
+> apiPackageUpdateStatusPatch(updatePackageStatusInput)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PackageApi,
+} from '';
+import type { ApiPackageUpdateStatusPatchRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new PackageApi(config);
+
+  const body = {
+    // UpdatePackageStatusInput (optional)
+    updatePackageStatusInput: ...,
+  } satisfies ApiPackageUpdateStatusPatchRequest;
+
+  try {
+    const data = await api.apiPackageUpdateStatusPatch(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **updatePackageStatusInput** | [UpdatePackageStatusInput](UpdatePackageStatusInput.md) |  | [Optional] |
 
 ### Return type
 

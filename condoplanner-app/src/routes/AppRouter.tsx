@@ -37,6 +37,7 @@ export function AppRouter() {
                                 <Route path="areas/:areaId" element={<CommonAreaViewPage />} />
                                 <Route path="comunicados" element={<PackagePage />} />
                                 <Route path="configuracoes" element={<CondominiumSettingsPage />} />
+                                <Route path="*" element={<NotFoundPage />} />
                             </Route>
                         </Route>
                     </Route>
@@ -48,7 +49,7 @@ export function AppRouter() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                 </Route>
-
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     );

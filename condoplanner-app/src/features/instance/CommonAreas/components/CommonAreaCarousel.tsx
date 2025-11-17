@@ -42,7 +42,7 @@ export function CommonAreaCarousel({
     if (photos == null || photos.length === 0) {
         return (
             <Box ref={containerRef} sx={{ width: '100%' }}>
-                <Lottie animationData={cameraAndPhotographyUrl} loop autoplay style={{ height }} />
+                <Lottie animationData={cameraAndPhotographyUrl} style={{ height }} />
                 <Box width={'100%'} display={"flex"} justifyContent="space-between" alignItems="center">
                     <Typography variant="subtitle1" color='disabled' align="center">
                         Nenhuma foto disponível

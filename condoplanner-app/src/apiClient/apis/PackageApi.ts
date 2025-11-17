@@ -48,17 +48,16 @@ export interface ApiPackageIdPutRequest {
     updatePackageInput?: UpdatePackageInput;
 }
 
-export interface ApiPackageIdUpdateStatusPatchRequest {
-    id: number;
-    updatePackageStatusInput?: UpdatePackageStatusInput;
-}
-
 export interface ApiPackageLinkResidentialLinkIdGetRequest {
     residentialLinkId: number;
 }
 
 export interface ApiPackagePostRequest {
     createPackageInput?: CreatePackageInput;
+}
+
+export interface ApiPackageUpdateStatusPatchRequest {
+    updatePackageStatusInput?: UpdatePackageStatusInput;
 }
 
 /**
@@ -241,51 +240,6 @@ export class PackageApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiPackageIdUpdateStatusPatchRaw(requestParameters: ApiPackageIdUpdateStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiPackageIdUpdateStatusPatch().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/Package/{id}/UpdateStatus`;
-        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: UpdatePackageStatusInputToJSON(requestParameters['updatePackageStatusInput']),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiPackageIdUpdateStatusPatch(requestParameters: ApiPackageIdUpdateStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiPackageIdUpdateStatusPatchRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
     async apiPackageLinkResidentialLinkIdGetRaw(requestParameters: ApiPackageLinkResidentialLinkIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<PackageDto>>> {
         if (requestParameters['residentialLinkId'] == null) {
             throw new runtime.RequiredError(
@@ -362,6 +316,43 @@ export class PackageApi extends runtime.BaseAPI {
      */
     async apiPackagePost(requestParameters: ApiPackagePostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiPackagePostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiPackageUpdateStatusPatchRaw(requestParameters: ApiPackageUpdateStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Package/UpdateStatus`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpdatePackageStatusInputToJSON(requestParameters['updatePackageStatusInput']),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiPackageUpdateStatusPatch(requestParameters: ApiPackageUpdateStatusPatchRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiPackageUpdateStatusPatchRaw(requestParameters, initOverrides);
     }
 
 }
