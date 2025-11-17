@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
     Avatar, Box, Button, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
-    Menu, MenuItem, Paper, Skeleton, Stack, Tooltip, Typography, useMediaQuery, useTheme
+    Menu, MenuItem, Paper, Skeleton, Stack, Tooltip, Typography, useMediaQuery, useTheme, Tabs, Tab
 } from '@mui/material';
 import { Add, DoneAll, Edit, LocalShipping, MoreVert, NotificationsActive } from '@mui/icons-material';
 import { useInstanceStore } from '../../../stores/instance.store';
@@ -26,6 +26,7 @@ const PackagePage = () => {
     const [loadingPackages, setLoadingPackages] = useState(false);
     const [packages, setPackages] = useState<PackageDto[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [tab, setTab] = useState(0);
 
     const isDoormanSelected = useMemo(() => {
         if (!selectedCondominiumId || !user) return false;
@@ -82,6 +83,22 @@ const PackagePage = () => {
         fetchPackages();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCondominiumId, canManage]);
+
+    const secondTabLabel = canManage ? 'Notificadas' : 'Aguardando retirada';
+
+    const counts = useMemo(() => {
+        const all = packages.length;
+        const second = packages.filter(p => (canManage ? p.status === EStatusEncomenda.Notificado : p.status === EStatusEncomenda.AguardandoRetirada)).length;
+        const picked = packages.filter(p => p.status === EStatusEncomenda.Retirado).length;
+        return { all, second, picked };
+    }, [packages, canManage]);
+
+    const filteredPackages = useMemo(() => {
+        if (tab === 0) return packages;
+        if (tab === 1) return packages.filter(p => (canManage ? p.status === EStatusEncomenda.Notificado : p.status === EStatusEncomenda.AguardandoRetirada));
+        if (tab === 2) return packages.filter(p => p.status === EStatusEncomenda.Retirado);
+        return packages;
+    }, [packages, tab, canManage]);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [menuForId, setMenuForId] = useState<number | null>(null);
@@ -223,7 +240,7 @@ const PackagePage = () => {
     };
 
     return (
-        <Box p={3} sx={{ width: isMobile ? 'auto' : '70%', margin: '0 auto' }}>
+        <Box>
             <Paper variant='outlined' sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant="h5" fontWeight={700}>Encomendas</Typography>
                 {canManage && (
@@ -242,6 +259,13 @@ const PackagePage = () => {
             </Paper>
 
             <Paper variant='outlined' sx={{ p: 0 }}>
+                <Box sx={{ px: 1, borderBottom: theme => `1px solid ${theme.palette.divider}` }}>
+                    <Tabs value={tab} onChange={(_, v) => setTab(v)} variant={isMobile ? 'scrollable' : 'standard'} scrollButtons allowScrollButtonsMobile>
+                        <Tab label={`Todas (${counts.all})`} />
+                        <Tab label={`${secondTabLabel} (${counts.second})`} />
+                        <Tab label={`Retiradas (${counts.picked})`} />
+                    </Tabs>
+                </Box>
                 {loadingPackages && (
                     <Box p={2}>
                         {[...Array(5)].map((_, i) => (
@@ -263,15 +287,15 @@ const PackagePage = () => {
                     </Box>
                 )}
 
-                {!loadingPackages && !error && packages.length === 0 && (
+                {!loadingPackages && !error && filteredPackages.length === 0 && (
                     <Box p={3} textAlign="center">
                         <Typography color="text.secondary">Nenhuma encomenda encontrada.</Typography>
                     </Box>
                 )}
 
-                {!loadingPackages && !error && packages.length > 0 && (
+                {!loadingPackages && !error && filteredPackages.length > 0 && (
                     <List sx={{ p: 1 }}>
-                        {packages
+                        {filteredPackages
                             .sort((a, b) => new Date(b.receivedAt ?? 0).getTime() - new Date(a.receivedAt ?? 0).getTime())
                             .map((p) => {
                                 const status = p.status ?? EStatusEncomenda.Recebido;
