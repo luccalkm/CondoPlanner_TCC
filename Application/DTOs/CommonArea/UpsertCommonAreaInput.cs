@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 
 namespace Application.DTOs.CommonArea
 {
     public class UpsertCommonAreaInput
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public int CondominiumId { get; set; }
 
         public string Name { get; set; } = string.Empty;
@@ -20,5 +20,6 @@ namespace Application.DTOs.CommonArea
         public bool RequiresApproval { get; set; }
         public int AvailableDays { get; set; }
         public string Notes { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 }

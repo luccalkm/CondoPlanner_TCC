@@ -25,15 +25,8 @@ namespace WebAPI.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
-            try
-            {
-                var result = await _userService.GetUserByIdAsync(id);
-                return Ok(result);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _userService.GetUserByIdAsync(id);
+            return Ok(result);
         }
 
         /// <summary>
@@ -42,15 +35,8 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<UserDto>> EditUser([FromBody] UserDto dto)
         {
-            try
-            {
-                var result = await _userService.EditUserAsync(dto);
-                return Ok(result);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _userService.EditUserAsync(dto);
+            return Ok(result);
         }
 
         /// <summary>
@@ -59,15 +45,8 @@ namespace WebAPI.Controllers
         [HttpPost("ChangePassword")]
         public async Task<ActionResult> ChangeUserPassword([FromBody] ChangePasswordInput input)
         {
-            try
-            {
-                await _userService.ChangeUserPasswordAsync(input);
-                return Ok(new { message = "Senha alterada com sucesso." });
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            await _userService.ChangeUserPasswordAsync(input);
+            return Ok(new { message = "Senha alterada com sucesso." });
         }
     }
 }

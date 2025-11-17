@@ -39,7 +39,40 @@ export function useCommonAreasStore(condominiumId?: number) {
 	}, []);
 
 	const saveArea = useCallback(async (input: UpsertCommonAreaInput) => {
-		await api.apiCommonAreaUpsertPost({ upsertCommonAreaInput: input });
+		if (!input.id || input.id === 0) {
+			const createBody = {
+				condominiumId: input.condominiumId!,
+				name: input.name ?? '',
+				description: input.description ?? '',
+				type: input.type ?? '',
+				capacity: input.capacity ?? 0,
+				openingTime: input.openingTime ?? '00:00:00',
+				closingTime: input.closingTime ?? '00:00:00',
+				maxDuration: input.maxDuration ?? 0,
+				available: input.available ?? false,
+				requiresApproval: input.requiresApproval ?? false,
+				availableDays: input.availableDays ?? 0,
+				notes: input.notes ?? ''
+			};
+			await api.apiCommonAreaPost({ upsertCommonAreaInput: createBody });
+		} else {
+			const updateBody = {
+				id: input.id!,
+				name: input.name ?? '',
+				description: input.description ?? '',
+				type: input.type ?? '',
+				capacity: input.capacity ?? 0,
+				openingTime: input.openingTime ?? '00:00:00',
+				closingTime: input.closingTime ?? '00:00:00',
+				maxDuration: input.maxDuration ?? 0,
+				available: input.available ?? false,
+				requiresApproval: input.requiresApproval ?? false,
+				availableDays: input.availableDays ?? 0,
+				notes: input.notes ?? ''
+			};
+			await api.apiCommonAreaIdPut({ id: input.id!, upsertCommonAreaInput: updateBody });
+		}
+
 		await loadAreas();
 	}, [loadAreas]);
 

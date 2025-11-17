@@ -28,6 +28,10 @@ import {
     ReviewResidentialLinkRequestToJSON,
 } from '../models/index';
 
+export interface ApiResidentialLinksActiveCondominiumIdGetRequest {
+    condominiumId: number;
+}
+
 export interface ApiResidentialLinksMyCondominiumIdGetRequest {
     condominiumId: number;
 }
@@ -48,6 +52,49 @@ export interface ApiResidentialLinksReviewPostRequest {
  * 
  */
 export class ResidentialLinksApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiResidentialLinksActiveCondominiumIdGetRaw(requestParameters: ApiResidentialLinksActiveCondominiumIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ResidentialLinkDto>>> {
+        if (requestParameters['condominiumId'] == null) {
+            throw new runtime.RequiredError(
+                'condominiumId',
+                'Required parameter "condominiumId" was null or undefined when calling apiResidentialLinksActiveCondominiumIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/ResidentialLinks/active/{condominiumId}`;
+        urlPath = urlPath.replace(`{${"condominiumId"}}`, encodeURIComponent(String(requestParameters['condominiumId'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ResidentialLinkDtoFromJSON));
+    }
+
+    /**
+     */
+    async apiResidentialLinksActiveCondominiumIdGet(requestParameters: ApiResidentialLinksActiveCondominiumIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ResidentialLinkDto>> {
+        const response = await this.apiResidentialLinksActiveCondominiumIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */

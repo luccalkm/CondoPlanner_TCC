@@ -1,21 +1,22 @@
-# CommonAreaApi
+# PackageApi
 
 All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**apiCommonAreaCondominiumCondominiumIdGet**](CommonAreaApi.md#apicommonareacondominiumcondominiumidget) | **GET** /api/CommonArea/Condominium/{condominiumId} |  |
-| [**apiCommonAreaIdGet**](CommonAreaApi.md#apicommonareaidget) | **GET** /api/CommonArea/{id} |  |
-| [**apiCommonAreaIdPut**](CommonAreaApi.md#apicommonareaidput) | **PUT** /api/CommonArea/{id} |  |
-| [**apiCommonAreaPhotosPhotoIdDelete**](CommonAreaApi.md#apicommonareaphotosphotoiddelete) | **DELETE** /api/CommonArea/Photos/{photoId} |  |
-| [**apiCommonAreaPhotosUploadPost**](CommonAreaApi.md#apicommonareaphotosuploadpost) | **POST** /api/CommonArea/Photos/Upload |  |
-| [**apiCommonAreaPost**](CommonAreaApi.md#apicommonareapost) | **POST** /api/CommonArea |  |
+| [**apiPackageCondominiumCondominiumIdGet**](PackageApi.md#apipackagecondominiumcondominiumidget) | **GET** /api/Package/Condominium/{condominiumId} |  |
+| [**apiPackageIdDelete**](PackageApi.md#apipackageiddelete) | **DELETE** /api/Package/{id} |  |
+| [**apiPackageIdGet**](PackageApi.md#apipackageidget) | **GET** /api/Package/{id} |  |
+| [**apiPackageIdPut**](PackageApi.md#apipackageidput) | **PUT** /api/Package/{id} |  |
+| [**apiPackageIdUpdateStatusPatch**](PackageApi.md#apipackageidupdatestatuspatch) | **PATCH** /api/Package/{id}/UpdateStatus |  |
+| [**apiPackageLinkResidentialLinkIdGet**](PackageApi.md#apipackagelinkresidentiallinkidget) | **GET** /api/Package/Link/{residentialLinkId} |  |
+| [**apiPackagePost**](PackageApi.md#apipackagepost) | **POST** /api/Package |  |
 
 
 
-## apiCommonAreaCondominiumCondominiumIdGet
+## apiPackageCondominiumCondominiumIdGet
 
-> Array&lt;CommonAreaDto&gt; apiCommonAreaCondominiumCondominiumIdGet(condominiumId)
+> Array&lt;PackageDto&gt; apiPackageCondominiumCondominiumIdGet(condominiumId)
 
 
 
@@ -24,9 +25,9 @@ All URIs are relative to *http://localhost*
 ```ts
 import {
   Configuration,
-  CommonAreaApi,
+  PackageApi,
 } from '';
-import type { ApiCommonAreaCondominiumCondominiumIdGetRequest } from '';
+import type { ApiPackageCondominiumCondominiumIdGetRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -34,15 +35,15 @@ async function example() {
     // Configure HTTP bearer authorization: Bearer
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new CommonAreaApi(config);
+  const api = new PackageApi(config);
 
   const body = {
     // number
     condominiumId: 56,
-  } satisfies ApiCommonAreaCondominiumCondominiumIdGetRequest;
+  } satisfies ApiPackageCondominiumCondominiumIdGetRequest;
 
   try {
-    const data = await api.apiCommonAreaCondominiumCondominiumIdGet(body);
+    const data = await api.apiPackageCondominiumCondominiumIdGet(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -62,7 +63,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;CommonAreaDto&gt;**](CommonAreaDto.md)
+[**Array&lt;PackageDto&gt;**](PackageDto.md)
 
 ### Authorization
 
@@ -82,9 +83,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiCommonAreaIdGet
+## apiPackageIdDelete
 
-> CommonAreaDto apiCommonAreaIdGet(id)
+> apiPackageIdDelete(id)
 
 
 
@@ -93,9 +94,9 @@ example().catch(console.error);
 ```ts
 import {
   Configuration,
-  CommonAreaApi,
+  PackageApi,
 } from '';
-import type { ApiCommonAreaIdGetRequest } from '';
+import type { ApiPackageIdDeleteRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -103,15 +104,15 @@ async function example() {
     // Configure HTTP bearer authorization: Bearer
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new CommonAreaApi(config);
+  const api = new PackageApi(config);
 
   const body = {
     // number
     id: 56,
-  } satisfies ApiCommonAreaIdGetRequest;
+  } satisfies ApiPackageIdDeleteRequest;
 
   try {
-    const data = await api.apiCommonAreaIdGet(body);
+    const data = await api.apiPackageIdDelete(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -131,7 +132,76 @@ example().catch(console.error);
 
 ### Return type
 
-[**CommonAreaDto**](CommonAreaDto.md)
+`void` (Empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiPackageIdGet
+
+> PackageDto apiPackageIdGet(id)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PackageApi,
+} from '';
+import type { ApiPackageIdGetRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new PackageApi(config);
+
+  const body = {
+    // number
+    id: 56,
+  } satisfies ApiPackageIdGetRequest;
+
+  try {
+    const data = await api.apiPackageIdGet(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `number` |  | [Defaults to `undefined`] |
+
+### Return type
+
+[**PackageDto**](PackageDto.md)
 
 ### Authorization
 
@@ -151,9 +221,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiCommonAreaIdPut
+## apiPackageIdPut
 
-> apiCommonAreaIdPut(id, upsertCommonAreaInput)
+> apiPackageIdPut(id, updatePackageInput)
 
 
 
@@ -162,9 +232,9 @@ example().catch(console.error);
 ```ts
 import {
   Configuration,
-  CommonAreaApi,
+  PackageApi,
 } from '';
-import type { ApiCommonAreaIdPutRequest } from '';
+import type { ApiPackageIdPutRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -172,17 +242,17 @@ async function example() {
     // Configure HTTP bearer authorization: Bearer
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new CommonAreaApi(config);
+  const api = new PackageApi(config);
 
   const body = {
     // number
     id: 56,
-    // UpsertCommonAreaInput (optional)
-    upsertCommonAreaInput: ...,
-  } satisfies ApiCommonAreaIdPutRequest;
+    // UpdatePackageInput (optional)
+    updatePackageInput: ...,
+  } satisfies ApiPackageIdPutRequest;
 
   try {
-    const data = await api.apiCommonAreaIdPut(body);
+    const data = await api.apiPackageIdPut(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -199,7 +269,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | `number` |  | [Defaults to `undefined`] |
-| **upsertCommonAreaInput** | [UpsertCommonAreaInput](UpsertCommonAreaInput.md) |  | [Optional] |
+| **updatePackageInput** | [UpdatePackageInput](UpdatePackageInput.md) |  | [Optional] |
 
 ### Return type
 
@@ -223,9 +293,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiCommonAreaPhotosPhotoIdDelete
+## apiPackageIdUpdateStatusPatch
 
-> apiCommonAreaPhotosPhotoIdDelete(photoId)
+> apiPackageIdUpdateStatusPatch(id, updatePackageStatusInput)
 
 
 
@@ -234,9 +304,9 @@ example().catch(console.error);
 ```ts
 import {
   Configuration,
-  CommonAreaApi,
+  PackageApi,
 } from '';
-import type { ApiCommonAreaPhotosPhotoIdDeleteRequest } from '';
+import type { ApiPackageIdUpdateStatusPatchRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -244,15 +314,17 @@ async function example() {
     // Configure HTTP bearer authorization: Bearer
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new CommonAreaApi(config);
+  const api = new PackageApi(config);
 
   const body = {
     // number
-    photoId: 56,
-  } satisfies ApiCommonAreaPhotosPhotoIdDeleteRequest;
+    id: 56,
+    // UpdatePackageStatusInput (optional)
+    updatePackageStatusInput: ...,
+  } satisfies ApiPackageIdUpdateStatusPatchRequest;
 
   try {
-    const data = await api.apiCommonAreaPhotosPhotoIdDelete(body);
+    const data = await api.apiPackageIdUpdateStatusPatch(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -268,76 +340,8 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **photoId** | `number` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## apiCommonAreaPhotosUploadPost
-
-> apiCommonAreaPhotosUploadPost(uploadCommonAreaPhotoInput)
-
-
-
-### Example
-
-```ts
-import {
-  Configuration,
-  CommonAreaApi,
-} from '';
-import type { ApiCommonAreaPhotosUploadPostRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: Bearer
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new CommonAreaApi(config);
-
-  const body = {
-    // UploadCommonAreaPhotoInput (optional)
-    uploadCommonAreaPhotoInput: ...,
-  } satisfies ApiCommonAreaPhotosUploadPostRequest;
-
-  try {
-    const data = await api.apiCommonAreaPhotosUploadPost(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **uploadCommonAreaPhotoInput** | [UploadCommonAreaPhotoInput](UploadCommonAreaPhotoInput.md) |  | [Optional] |
+| **id** | `number` |  | [Defaults to `undefined`] |
+| **updatePackageStatusInput** | [UpdatePackageStatusInput](UpdatePackageStatusInput.md) |  | [Optional] |
 
 ### Return type
 
@@ -361,9 +365,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## apiCommonAreaPost
+## apiPackageLinkResidentialLinkIdGet
 
-> apiCommonAreaPost(upsertCommonAreaInput)
+> Array&lt;PackageDto&gt; apiPackageLinkResidentialLinkIdGet(residentialLinkId)
 
 
 
@@ -372,9 +376,9 @@ example().catch(console.error);
 ```ts
 import {
   Configuration,
-  CommonAreaApi,
+  PackageApi,
 } from '';
-import type { ApiCommonAreaPostRequest } from '';
+import type { ApiPackageLinkResidentialLinkIdGetRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -382,15 +386,15 @@ async function example() {
     // Configure HTTP bearer authorization: Bearer
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new CommonAreaApi(config);
+  const api = new PackageApi(config);
 
   const body = {
-    // UpsertCommonAreaInput (optional)
-    upsertCommonAreaInput: ...,
-  } satisfies ApiCommonAreaPostRequest;
+    // number
+    residentialLinkId: 56,
+  } satisfies ApiPackageLinkResidentialLinkIdGetRequest;
 
   try {
-    const data = await api.apiCommonAreaPost(body);
+    const data = await api.apiPackageLinkResidentialLinkIdGet(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -406,7 +410,76 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **upsertCommonAreaInput** | [UpsertCommonAreaInput](UpsertCommonAreaInput.md) |  | [Optional] |
+| **residentialLinkId** | `number` |  | [Defaults to `undefined`] |
+
+### Return type
+
+[**Array&lt;PackageDto&gt;**](PackageDto.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiPackagePost
+
+> apiPackagePost(createPackageInput)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PackageApi,
+} from '';
+import type { ApiPackagePostRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new PackageApi(config);
+
+  const body = {
+    // CreatePackageInput (optional)
+    createPackageInput: ...,
+  } satisfies ApiPackagePostRequest;
+
+  try {
+    const data = await api.apiPackagePost(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **createPackageInput** | [CreatePackageInput](CreatePackageInput.md) |  | [Optional] |
 
 ### Return type
 

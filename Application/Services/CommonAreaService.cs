@@ -89,33 +89,40 @@ namespace Application.Services
             return Task.FromResult(entity is null ? null : _mapper.Map<CommonAreaDto>(entity));
         }
 
-        public async Task<int> UpsertAsync(UpsertCommonAreaInput input, int userId)
+        public async Task<int> CreateAsync(UpsertCommonAreaInput input)
         {
             var relation = await _usuarioCondRepo.FirstOrDefaultAsync(uc =>
-                uc.UsuarioId == userId &&
+                uc.UsuarioId == input.UserId &&
                 uc.CondominioId == input.CondominiumId &&
                 (uc.TipoUsuario == ETipoUsuario.ADMINISTRADOR || uc.TipoUsuario == ETipoUsuario.SINDICO));
 
             if (relation is null)
                 throw new UserFriendlyException("Você não tem permissão para gerenciar áreas comuns neste condomínio.");
 
-            AreaComum entity;
-            if (input.Id.HasValue && input.Id.Value > 0)
-            {
-                entity = await _areaRepository.GetTrackedAsync(a => a.Id == input.Id.Value)
-                    ?? throw new UserFriendlyException("Área comum não encontrada. Recarregue a página ou entre em contato.");
-            }
-            else
-            {
-                entity = new AreaComum { CondominioId = input.CondominiumId };
-                await _areaRepository.AddAsync(entity);
-            }
-
+            var entity = new AreaComum { CondominioId = input.CondominiumId };
             _mapper.Map(input, entity);
 
-            _areaRepository.Update(entity);
+            await _areaRepository.AddAsync(entity);
             await _areaRepository.SaveChangesAsync();
             return entity.Id;
+        }
+
+        public async Task UpdateAsync(UpsertCommonAreaInput input)
+        {
+            var entity = await _areaRepository.GetTrackedAsync(a => a.Id == input.Id)
+                ?? throw new UserFriendlyException("Área comum não encontrada.");
+
+            var relation = await _usuarioCondRepo.FirstOrDefaultAsync(uc =>
+                uc.UsuarioId == input.UserId &&
+                uc.CondominioId == entity.CondominioId &&
+                (uc.TipoUsuario == ETipoUsuario.ADMINISTRADOR || uc.TipoUsuario == ETipoUsuario.SINDICO));
+
+            if (relation is null)
+                throw new UserFriendlyException("Você não tem permissão para gerenciar áreas comuns neste condomínio.");
+
+            _mapper.Map(input, entity);
+            _areaRepository.Update(entity);
+            await _areaRepository.SaveChangesAsync();
         }
 
         public async Task UploadPhotoAsync(UploadCommonAreaPhotoInput input, int currentUserId)

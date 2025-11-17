@@ -1,7 +1,10 @@
 import { useMemo, useRef, useState } from 'react';
-import { Box, IconButton, Skeleton, Stack } from '@mui/material';
+import { Box, IconButton, Skeleton, Stack, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import cameraAndPhotographyUrl from "../../../../assets/camerasAndPhotography.json";
+import Lottie from 'lottie-react';
+import { AddPhotoAlternate } from '@mui/icons-material';
 
 type Photo = { id?: number; base64Data?: string | null; contentType?: string | null };
 
@@ -34,6 +37,22 @@ export function CommonAreaCarousel({
         if (ids.length === 0) return;
         const next = ((index + delta) % ids.length + ids.length) % ids.length;
         setIndex(next);
+    }
+
+    if (photos == null || photos.length === 0) {
+        return (
+            <Box ref={containerRef} sx={{ width: '100%' }}>
+                <Lottie animationData={cameraAndPhotographyUrl} loop autoplay style={{ height }} />
+                <Box width={'100%'} display={"flex"} justifyContent="space-between" alignItems="center">
+                    <Typography variant="subtitle1" color='disabled' align="center">
+                        Nenhuma foto disponível
+                    </Typography>
+                    <IconButton>
+                        <AddPhotoAlternate />
+                    </IconButton>
+                </Box>
+            </Box>
+        );
     }
 
     return (

@@ -15,7 +15,7 @@ import CondominiumSettingsPage from "../features/instance/CondominiumSettings/Co
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
 import { useAuth } from "../hooks/useAuth";
 import ResidentialLinkGate from "../features/ResidentialLink/ResidentiaLinkGate";
-import NotificationsPage from "../features/instance/Notifications/NotificationsPage";
+import PackagePage from "../features/instance/Package/PackagePage";
 
 export function AppRouter() {
     const { hasAuthenticationToken } = useAuth();
@@ -35,7 +35,7 @@ export function AppRouter() {
                                 <Route index element={<Navigate to="areas" replace />} />
                                 <Route path="areas" element={<CommonAreasPage />} />
                                 <Route path="areas/:areaId" element={<CommonAreaViewPage />} />
-                                <Route path="comunicados" element={<NotificationsPage />} />
+                                <Route path="comunicados" element={<PackagePage />} />
                                 <Route path="configuracoes" element={<CondominiumSettingsPage />} />
                             </Route>
                         </Route>

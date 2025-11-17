@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { EStatusVinculoResidencial, ResidentialLinksApi, type CommonAreaDto, type UpsertCommonAreaInput } from '../../../apiClient';
 import { UploadPhotoButton } from './components/UploadPhotoButton';
 import { CommonAreaDialog } from './components/CommonAreaDialog';
-import { AddAPhoto, AddBusiness, DomainDisabled } from '@mui/icons-material';
+import { AddAPhoto, AddBusiness, DomainDisabled, Report, Verified } from '@mui/icons-material';
 import { CommonAreaCarousel } from './components/CommonAreaCarousel';
 import { useCommonAreasStore } from '../../../stores/commonArea.store';
 import { placeholderImage as placeholderHelper } from './utils';
@@ -36,7 +36,7 @@ const residentialLinkApi = new ResidentialLinksApi(ApiConfiguration);
 export default function CommonAreasPage() {
     const { selectedCondominium, isAdminSelected, isSyndicSelected } = useInstanceStore();
     const { areas, loadingAreas, saveArea, loadAreas } = useCommonAreasStore(selectedCondominium?.id);
-    const { setCurrentArea } = useCommonAreaViewStore();
+    const { setCurrentArea, handleWorkingTime } = useCommonAreaViewStore();
     const [openDialog, setOpenDialog] = useState(false);
     const [editing, setEditing] = useState<CommonAreaDto | null>(null);
     const [missingResidentialLink, setMissingResidentialLink] = useState(false);
@@ -131,23 +131,36 @@ export default function CommonAreasPage() {
                     {areas.map(area => {
                         const opening = (area.openingTime || '').substring(0, 5);
                         const closing = (area.closingTime || '').substring(0, 5);
+                        const commonAreaStatus = handleWorkingTime(opening, closing);
 
                         return (
                             <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} key={area.id}>
                                 <Paper variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                    <CommonAreaCarousel
-                                        alt={area.name ?? 'Área Comum'}
-                                        fallbackUrl={placeholderImage(area.id ?? Math.random() * 1000)}
-                                        height={160}
-                                        areaId={area.id ?? 0}
-                                        photos={area.photos || []}
-                                    />
+                                    {
+                                        area.photos && area.photos.length > 0 && (
+                                        <CommonAreaCarousel
+                                            alt={area.name ?? 'Área Comum'}
+                                            fallbackUrl={placeholderImage(area.id ?? Math.random() * 1000)}
+                                            height={160}
+                                            areaId={area.id ?? 0}
+                                            photos={area.photos || []}
+                                        />
+                                    )}
                                     <CardContent sx={{ flexGrow: 1 }}>
-                                        <Tooltip title={area.name ?? ''}>
-                                            <Typography variant="subtitle1" fontWeight={600} gutterBottom noWrap>
-                                                {area.name || 'Sem nome'}
-                                            </Typography>
-                                        </Tooltip>
+                                        <Box display={'flex'} alignItems="center" justifyContent={'space-between'} gap={1}>
+                                            <Tooltip title={area.name ?? ''}>
+                                                <Typography variant="subtitle1" fontWeight={600} noWrap>
+                                                    {area.name || 'Sem nome'}
+                                                </Typography>
+                                            </Tooltip>
+                                            <Tooltip title={commonAreaStatus.text}>
+                                                {
+                                                    commonAreaStatus.open ?
+                                                        <Verified fontSize="small" color={"success"} /> :
+                                                        <Report fontSize="small" color={"error"} />
+                                                }
+                                            </Tooltip>
+                                        </Box>
                                         <Tooltip title={area.description ?? ''}>
                                             <Typography variant="body2" color="text.secondary" noWrap>
                                                 {area.description || 'Sem descrição'}

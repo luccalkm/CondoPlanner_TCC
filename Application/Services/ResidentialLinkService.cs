@@ -17,16 +17,19 @@ namespace Application.Services
         private readonly IRepository<Apartamento> _apRepo;
         private readonly IRepository<Bloco> _blocoRepo;
         private readonly IMapper _mapper;
+        private readonly IRepository<UsuarioCondominio> _userCondoRepo;
 
         public ResidentialLinkService(
             IRepository<VinculoResidencial> linkRepo,
             IRepository<Apartamento> apRepo,
             IRepository<Bloco> blocoRepo,
+            IRepository<UsuarioCondominio> userCondoRepo,
             IMapper mapper)
         {
             _linkRepo = linkRepo;
             _apRepo = apRepo;
             _blocoRepo = blocoRepo;
+            _userCondoRepo = userCondoRepo;
             _mapper = mapper;
         }
 
@@ -125,6 +128,29 @@ namespace Application.Services
                 .ToList();
 
             return Task.FromResult(pending.Select(_mapper.Map<ResidentialLinkDto>));
+        }
+
+        public async Task<IEnumerable<ResidentialLinkDto>> ListActiveByCondominiumForStaffAsync(int staffUserId, int condominiumId)
+        {
+            var isStaff = await _userCondoRepo.FirstOrDefaultAsync(uc =>
+                uc.UsuarioId == staffUserId &&
+                uc.CondominioId == condominiumId &&
+                (uc.TipoUsuario == ETipoUsuario.ADMINISTRADOR ||
+                 uc.TipoUsuario == ETipoUsuario.SINDICO ||
+                 uc.TipoUsuario == ETipoUsuario.PORTEIRO)) != null;
+
+            if (!isStaff)
+                throw new UserFriendlyException("Você não tem permissão para listar vínculos deste condomínio.");
+
+            var active = _linkRepo
+                .Include("Apartamento.Bloco.Condominio", "Usuario")
+                .Where(v => v.Status == EStatusVinculoResidencial.Aprovado &&
+                            v.Ativo &&
+                            v.DataFim == null &&
+                            v.Apartamento.Bloco.CondominioId == condominiumId)
+                .ToList();
+
+            return active.Select(_mapper.Map<ResidentialLinkDto>);
         }
 
         public async Task<ResidentialLinkDto> ReviewAsync(int reviewerUserId, ReviewResidentialLinkRequest input)

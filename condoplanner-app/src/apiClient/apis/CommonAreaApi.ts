@@ -36,6 +36,11 @@ export interface ApiCommonAreaIdGetRequest {
     id: number;
 }
 
+export interface ApiCommonAreaIdPutRequest {
+    id: number;
+    upsertCommonAreaInput?: UpsertCommonAreaInput;
+}
+
 export interface ApiCommonAreaPhotosPhotoIdDeleteRequest {
     photoId: number;
 }
@@ -44,7 +49,7 @@ export interface ApiCommonAreaPhotosUploadPostRequest {
     uploadCommonAreaPhotoInput?: UploadCommonAreaPhotoInput;
 }
 
-export interface ApiCommonAreaUpsertPostRequest {
+export interface ApiCommonAreaPostRequest {
     upsertCommonAreaInput?: UpsertCommonAreaInput;
 }
 
@@ -141,6 +146,51 @@ export class CommonAreaApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiCommonAreaIdPutRaw(requestParameters: ApiCommonAreaIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiCommonAreaIdPut().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/CommonArea/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpsertCommonAreaInputToJSON(requestParameters['upsertCommonAreaInput']),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiCommonAreaIdPut(requestParameters: ApiCommonAreaIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiCommonAreaIdPutRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
     async apiCommonAreaPhotosPhotoIdDeleteRaw(requestParameters: ApiCommonAreaPhotosPhotoIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['photoId'] == null) {
             throw new runtime.RequiredError(
@@ -220,7 +270,7 @@ export class CommonAreaApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCommonAreaUpsertPostRaw(requestParameters: ApiCommonAreaUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiCommonAreaPostRaw(requestParameters: ApiCommonAreaPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -236,7 +286,7 @@ export class CommonAreaApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/api/CommonArea/Upsert`;
+        let urlPath = `/api/CommonArea`;
 
         const response = await this.request({
             path: urlPath,
@@ -251,8 +301,8 @@ export class CommonAreaApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCommonAreaUpsertPost(requestParameters: ApiCommonAreaUpsertPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiCommonAreaUpsertPostRaw(requestParameters, initOverrides);
+    async apiCommonAreaPost(requestParameters: ApiCommonAreaPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiCommonAreaPostRaw(requestParameters, initOverrides);
     }
 
 }

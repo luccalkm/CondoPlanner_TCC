@@ -33,6 +33,7 @@ namespace Application.Mappings
 
             CreateMap<UpsertCommonAreaInput, AreaComum>()
                 .ForMember(d => d.Nome, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.CondominioId, o => o.MapFrom(s => s.CondominiumId))
                 .ForMember(d => d.Descricao, o => o.MapFrom(s => s.Description))
                 .ForMember(d => d.Tipo, o => o.MapFrom(s => s.Type))
                 .ForMember(d => d.Capacidade, o => o.MapFrom(s => s.Capacity))
@@ -43,7 +44,7 @@ namespace Application.Mappings
                 .ForMember(d => d.RequerAprovacao, o => o.MapFrom(s => s.RequiresApproval))
                 .ForMember(d => d.DiasDisponiveis, o => o.MapFrom(s => s.AvailableDays))
                 .ForMember(d => d.Observacoes, o => o.MapFrom(s => s.Notes))
-                .ForMember(d => d.CondominioId, o => o.MapFrom(s => s.CondominiumId))
+                .ForMember(d => d.CondominioId, o => o.Ignore())
                 .ForMember(d => d.Fotos, o => o.Ignore());
         }
     }

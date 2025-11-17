@@ -19,6 +19,7 @@ Name | Type
 `requiresApproval` | boolean
 `availableDays` | number
 `notes` | string
+`userId` | number
 
 ## Example
 
@@ -40,6 +41,7 @@ const example = {
   "requiresApproval": null,
   "availableDays": null,
   "notes": null,
+  "userId": null,
 } satisfies UpsertCommonAreaInput
 
 console.log(example)

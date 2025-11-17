@@ -3,6 +3,7 @@ apis/AuthApi.ts
 apis/CommonAreaApi.ts
 apis/CondominiumApi.ts
 apis/CondominiumInviteApi.ts
+apis/PackageApi.ts
 apis/ReservationApi.ts
 apis/ResidentialLinksApi.ts
 apis/UsersApi.ts
@@ -26,8 +27,10 @@ docs/CondominiumApi.md
 docs/CondominiumDto.md
 docs/CondominiumInviteApi.md
 docs/CreateOrEditCondominiumInput.md
+docs/CreatePackageInput.md
 docs/CreateReservationInput.md
 docs/CreateResidentialLinkRequest.md
+docs/EStatusEncomenda.md
 docs/EStatusReserva.md
 docs/EStatusVinculoResidencial.md
 docs/ETipoOcupacao.md
@@ -35,6 +38,8 @@ docs/ETipoUsuario.md
 docs/GenerateInviteRequest.md
 docs/GenerateInviteResponse.md
 docs/LoginRequest.md
+docs/PackageApi.md
+docs/PackageDto.md
 docs/RegisterRequest.md
 docs/RegisterResponse.md
 docs/ReservationApi.md
@@ -42,6 +47,8 @@ docs/ReservationDto.md
 docs/ResidentialLinkDto.md
 docs/ResidentialLinksApi.md
 docs/ReviewResidentialLinkRequest.md
+docs/UpdatePackageInput.md
+docs/UpdatePackageStatusInput.md
 docs/UploadCommonAreaPhotoInput.md
 docs/UpsertCommonAreaInput.md
 docs/UpsertUserCondominiumInput.md
@@ -63,8 +70,10 @@ models/CommonAreaDto.ts
 models/CommonAreaPhotoDto.ts
 models/CondominiumDto.ts
 models/CreateOrEditCondominiumInput.ts
+models/CreatePackageInput.ts
 models/CreateReservationInput.ts
 models/CreateResidentialLinkRequest.ts
+models/EStatusEncomenda.ts
 models/EStatusReserva.ts
 models/EStatusVinculoResidencial.ts
 models/ETipoOcupacao.ts
@@ -72,11 +81,14 @@ models/ETipoUsuario.ts
 models/GenerateInviteRequest.ts
 models/GenerateInviteResponse.ts
 models/LoginRequest.ts
+models/PackageDto.ts
 models/RegisterRequest.ts
 models/RegisterResponse.ts
 models/ReservationDto.ts
 models/ResidentialLinkDto.ts
 models/ReviewResidentialLinkRequest.ts
+models/UpdatePackageInput.ts
+models/UpdatePackageStatusInput.ts
 models/UploadCommonAreaPhotoInput.ts
 models/UpsertCommonAreaInput.ts
 models/UpsertUserCondominiumInput.ts

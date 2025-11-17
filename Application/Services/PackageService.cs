@@ -40,7 +40,7 @@ namespace Application.Services
                 throw new UserFriendlyException("Você não tem permissão para registrar encomendas neste condomínio.");
 
             var entity = _mapper.Map<Encomenda>(input);
-            entity.Status = EStatusEncomenda.RECEBIDO;
+            entity.Status = EStatusEncomenda.NOTIFICADO;
 
             await _repo.AddAsync(entity);
             await _repo.SaveChangesAsync();

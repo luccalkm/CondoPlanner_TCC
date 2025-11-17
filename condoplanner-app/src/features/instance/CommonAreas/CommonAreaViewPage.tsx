@@ -18,7 +18,7 @@ const CommonAreaViewPage: React.FC = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { selectedCondominium } = useInstanceStore();
     const { userCondominiumRelations } = useCondominiumStore();
-    const { currentArea, setCurrentArea } = useCommonAreaViewStore();
+    const { currentArea, setCurrentArea, handleWorkingTime } = useCommonAreaViewStore();
 
     const showAlert = useAlertStore((state) => state.showAlert);
 
@@ -50,13 +50,7 @@ const CommonAreaViewPage: React.FC = () => {
         return userCondominiumRelations.some(r => r.condominiumId === selectedCondominium.id);
     }, [selectedCondominium, userCondominiumRelations]);
 
-    const handleWorkingTime = (openingTime: string, closingTime: string) => {
-        const now = new Date();
-        if (openingTime && closingTime && new Date(openingTime) <= now && now <= new Date(closingTime)) {
-            return { open: true, text: 'Aberto agora' };
-        }
-        return { open: false, text: 'Fechado agora' };
-    };
+
 
     return (
         <Box p={isMobile ? 1 : 3} sx={{ maxWidth: 1000, margin: '0 auto' }}>

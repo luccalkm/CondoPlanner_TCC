@@ -28,15 +28,8 @@ namespace WebApi.Controllers
         [HttpPost("Invites")]
         public async Task<ActionResult<GenerateInviteResponse>> Generate([FromBody] GenerateInviteRequest request)
         {
-            try
-            {
-                var result = await _inviteService.GenerateInviteAsync(request, GetCurrentUserId());
-                return Ok(result);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _inviteService.GenerateInviteAsync(request, GetCurrentUserId());
+            return Ok(result);
         }
 
         [HttpPost("AcceptInvite")]

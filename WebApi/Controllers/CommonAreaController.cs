@@ -33,13 +33,27 @@ namespace WebApi.Controllers
             return Ok(item);
         }
 
-        [HttpPost("Upsert")]
-        public async Task<IActionResult> Upsert([FromBody] UpsertCommonAreaInput input)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] UpsertCommonAreaInput input)
         {
-            if (input is null) return BadRequest("Solicitação inválida.");
-            var userId = CurrentUserId();
-            var id = await _service.UpsertAsync(input, userId);
+            if ((input.UserId > 0 && CurrentUserId() != input.UserId) || input is null) return BadRequest("Solicitação inválida.");
+
+            input.UserId = CurrentUserId();
+
+            var id = await _service.CreateAsync(input);
             return Ok(new { id });
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpsertCommonAreaInput input)
+        {
+            if ((input.UserId > 0 && CurrentUserId() != input.UserId) || id <= 0 || input is null) return BadRequest("Solicitação inválida.");
+
+            input.Id = id;
+            input.UserId = CurrentUserId();
+
+            await _service.UpdateAsync(input);
+            return Ok();
         }
 
         [HttpPost("Photos/Upload")]

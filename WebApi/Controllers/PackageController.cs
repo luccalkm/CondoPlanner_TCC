@@ -22,37 +22,15 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePackageInput input)
         {
-            try
-            {
-                var id = await _service.CreateAsync(input, CurrentUserId());
-                return Ok(new { id });
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao criar encomenda." });
-            }
+            var id = await _service.CreateAsync(input, CurrentUserId());
+            return Ok(new { id });
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdatePackageInput input)
         {
-            try
-            {
-                await _service.UpdateAsync(id, input, CurrentUserId());
-                return Ok();
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao atualizar encomenda." });
-            }
+            await _service.UpdateAsync(id, input, CurrentUserId());
+            return Ok();
         }
 
         [HttpPatch("{id:int}/UpdateStatus")]
@@ -63,92 +41,37 @@ namespace WebApi.Controllers
 
             input.PackageId = id;
 
-            try
-            {
-                await _service.UpdateStatusAsync(input, CurrentUserId());
-                return Ok();
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao atualizar status da encomenda." });
-            }
+            await _service.UpdateStatusAsync(input, CurrentUserId());
+            return Ok();
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _service.DeleteAsync(id, CurrentUserId());
-                return Ok();
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao deletar encomenda." });
-            }
+            await _service.DeleteAsync(id, CurrentUserId());
+            return Ok();
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PackageDto?>> GetById(int id)
         {
-            try
-            {
-                var dto = await _service.GetByIdAsync(id, CurrentUserId());
-                if (dto is null) return NotFound();
-                return Ok(dto);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao buscar encomenda." });
-            }
+            var dto = await _service.GetByIdAsync(id, CurrentUserId());
+            if (dto is null) return NotFound();
+            return Ok(dto);
         }
 
         [HttpGet("Condominium/{condominiumId:int}")]
         public async Task<ActionResult<List<PackageDto>>> ListByCondominium(int condominiumId)
         {
-            try
-            {
-                var list = await _service.ListByCondominiumAsync(condominiumId, CurrentUserId());
-                return Ok(list);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao listar encomendas do condomínio." });
-            }
+            var list = await _service.ListByCondominiumAsync(condominiumId, CurrentUserId());
+            return Ok(list);
         }
 
         [HttpGet("Link/{residentialLinkId:int}")]
         public async Task<ActionResult<List<PackageDto>>> ListByResidentialLink(int residentialLinkId)
         {
-            try
-            {
-                var list = await _service.ListByResidentialLinkAsync(residentialLinkId, CurrentUserId());
-                return Ok(list);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao listar encomendas do vínculo." });
-            }
+            var list = await _service.ListByResidentialLinkAsync(residentialLinkId, CurrentUserId());
+            return Ok(list);
         }
 
         private int CurrentUserId()

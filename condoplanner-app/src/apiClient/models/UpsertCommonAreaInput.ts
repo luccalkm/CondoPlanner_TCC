@@ -24,7 +24,7 @@ export interface UpsertCommonAreaInput {
      * @type {number}
      * @memberof UpsertCommonAreaInput
      */
-    id?: number | null;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -97,6 +97,12 @@ export interface UpsertCommonAreaInput {
      * @memberof UpsertCommonAreaInput
      */
     notes?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpsertCommonAreaInput
+     */
+    userId?: number;
 }
 
 /**
@@ -129,6 +135,7 @@ export function UpsertCommonAreaInputFromJSONTyped(json: any, ignoreDiscriminato
         'requiresApproval': json['requiresApproval'] == null ? undefined : json['requiresApproval'],
         'availableDays': json['availableDays'] == null ? undefined : json['availableDays'],
         'notes': json['notes'] == null ? undefined : json['notes'],
+        'userId': json['userId'] == null ? undefined : json['userId'],
     };
 }
 
@@ -156,6 +163,7 @@ export function UpsertCommonAreaInputToJSONTyped(value?: UpsertCommonAreaInput |
         'requiresApproval': value['requiresApproval'],
         'availableDays': value['availableDays'],
         'notes': value['notes'],
+        'userId': value['userId'],
     };
 }
 

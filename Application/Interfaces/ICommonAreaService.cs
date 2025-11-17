@@ -6,7 +6,9 @@ namespace Application.Interfaces
     {
         Task<List<CommonAreaDto>> GetByCondominiumAsync(int condominiumId);
         Task<CommonAreaDto?> GetByIdAsync(int id);
-        Task<int> UpsertAsync(UpsertCommonAreaInput input, int userId);
+
+        Task<int> CreateAsync(UpsertCommonAreaInput input);
+        Task UpdateAsync(UpsertCommonAreaInput input);
 
         Task UploadPhotoAsync(UploadCommonAreaPhotoInput input, int currentUserId);
         Task RemovePhotoAsync(int photoId);

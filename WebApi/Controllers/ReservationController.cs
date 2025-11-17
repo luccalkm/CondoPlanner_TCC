@@ -87,19 +87,8 @@ namespace WebApi.Controllers
         [HttpGet("Pending/{condominiumId:int}")]
         public async Task<ActionResult<List<ReservationDto>>> GetPendingReservations(int condominiumId)
         {
-            try
-            {
-                var reservations = await _service.GetPendingReservationsAsync(condominiumId);
-                return Ok(reservations);
-            }
-            catch (UserFriendlyException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500, new { message = "Erro ao buscar reservas pendentes." });
-            }
+            var reservations = await _service.GetPendingReservationsAsync(condominiumId);
+            return Ok(reservations);
         }
 
         private int CurrentUserId()
