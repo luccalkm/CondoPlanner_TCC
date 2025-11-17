@@ -15,7 +15,7 @@ import { InstanceGuard } from "./InstanceGuard";
 import CondominiumSettingsPage from "../features/instance/CondominiumSettings/CondominiumSettingsPage";
 import AcceptInvitePage from "../features/invite/AcceptInvitePage";
 import { useAuth } from "../hooks/useAuth";
-import ResidentialLinkGate from "../features/instance/ResidentialLink/ResidentiaLinkGate";
+import ResidentialLinkGate from "../features/ResidentialLink/ResidentiaLinkGate";
 
 export function AppRouter() {
     const { hasAuthenticationToken } = useAuth();

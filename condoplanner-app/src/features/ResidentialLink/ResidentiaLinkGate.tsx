@@ -3,9 +3,9 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import {
     Box, Paper, Typography, TextField, Button, MenuItem, Select, InputLabel,
     FormControl, Stack, Alert, CircularProgress} from '@mui/material';
-import { ApiConfiguration } from '../../../apiClient/apiConfig';
-import { ResidentialLinksApi, ETipoOcupacao, type BlockDto, EStatusVinculoResidencial } from '../../../apiClient';
-import { useInstanceStore } from '../../../stores/instance.store';
+import { ApiConfiguration } from '../../apiClient/apiConfig';
+import { ResidentialLinksApi, ETipoOcupacao, type BlockDto, EStatusVinculoResidencial } from '../../apiClient';
+import { useInstanceStore } from '../../stores/instance.store';
 import { ArrowBack } from '@mui/icons-material';
 
 const api = new ResidentialLinksApi(ApiConfiguration);
