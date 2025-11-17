@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { Box, useTheme, useMediaQuery, Grid } from '@mui/material';
+import { Box, useTheme, useMediaQuery, Grid, Paper } from '@mui/material';
 import { CommonAreaApi } from '../../../apiClient';
 import { ApiConfiguration } from '../../../apiClient/apiConfig';
 import { useInstanceStore } from '../../../stores/instance.store';
@@ -21,7 +21,7 @@ const CommonAreaViewPage: React.FC = () => {
     const { currentArea, setCurrentArea } = useCommonAreaViewStore();
 
     const showAlert = useAlertStore((state) => state.showAlert);
-    
+
     useEffect(() => {
         let mounted = true;
         async function ensureAreaFromUrl() {
@@ -44,15 +44,23 @@ const CommonAreaViewPage: React.FC = () => {
     }, [currentArea, setCurrentArea, showAlert]);
 
     const area = currentArea;
-    
+
     const canCreateReservation = useMemo(() => {
         if (!selectedCondominium) return false;
         return userCondominiumRelations.some(r => r.condominiumId === selectedCondominium.id);
     }, [selectedCondominium, userCondominiumRelations]);
 
+    const handleWorkingTime = (openingTime: string, closingTime: string) => {
+        const now = new Date();
+        if (openingTime && closingTime && new Date(openingTime) <= now && now <= new Date(closingTime)) {
+            return { open: true, text: 'Aberto agora' };
+        }
+        return { open: false, text: 'Fechado agora' };
+    };
+
     return (
         <Box p={isMobile ? 1 : 3} sx={{ maxWidth: 1000, margin: '0 auto' }}>
-            <AreaHeader area={area} />
+            <AreaHeader area={area} handleWorkingTime={handleWorkingTime} />
 
             <Grid container spacing={2} sx={{ mb: 2 }}>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -65,7 +73,16 @@ const CommonAreaViewPage: React.FC = () => {
                     />
                 </Grid>
             </Grid>
-            <CommonAreaCalendar canEdit={canCreateReservation} />
+            {
+                currentArea &&
+                    currentArea.requiresApproval ? (
+                    <CommonAreaCalendar canEdit={canCreateReservation} />
+                ) : (
+                    <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
+                        O espaço <b>{currentArea?.name}</b> não permite reservas. O espaço é público e disponível durante o período estabelecido pelo condomínio.
+                    </Paper>
+                )
+            }
         </Box>
     );
 };

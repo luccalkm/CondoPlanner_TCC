@@ -37,6 +37,8 @@ namespace Application.Services
             var query = _reservationRepo
                 .Include(r => r.AreaComum)
                 .Where(r => r.AreaComumId == areaId
+                    && r.Status != EStatusReserva.REJEITADO 
+                    && r.Status != EStatusReserva.CANCELADO
                     && r.DataInicio < endExclusive
                     && r.DataFim > startInclusive)
                 .ToList();
@@ -132,8 +134,12 @@ namespace Application.Services
             await _reservationRepo.SaveChangesAsync();
         }
 
-        public async Task ApproveAsync(int reservationId, int userId, bool approve)
+        public async Task ApproveOrRejectAsync(ApproveOrRejectReservationInput input)
         {
+            var reservationId = input.ReservationId;
+            var userId = input.UserId;
+            var shouldApprove = input.ShouldApprove;
+
             var reserva = await _reservationRepo.GetTrackedAsync(r => r.Id == reservationId)
                 ?? throw new UserFriendlyException("Reserva não encontrada.");
 
@@ -147,7 +153,7 @@ namespace Application.Services
             if (relation is null)
                 throw new UserFriendlyException("Você não tem permissão para aprovar/rejeitar reservas desta área.");
 
-            reserva.Status = approve ? EStatusReserva.APROVADO : EStatusReserva.REJEITADO;
+            reserva.Status = shouldApprove ? EStatusReserva.APROVADO : EStatusReserva.REJEITADO;
             _reservationRepo.Update(reserva);
             await _reservationRepo.SaveChangesAsync();
         }
@@ -159,7 +165,7 @@ namespace Application.Services
                 .Where(r => r.Status == EStatusReserva.PENDENTE && r.AreaComum.CondominioId == condominiumId)
                 .ToList();
 
-            return pendingReservations.Select(_mapper.Map<ReservationDto>).ToList();
+            return _mapper.Map<List<ReservationDto>>(pendingReservations);
         }
     }
 }

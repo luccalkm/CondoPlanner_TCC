@@ -13,7 +13,7 @@ docs/AddressApi.md
 docs/AddressDto.md
 docs/ApartmentDto.md
 docs/ApartmentInputDto.md
-docs/ApproveRequest.md
+docs/ApproveOrRejectReservationInput.md
 docs/AuthApi.md
 docs/AuthenticationResponse.md
 docs/BlockDto.md
@@ -54,7 +54,7 @@ models/AcceptInviteResponse.ts
 models/AddressDto.ts
 models/ApartmentDto.ts
 models/ApartmentInputDto.ts
-models/ApproveRequest.ts
+models/ApproveOrRejectReservationInput.ts
 models/AuthenticationResponse.ts
 models/BlockDto.ts
 models/BlockInputDto.ts

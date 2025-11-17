@@ -17,6 +17,7 @@ export const MainLayout = () => {
                     mt: !isMobile ? 8 : 0,
                     mb: isMobile ? 8 : 0,
                     width: '100vw',
+                    overflowX: 'hidden',
                     marginX: 'auto',
                 }}
             >

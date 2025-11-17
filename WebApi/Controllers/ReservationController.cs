@@ -57,13 +57,15 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        public class ApproveRequest { public bool Approve { get; set; } }
 
-        [HttpPost("{reservationId:int}/Approve")]
-        public async Task<IActionResult> Approve(int reservationId, [FromBody] ApproveRequest req)
+        [HttpPost("ApproveOrReject")]
+        public async Task<IActionResult> ApproveOrReject([FromBody] ApproveOrRejectReservationInput input)
         {
-            if (req is null) return BadRequest("Solicitação inválida.");
-            await _service.ApproveAsync(reservationId, CurrentUserId(), req.Approve);
+            if (input.UserId != 0 && input.UserId != CurrentUserId())
+                return BadRequest(new { message = "Conflito de usuários. Reinicie sua sessão e tente novamente." });
+            
+            input.UserId = CurrentUserId();
+            await _service.ApproveOrRejectAsync(input);
             return Ok();
         }
 

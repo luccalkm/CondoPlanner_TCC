@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Typography, useMediaQuery, useTheme, Paper, Grid } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme, Paper } from '@mui/material';
 import CalendarHeader from '../../../common/CalendarHeader';
-import CalendarDayCell from '../../../common/CalendarDayCell';
 import CreateReservationDialog from './CreateReservationDialog';
 import useCommonAreaViewStore from '../../../../stores/commonAreaView.store';
 import useReservationStore from '../../../../stores/reservation.store';
 import { type ReservationDto } from '../../../../apiClient';
+import { CalendarGrid } from "./CalendarGrid";
 
 function buildMonth(year: number, month: number) {
     const first = new Date(year, month, 1);
@@ -27,45 +27,6 @@ function buildMonth(year: number, month: number) {
 
 interface CommonAreaCalendarProps {
     canEdit: boolean;
-}
-
-function CalendarGrid({
-    weeks,
-    dayMap,
-    today0,
-    canEdit,
-    variant,
-    onSelect,
-}: {
-    weeks: (Date | null)[][];
-    dayMap: Map<string, ReservationDto[]>;
-    today0: Date;
-    canEdit: boolean;
-    variant: 'mobile' | 'desktop';
-    onSelect: (date: Date) => void;
-}) {
-    return (
-        <Grid container>
-            {weeks.flat().map((dt, i) => {
-                const key = dt ? dt.toISOString().slice(0, 10) : `empty-${i}`;
-                const items = dt ? dayMap.get(key) ?? [] : [];
-                const isToday = dt ? new Date().toDateString() === dt.toDateString() : false;
-                const isPast = dt ? new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) < today0 : false;
-                return (
-                    <CalendarDayCell
-                        key={key}
-                        date={dt}
-                        items={items}
-                        isToday={isToday}
-                        isPast={isPast}
-                        canEdit={canEdit}
-                        variant={variant}
-                        onSelect={onSelect}
-                    />
-                );
-            })}
-        </Grid>
-    );
 }
 
 export function CommonAreaCalendar({ canEdit }: CommonAreaCalendarProps) {

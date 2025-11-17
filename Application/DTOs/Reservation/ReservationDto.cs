@@ -7,7 +7,7 @@ namespace Application.DTOs.Reservation
     {
         public int Id { get; set; }
         public int AreaId { get; set; }
-        public CommonAreaDto Area { get; set; }
+        public CommonAreaDto CommonArea { get; set; }
         public int CondominiumId { get; set; }
         public int VinculoResidencialId { get; set; }
 

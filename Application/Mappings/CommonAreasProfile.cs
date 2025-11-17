@@ -28,7 +28,8 @@ namespace Application.Mappings
                 .ForMember(d => d.RequiresApproval, o => o.MapFrom(s => s.RequerAprovacao))
                 .ForMember(d => d.AvailableDays, o => o.MapFrom(s => s.DiasDisponiveis))
                 .ForMember(d => d.Notes, o => o.MapFrom(s => s.Observacoes))
-                .ForMember(d => d.Photos, o => o.MapFrom(s => s.Fotos));
+                .ForMember(d => d.Photos, o => o.MapFrom(s => s.Fotos))
+                .ReverseMap();
 
             CreateMap<UpsertCommonAreaInput, AreaComum>()
                 .ForMember(d => d.Nome, o => o.MapFrom(s => s.Name))

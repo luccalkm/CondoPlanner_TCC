@@ -4,12 +4,81 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
+| [**apiReservationApproveOrRejectPost**](ReservationApi.md#apireservationapproveorrejectpost) | **POST** /api/Reservation/ApproveOrReject |  |
 | [**apiReservationAreaAreaIdGet**](ReservationApi.md#apireservationareaareaidget) | **GET** /api/Reservation/Area/{areaId} |  |
 | [**apiReservationPendingCondominiumIdGet**](ReservationApi.md#apireservationpendingcondominiumidget) | **GET** /api/Reservation/Pending/{condominiumId} |  |
 | [**apiReservationPost**](ReservationApi.md#apireservationpost) | **POST** /api/Reservation |  |
-| [**apiReservationReservationIdApprovePost**](ReservationApi.md#apireservationreservationidapprovepost) | **POST** /api/Reservation/{reservationId}/Approve |  |
 | [**apiReservationReservationIdCancelPost**](ReservationApi.md#apireservationreservationidcancelpost) | **POST** /api/Reservation/{reservationId}/Cancel |  |
 
+
+
+## apiReservationApproveOrRejectPost
+
+> apiReservationApproveOrRejectPost(approveOrRejectReservationInput)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ReservationApi,
+} from '';
+import type { ApiReservationApproveOrRejectPostRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new ReservationApi(config);
+
+  const body = {
+    // ApproveOrRejectReservationInput (optional)
+    approveOrRejectReservationInput: ...,
+  } satisfies ApiReservationApproveOrRejectPostRequest;
+
+  try {
+    const data = await api.apiReservationApproveOrRejectPost(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **approveOrRejectReservationInput** | [ApproveOrRejectReservationInput](ApproveOrRejectReservationInput.md) |  | [Optional] |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`, `text/json`, `application/*+json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
 ## apiReservationAreaAreaIdGet
@@ -202,78 +271,6 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **createReservationInput** | [CreateReservationInput](CreateReservationInput.md) |  | [Optional] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: `application/json`, `text/json`, `application/*+json`
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## apiReservationReservationIdApprovePost
-
-> apiReservationReservationIdApprovePost(reservationId, approveRequest)
-
-
-
-### Example
-
-```ts
-import {
-  Configuration,
-  ReservationApi,
-} from '';
-import type { ApiReservationReservationIdApprovePostRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: Bearer
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new ReservationApi(config);
-
-  const body = {
-    // number
-    reservationId: 56,
-    // ApproveRequest (optional)
-    approveRequest: ...,
-  } satisfies ApiReservationReservationIdApprovePostRequest;
-
-  try {
-    const data = await api.apiReservationReservationIdApprovePost(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **reservationId** | `number` |  | [Defaults to `undefined`] |
-| **approveRequest** | [ApproveRequest](ApproveRequest.md) |  | [Optional] |
 
 ### Return type
 

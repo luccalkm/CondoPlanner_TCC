@@ -5,7 +5,7 @@ export * from './AcceptInviteResponse';
 export * from './AddressDto';
 export * from './ApartmentDto';
 export * from './ApartmentInputDto';
-export * from './ApproveRequest';
+export * from './ApproveOrRejectReservationInput';
 export * from './AuthenticationResponse';
 export * from './BlockDto';
 export * from './BlockInputDto';

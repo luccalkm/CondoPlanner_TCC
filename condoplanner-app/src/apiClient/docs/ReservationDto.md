@@ -8,7 +8,7 @@ Name | Type
 ------------ | -------------
 `id` | number
 `areaId` | number
-`area` | [CommonAreaDto](CommonAreaDto.md)
+`commonArea` | [CommonAreaDto](CommonAreaDto.md)
 `condominiumId` | number
 `vinculoResidencialId` | number
 `purpose` | string
@@ -28,7 +28,7 @@ import type { ReservationDto } from ''
 const example = {
   "id": null,
   "areaId": null,
-  "area": null,
+  "commonArea": null,
   "condominiumId": null,
   "vinculoResidencialId": null,
   "purpose": null,

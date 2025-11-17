@@ -18,7 +18,8 @@ namespace Application.Mappings
                 .ForMember(d => d.EndTime, o => o.MapFrom(s => s.DataFim.TimeOfDay))
                 .ForMember(d => d.Guests, o => o.MapFrom(s => s.NumeroConvidados))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
-                .ForMember(d => d.Notes, o => o.MapFrom(s => s.Observacoes));
+                .ForMember(d => d.Notes, o => o.MapFrom(s => s.Observacoes))
+                .ForMember(d => d.CommonArea, o => o.MapFrom(s => s.AreaComum));
 
             CreateMap<CreateReservationInput, Reserva>()
                 .ForMember(d => d.AreaComumId, o => o.MapFrom(s => s.AreaId))

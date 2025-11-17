@@ -15,18 +15,22 @@
 
 import * as runtime from '../runtime';
 import type {
-  ApproveRequest,
+  ApproveOrRejectReservationInput,
   CreateReservationInput,
   ReservationDto,
 } from '../models/index';
 import {
-    ApproveRequestFromJSON,
-    ApproveRequestToJSON,
+    ApproveOrRejectReservationInputFromJSON,
+    ApproveOrRejectReservationInputToJSON,
     CreateReservationInputFromJSON,
     CreateReservationInputToJSON,
     ReservationDtoFromJSON,
     ReservationDtoToJSON,
 } from '../models/index';
+
+export interface ApiReservationApproveOrRejectPostRequest {
+    approveOrRejectReservationInput?: ApproveOrRejectReservationInput;
+}
 
 export interface ApiReservationAreaAreaIdGetRequest {
     areaId: number;
@@ -42,11 +46,6 @@ export interface ApiReservationPostRequest {
     createReservationInput?: CreateReservationInput;
 }
 
-export interface ApiReservationReservationIdApprovePostRequest {
-    reservationId: number;
-    approveRequest?: ApproveRequest;
-}
-
 export interface ApiReservationReservationIdCancelPostRequest {
     reservationId: number;
 }
@@ -55,6 +54,43 @@ export interface ApiReservationReservationIdCancelPostRequest {
  * 
  */
 export class ReservationApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiReservationApproveOrRejectPostRaw(requestParameters: ApiReservationApproveOrRejectPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Reservation/ApproveOrReject`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ApproveOrRejectReservationInputToJSON(requestParameters['approveOrRejectReservationInput']),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiReservationApproveOrRejectPost(requestParameters: ApiReservationApproveOrRejectPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiReservationApproveOrRejectPostRaw(requestParameters, initOverrides);
+    }
 
     /**
      */
@@ -185,51 +221,6 @@ export class ReservationApi extends runtime.BaseAPI {
      */
     async apiReservationPost(requestParameters: ApiReservationPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiReservationPostRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiReservationReservationIdApprovePostRaw(requestParameters: ApiReservationReservationIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['reservationId'] == null) {
-            throw new runtime.RequiredError(
-                'reservationId',
-                'Required parameter "reservationId" was null or undefined when calling apiReservationReservationIdApprovePost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/Reservation/{reservationId}/Approve`;
-        urlPath = urlPath.replace(`{${"reservationId"}}`, encodeURIComponent(String(requestParameters['reservationId'])));
-
-        const response = await this.request({
-            path: urlPath,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ApproveRequestToJSON(requestParameters['approveRequest']),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiReservationReservationIdApprovePost(requestParameters: ApiReservationReservationIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiReservationReservationIdApprovePostRaw(requestParameters, initOverrides);
     }
 
     /**

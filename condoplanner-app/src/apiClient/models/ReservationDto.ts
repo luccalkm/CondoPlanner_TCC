@@ -51,7 +51,7 @@ export interface ReservationDto {
      * @type {CommonAreaDto}
      * @memberof ReservationDto
      */
-    area?: CommonAreaDto;
+    commonArea?: CommonAreaDto;
     /**
      * 
      * @type {number}
@@ -129,7 +129,7 @@ export function ReservationDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'] == null ? undefined : json['id'],
         'areaId': json['areaId'] == null ? undefined : json['areaId'],
-        'area': json['area'] == null ? undefined : CommonAreaDtoFromJSON(json['area']),
+        'commonArea': json['commonArea'] == null ? undefined : CommonAreaDtoFromJSON(json['commonArea']),
         'condominiumId': json['condominiumId'] == null ? undefined : json['condominiumId'],
         'vinculoResidencialId': json['vinculoResidencialId'] == null ? undefined : json['vinculoResidencialId'],
         'purpose': json['purpose'] == null ? undefined : json['purpose'],
@@ -155,7 +155,7 @@ export function ReservationDtoToJSONTyped(value?: ReservationDto | null, ignoreD
         
         'id': value['id'],
         'areaId': value['areaId'],
-        'area': CommonAreaDtoToJSON(value['area']),
+        'commonArea': CommonAreaDtoToJSON(value['commonArea']),
         'condominiumId': value['condominiumId'],
         'vinculoResidencialId': value['vinculoResidencialId'],
         'purpose': value['purpose'],
