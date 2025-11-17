@@ -1,0 +1,14 @@
+condoplanner-app/
+
+.vs/
+bin/
+obj/
+.git/
+.github/
+Dockerfile
+.gitignore
+*.md
+*.tmp
+*.log
+*.cache
+*.DS_Store
