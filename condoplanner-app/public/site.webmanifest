@@ -1,0 +1,22 @@
+{
+  "name": "CondoPlanner - Planejamento de condomínios",
+  "short_name": "CondoPlanner",
+  "description": "Coordene o seu condomínio na palma da sua mão.",
+  "theme_color": "#1c349eff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icons/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
