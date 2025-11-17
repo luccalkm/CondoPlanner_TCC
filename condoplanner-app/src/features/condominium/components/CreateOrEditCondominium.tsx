@@ -15,12 +15,11 @@ import { useDebounce } from "use-debounce";
 import { useCondominiumStore } from "../../../stores/condominium.store";
 import { useAuthStore } from "../../../stores/auth.store";
 import { useAlertStore } from "../../../stores/alert.store";
-import { AddressApi, type ApartmentDto, type BlockDto } from "../../../apiClient";
+import { AddressApi, type ApartmentDto, type BlockDto, type CondominiumDto } from "../../../apiClient";
 import { ApiConfiguration } from "../../../apiClient/apiConfig";
 import { StepCondoAddress } from "./steps/StepCondoAddress";
 import { StepBlocks } from "./steps/StepBlocks";
 import { StepFloorsApartments } from "./steps/StepFloorsApartments";
-import type { CondominioDto } from "../../../apiClient/models/CondominioDto";
 
 type ApartmentForm = { id?: number; number: string; floorNumber: number; };
 type BlockForm = {
@@ -112,7 +111,7 @@ export const CreateOrEditCondominium: React.FC<CreateOrEditCondominiumProps> = (
     useEffect(() => {
         if (!condominiumId) return;
         setLoadingData(true);
-        const cond = condominiums.find((c: CondominioDto) => c.id === condominiumId);
+        const cond = condominiums.find((c: CondominiumDto) => c.id === condominiumId);
         if (cond) {
             setForm({
                 id: cond.id,
