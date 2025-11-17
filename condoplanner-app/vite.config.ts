@@ -20,8 +20,8 @@ export default defineConfig({
                 'favicon.ico',
                 'robots.txt',
                 'apple-touch-icon.png',
-                'icons/pwa-192x192.png',
-                'icons/pwa-512x512.png'
+                'pwa-192x192.png',
+                'pwa-512x512.png'
             ],
             manifest: {
                 name: 'CondoPlanner - Planejamento de condomínios',
@@ -34,12 +34,12 @@ export default defineConfig({
                 start_url: '/',
                 icons: [
                     {
-                        src: 'icons/pwa-192x192.png',
+                        src: '/pwa-192x192.png',
                         sizes: '192x192',
                         type: 'image/png'
                     },
                     {
-                        src: 'icons/pwa-512x512.png',
+                        src: '/pwa-512x512.png',
                         sizes: '512x512',
                         type: 'image/png'
                     }
