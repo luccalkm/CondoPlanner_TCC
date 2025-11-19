@@ -64,9 +64,10 @@ namespace Application.Services
         {
             var entity = await _repo.GetTrackedAsync(e => e.Id == input.PackageId)
                 ?? throw new UserFriendlyException("Encomenda não encontrada.");
+            var isStaff = await IsStaffAsync(currentUserId, entity.CondominioId);
             var isOwner = await IsOwnerOfLinkAsync(currentUserId, entity.VinculoResidencialId);
 
-            if (!isOwner)
+            if (!isOwner && !isStaff)
                 throw new UserFriendlyException("Você não tem permissão para alterar o status desta encomenda.");
 
             entity.Status = input.Status;
@@ -91,8 +92,6 @@ namespace Application.Services
             }
             else
             {
-                var isStaff = await IsStaffAsync(currentUserId, entity.CondominioId);
-
                 if (!isStaff)
                     throw new UserFriendlyException("Você não tem permissão para alterar este status.");
 
