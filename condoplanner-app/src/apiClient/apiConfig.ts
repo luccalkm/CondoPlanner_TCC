@@ -14,7 +14,7 @@ function handleUnauthorized() {
 }
 
 export const ApiConfiguration = new Configuration({
-    basePath: import.meta.env.VITE_API_BASE_URL,
+    basePath: import.meta.env.VITE_API_BASE_URL ?? 'https://localhost:7257',
     middleware: [
         {
             async pre(context: RequestContext) {
