@@ -18,7 +18,7 @@ type Props = {
 
 export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing }: Props) {
     const [form, setForm] = useState<UpsertCommonAreaInput>({
-        id: null,
+        id: undefined,
         condominiumId,
         name: '',
         description: '',
@@ -37,7 +37,7 @@ export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing
     useEffect(() => {
         if (editing) {
             setForm({
-                id: editing.id ?? null,
+                id: editing.id ?? undefined,
                 condominiumId,
                 name: editing.name ?? '',
                 description: editing.description ?? '',
@@ -52,7 +52,7 @@ export function CommonAreaDialog({ open, onClose, onSave, condominiumId, editing
                 notes: editing.notes ?? ''
             });
         } else {
-            setForm((f: typeof form) => ({ ...f, id: null, condominiumId }));
+            setForm((f: typeof form) => ({ ...f, id: undefined, condominiumId }));
         }
     }, [editing, condominiumId]);
 
