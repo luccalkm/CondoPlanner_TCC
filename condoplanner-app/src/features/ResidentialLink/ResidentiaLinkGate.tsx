@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import {
-    Box, Paper, Typography, TextField, Button, MenuItem, Select, InputLabel,
-    FormControl, Stack, Alert, CircularProgress} from '@mui/material';
+    Paper, Typography, TextField, Button, MenuItem, Select, InputLabel,
+    FormControl, Stack, Alert, Skeleton } from '@mui/material';
 import { ApiConfiguration } from '../../apiClient/apiConfig';
 import { ResidentialLinksApi, ETipoOcupacao, type BlockDto, EStatusVinculoResidencial } from '../../apiClient';
 import { useInstanceStore } from '../../stores/instance.store';
@@ -81,9 +81,22 @@ export const ResidentialLinkGate = () => {
 
     if (loading) {
         return (
-            <Box display="flex" alignItems="center" justifyContent="center" minHeight="60vh">
-                <CircularProgress />
-            </Box>
+            <Paper variant='outlined' sx={{ width: '75vw', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', p: 3, borderRadius: 3 }}>
+                <Stack spacing={2}>
+                    <Skeleton variant="text" width="40%" height={32} />
+                    <Skeleton variant="text" width="80%" />
+                    <Skeleton variant="text" width="70%" />
+
+                    <Skeleton variant="rectangular" height={40} sx={{ borderRadius: 1 }} />
+                    <Skeleton variant="rectangular" height={40} sx={{ borderRadius: 1 }} />
+                    <Skeleton variant="rectangular" height={40} sx={{ borderRadius: 1 }} />
+
+                    <Stack direction="row" gap={2}>
+                        <Skeleton variant="rectangular" width={160} height={36} sx={{ borderRadius: 1 }} />
+                        <Skeleton variant="rectangular" width={140} height={36} sx={{ borderRadius: 1 }} />
+                    </Stack>
+                </Stack>
+            </Paper>
         );
     }
 
