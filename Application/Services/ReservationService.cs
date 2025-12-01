@@ -76,7 +76,7 @@ namespace Application.Services
             if (startDateTime.Date < today)
                 throw new UserFriendlyException("Não é possível reservar em data passada.");
 
-            if ((startDateTime.Date - today).TotalDays > area.DiasDisponiveis)
+            if (area.DiasDisponiveis != 7 && (startDateTime.Date - endDateTime.Date).TotalDays > area.DiasDisponiveis)
                 throw new UserFriendlyException("Data desejada fora da janela de agendamento permitida.");
 
             var vinculo = _vinculoRepo
